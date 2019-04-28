@@ -16,7 +16,7 @@
  *
  */
 
-#include "razercapability.h"
+#include "libopenrazer.h"
 
 namespace libopenrazer {
 /*!

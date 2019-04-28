@@ -1,41 +1,56 @@
-libopenrazer_version =  '0.0.1'
+project('libopenrazer',
+        'cpp',
+        version : '0.0.1',)
 
-openrazerlib_sources = [
-    'libopenrazer.cpp',
-    'device.cpp',
-    'led.cpp',
-    'manager.cpp',
-    'razercapability.cpp'
+qt5 = import('qt5')
+
+qt5_dep = dependency('qt5', modules : ['Core', 'DBus', 'Gui'])
+razer_test_dep = dependency('razer_test', fallback : ['razer_test', 'razer_test_dep'])
+
+sources = [
+    'src/device.cpp',
+    'src/led.cpp',
+    'src/libopenrazer.cpp',
+    'src/manager.cpp',
+    'src/razercapability.cpp'
 ]
-processed = qt5.preprocess(
-    moc_headers : ['libopenrazer.h']
+sources += qt5.preprocess(
+    moc_headers : ['include/libopenrazer.h']
 )
+
+inc = include_directories('include')
 
 openrazerlib = library('openrazer',
-                       [openrazerlib_sources, processed],
-                       version : libopenrazer_version,
+                       sources,
+                       version : meson.project_version(),
                        dependencies : [qt5_dep, razer_test_dep],
-                       install : true)
+                       include_directories : inc,
+                       install : not meson.is_subproject())
 
-libopenrazer = declare_dependency(
-    dependencies: [qt5_dep, razer_test_dep],
-    include_directories : include_directories('.'),
-    link_with: openrazerlib
+libopenrazer_dep = declare_dependency(
+    dependencies : [qt5_dep, razer_test_dep],
+    include_directories : inc,
+    link_with : openrazerlib
 )
 
-# install_headers('libopenrazer.h', 'razercapability.h', subdir : 'libopenrazer')
+# Stop execution here if we are in a subproject
+if meson.is_subproject()
+  subdir_done()
+endif
 
-# pkg = import('pkgconfig')
-# pkg.generate(name: meson.project_name(),
-#              description: 'Qt wrapper around the D-Bus API from OpenRazer',
-#              libraries : openrazerlib,
-#              version: libopenrazer_version)
+install_headers('include/libopenrazer.h')
+
+pkg = import('pkgconfig')
+pkg.generate(name : meson.project_name(),
+             description : 'Qt wrapper around the D-Bus API from OpenRazer',
+             libraries : openrazerlib,
+             version : meson.project_version())
 
 
 # Demo executable
 if get_option('buildtype') == 'debug'
   message('Building libopenrazerdemo...')
   executable('libopenrazerdemo',
-             'libopenrazerdemo.cpp',
-             dependencies : [qt5_dep, razer_test_dep, libopenrazer])
+             'src/demo/libopenrazerdemo.cpp',
+             dependencies : [qt5_dep, razer_test_dep, libopenrazer_dep])
 endif

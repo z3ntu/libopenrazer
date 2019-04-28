@@ -27,8 +27,6 @@
 
 #include <razer_test.h>
 
-#include "razercapability.h"
-
 #define OPENRAZER_SERVICE_NAME "io.github.openrazer1"
 #if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
 #define TARGET_BUS QDBusConnection::systemBus()
@@ -174,13 +172,37 @@ class DBusException : public QException
 public:
     DBusException(const QDBusError &error);
     DBusException(const QString &name, const QString &message);
+
     void raise() const override;
     DBusException *clone() const override;
+
     QString getName();
     QString getMessage();
+
 private:
     QString name;
     QString message;
+};
+
+class RazerCapability
+{
+public:
+    RazerCapability();
+    RazerCapability(razer_test::RazerEffect identifier, QString displayString, int numColors);
+    RazerCapability(razer_test::RazerEffect, QString displayString, bool wave);
+    RazerCapability(const RazerCapability &other);
+    ~RazerCapability();
+
+    int getNumColors() const;
+    razer_test::RazerEffect getIdentifier() const;
+    QString getDisplayString() const;
+    bool isWave() const;
+
+private:
+    int numColors;
+    razer_test::RazerEffect identifier;
+    QString displayString;
+    bool wave;
 };
 
 const QList<RazerCapability> ledFxList {
@@ -211,5 +233,7 @@ const QHash<razer_test::RazerLedId, QString> ledIdToStringTable {
 };
 
 }
+
+Q_DECLARE_METATYPE(libopenrazer::RazerCapability)
 
 #endif // LIBRAZER_H
