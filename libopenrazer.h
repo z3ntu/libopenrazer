@@ -38,13 +38,16 @@
 
 // NOTE: DBus types -> Qt/C++ types: http://doc.qt.io/qt-5/qdbustypesystem.html#primitive-types
 
-namespace libopenrazer
-{
+namespace libopenrazer {
 
-enum DaemonStatus { Enabled, Disabled, NotInstalled, NoSystemd, Unknown };
+enum DaemonStatus { Enabled,
+                    Disabled,
+                    NotInstalled,
+                    NoSystemd,
+                    Unknown };
 
 void printDBusError(QDBusError error, const char *functionname);
-bool handleBoolReply (QDBusReply<bool> reply, const char *functionname);
+bool handleBoolReply(QDBusReply<bool> reply, const char *functionname);
 QString handleStringReply(QDBusReply<QString> reply, const char *functionname);
 
 class Manager : public QObject
@@ -169,7 +172,7 @@ public:
 class DBusException : public QException
 {
 public:
-    DBusException(const QDBusError& error);
+    DBusException(const QDBusError &error);
     DBusException(const QString &name, const QString &message);
     void raise() const override;
     DBusException *clone() const override;
@@ -193,18 +196,18 @@ const QList<RazerCapability> ledFxList {
 };
 
 const QHash<razer_test::RazerLedId, QString> ledIdToStringTable {
-    {razer_test::RazerLedId::Unspecified, Led::tr("Unspecified")},
-    {razer_test::RazerLedId::ScrollWheelLED, Led::tr("Scroll Wheel")},
-    {razer_test::RazerLedId::BatteryLED, Led::tr("Battery")},
-    {razer_test::RazerLedId::LogoLED, Led::tr("Logo")},
-    {razer_test::RazerLedId::BacklightLED, Led::tr("Backlight")},
-    {razer_test::RazerLedId::MacroRecordingLED, Led::tr("Macro Recording")},
-    {razer_test::RazerLedId::GameModeLED, Led::tr("Game Mode")},
-    {razer_test::RazerLedId::KeymapRedLED, Led::tr("Keymap Red")},
-    {razer_test::RazerLedId::KeymapGreenLED, Led::tr("Keymap Green")},
-    {razer_test::RazerLedId::KeymapBlueLED, Led::tr("Keymap Blue")},
-    {razer_test::RazerLedId::RightSideLED, Led::tr("Right Side")},
-    {razer_test::RazerLedId::LeftSideLED, Led::tr("Left Side")}
+    { razer_test::RazerLedId::Unspecified, Led::tr("Unspecified") },
+    { razer_test::RazerLedId::ScrollWheelLED, Led::tr("Scroll Wheel") },
+    { razer_test::RazerLedId::BatteryLED, Led::tr("Battery") },
+    { razer_test::RazerLedId::LogoLED, Led::tr("Logo") },
+    { razer_test::RazerLedId::BacklightLED, Led::tr("Backlight") },
+    { razer_test::RazerLedId::MacroRecordingLED, Led::tr("Macro Recording") },
+    { razer_test::RazerLedId::GameModeLED, Led::tr("Game Mode") },
+    { razer_test::RazerLedId::KeymapRedLED, Led::tr("Keymap Red") },
+    { razer_test::RazerLedId::KeymapGreenLED, Led::tr("Keymap Green") },
+    { razer_test::RazerLedId::KeymapBlueLED, Led::tr("Keymap Blue") },
+    { razer_test::RazerLedId::RightSideLED, Led::tr("Right Side") },
+    { razer_test::RazerLedId::LeftSideLED, Led::tr("Left Side") }
 };
 
 }
