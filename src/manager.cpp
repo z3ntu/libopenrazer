@@ -224,7 +224,7 @@ bool Manager::enableDaemon()
 // TODO New Qt5 connect style syntax - maybe https://stackoverflow.com/a/35501065/3527128
 bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
 {
-    return TARGET_BUS.connect(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager", "devicesChanged", receiver, slot);
+    return RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager", "devicesChanged", receiver, slot);
 }
 
 }
