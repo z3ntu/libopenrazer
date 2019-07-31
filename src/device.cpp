@@ -70,6 +70,9 @@ bool Device::hasFx(razer_test::RazerEffect fx)
     case razer_test::RazerEffect::Off:
         fxStr = "off";
         break;
+    case razer_test::RazerEffect::On:
+        fxStr = "on";
+        break;
     case razer_test::RazerEffect::Static:
         fxStr = "static";
         break;
