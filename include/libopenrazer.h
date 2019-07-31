@@ -27,7 +27,10 @@
 
 #include <razer_test.h>
 
-#define OPENRAZER_SERVICE_NAME "io.github.openrazer1"
+#undef RAZER_TEST_DBUS_BUS
+#define RAZER_TEST_DBUS_BUS QDBusConnection::sessionBus()
+
+#define OPENRAZER_SERVICE_NAME "org.razer"
 
 // NOTE: DBus types -> Qt/C++ types: http://doc.qt.io/qt-5/qdbustypesystem.html#primitive-types
 
@@ -40,15 +43,19 @@ enum DaemonStatus { Enabled,
                     Unknown };
 
 void printDBusError(QDBusError error, const char *functionname);
+void handleVoidReply(QDBusReply<void> reply, const char *functionname);
 bool handleBoolReply(QDBusReply<bool> reply, const char *functionname);
 QString handleStringReply(QDBusReply<QString> reply, const char *functionname);
+QStringList handleStringListReply(QDBusReply<QStringList> reply, const char *functionname);
 
 class Manager : public QObject
 {
     Q_OBJECT
 private:
-    QDBusInterface *iface = nullptr;
-    QDBusInterface *managerIface();
+    QDBusInterface *ifaceDaemon = nullptr;
+    QDBusInterface *ifaceDevices = nullptr;
+    QDBusInterface *managerDaemonIface();
+    QDBusInterface *managerDevicesIface();
 
 public:
     Manager();
@@ -82,12 +89,17 @@ class Led : public QObject
     Q_OBJECT
 private:
     QDBusInterface *iface = nullptr;
+    QDBusInterface *ifaceBrightness = nullptr;
     QDBusInterface *ledIface();
+    QDBusInterface *ledBrightnessIface();
 
     QDBusObjectPath mObjectPath;
 
+    razer_test::RazerLedId ledId;
+    QString someStr; // FIXME Called "loc" in setupCapabilities()
+
 public:
-    Led(QDBusObjectPath objectPath);
+    Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString someStr);
     ~Led() override;
 
     QDBusObjectPath getObjectPath();
@@ -113,8 +125,10 @@ class Device : public QObject
 {
     Q_OBJECT
 private:
-    QDBusInterface *iface = nullptr;
-    QDBusInterface *deviceIface();
+    QDBusInterface *ifaceMisc = nullptr;
+    QDBusInterface *ifaceDpi = nullptr;
+    QDBusInterface *deviceMiscIface();
+    QDBusInterface *deviceDpiIface();
 
     QDBusObjectPath mObjectPath;
 
@@ -122,7 +136,14 @@ private:
     QStringList supportedFeatures;
 
     QList<Led *> leds;
-    QList<QDBusObjectPath> getLedObjectPaths();
+
+    void introspect();
+    void setupCapabilities();
+    bool hasCapabilityInternal(const QString &interface, const QString &method = QString());
+    QStringList introspection;
+
+    // Maps RazerLedId to "Chroma" or "Scroll" (the string put e.g. into setScrollSpectrum)
+    QMap<razer_test::RazerLedId, QString> supportedLeds;
 
 public:
     Device(QDBusObjectPath objectPath);
@@ -136,9 +157,6 @@ public:
     QString getPngUrl();
 
     QList<Led *> getLeds();
-
-    QStringList getSupportedFx();
-    QStringList getSupportedFeatures();
 
     // --- MISC METHODS ---
     QString getDeviceMode();

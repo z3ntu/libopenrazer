@@ -24,9 +24,9 @@
 
 namespace libopenrazer {
 
-Led::Led(QDBusObjectPath objectPath)
+Led::Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString someStr)
+    : mObjectPath(objectPath), ledId(ledId), someStr(someStr)
 {
-    mObjectPath = objectPath;
 }
 
 /*
@@ -41,29 +41,19 @@ QDBusObjectPath Led::getObjectPath()
 
 razer_test::RazerEffect Led::getCurrentEffect()
 {
-    QVariant reply = ledIface()->property("CurrentEffect");
-    if (!reply.isNull())
-        return reply.value<razer_test::RazerEffect>();
-    else
-        throw DBusException("Error getting CurrentEffect", "");
+    // FIXME
+    return razer_test::RazerEffect::Spectrum;
 }
 
 QList<razer_test::RGB> Led::getCurrentColors()
 {
-    QVariant reply = ledIface()->property("CurrentColors");
-    if (!reply.isNull())
-        return reply.value<QList<razer_test::RGB>>();
-    else
-        throw DBusException("Error getting CurrentColors", "");
+    // FIXME
+    return { { 0, 255, 0 }, { 255, 0, 0 }, { 0, 0, 255 } };
 }
 
 razer_test::RazerLedId Led::getLedId()
 {
-    QVariant reply = ledIface()->property("LedId");
-    if (!reply.isNull())
-        return reply.value<razer_test::RazerLedId>();
-    else
-        throw DBusException("Error getting LedId", "");
+    return ledId;
 }
 
 /*!
@@ -192,7 +182,12 @@ bool Led::setReactive(QColor color, razer_test::ReactiveSpeed speed)
  */
 bool Led::setBrightness(uchar brightness)
 {
-    QDBusReply<bool> reply = ledIface()->call("setBrightness", QVariant::fromValue(brightness));
+    double dbusBrightness = brightness / 255 * 100;
+    QDBusReply<bool> reply;
+    if (someStr == "Chroma")
+        reply = ledBrightnessIface()->call("setBrightness", QVariant::fromValue(dbusBrightness));
+    else
+        reply = ledIface()->call("setBrightness", QVariant::fromValue(dbusBrightness));
     return handleBoolReply(reply, Q_FUNC_INFO);
 }
 
@@ -203,9 +198,13 @@ bool Led::setBrightness(uchar brightness)
  */
 uchar Led::getBrightness()
 {
-    QDBusReply<uchar> reply = ledIface()->call("getBrightness");
+    QDBusReply<double> reply;
+    if (someStr == "Chroma")
+        reply = ledBrightnessIface()->call("getBrightness");
+    else
+        reply = ledIface()->call("get" + someStr + "Brightness");
     if (reply.isValid()) {
-        return reply.value();
+        return reply.value() / 100 * 255;
     } else {
         printDBusError(reply.error(), Q_FUNC_INFO);
         throw DBusException(reply.error());

@@ -37,8 +37,8 @@ Manager::Manager()
  */
 bool Manager::isDaemonRunning()
 {
-    QVariant reply = managerIface()->property("Version");
-    return !reply.isNull();
+    QDBusReply<QString> reply = managerDaemonIface()->call("version");
+    return reply.isValid();
 }
 
 /*!
@@ -62,11 +62,13 @@ QVariantHash Manager::getSupportedDevices()
  */
 QList<QDBusObjectPath> Manager::getDevices()
 {
-    QVariant reply = managerIface()->property("Devices");
-    if (!reply.isNull())
-        return qdbus_cast<QList<QDBusObjectPath>>(reply);
-    else
-        throw DBusException("Error getting Devices", "");
+    QDBusReply<QStringList> reply = managerDevicesIface()->call("getDevices");
+    QStringList serialList = handleStringListReply(reply, Q_FUNC_INFO);
+    QList<QDBusObjectPath> ret;
+    foreach (const QString &serial, serialList) {
+        ret.append(QDBusObjectPath("/org/razer/device/" + serial));
+    }
+    return ret;
 }
 
 /*!
@@ -104,11 +106,8 @@ bool Manager::getSyncEffects()
  */
 QString Manager::getDaemonVersion()
 {
-    QVariant reply = managerIface()->property("Version");
-    if (!reply.isNull())
-        return reply.toString();
-    else
-        throw DBusException("Error getting Version", "");
+    QDBusReply<QString> reply = managerDaemonIface()->call("version");
+    return handleStringReply(reply, Q_FUNC_INFO);
 }
 
 /*!

@@ -4,7 +4,7 @@ project('libopenrazer',
 
 qt5 = import('qt5')
 
-qt5_dep = dependency('qt5', modules : ['Core', 'DBus', 'Gui'])
+qt5_dep = dependency('qt5', modules : ['Core', 'DBus', 'Gui', 'Xml'])
 razer_test_dep = dependency('razer_test', fallback : ['razer_test', 'razer_test_dep'])
 
 sources = [

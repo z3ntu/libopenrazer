@@ -18,6 +18,8 @@
 
 #include <QVector>
 #include <QColor>
+#include <QDomDocument>
+#include <QDebug>
 
 #include "libopenrazer.h"
 
@@ -38,12 +40,15 @@ namespace libopenrazer {
 Device::Device(QDBusObjectPath objectPath)
 {
     mObjectPath = objectPath;
-    supportedFx = this->getSupportedFx();
-    supportedFeatures = this->getSupportedFeatures();
 
-    foreach (const QDBusObjectPath &ledPath, getLedObjectPaths()) {
-        libopenrazer::Led *led = new libopenrazer::Led(ledPath);
+    introspect();
+    setupCapabilities();
+
+    QMap<razer_test::RazerLedId, QString>::const_iterator i = supportedLeds.constBegin();
+    while (i != supportedLeds.constEnd()) {
+        libopenrazer::Led *led = new libopenrazer::Led(mObjectPath, i.key(), i.value());
         leds.append(led);
+        ++i;
     }
 }
 
@@ -55,6 +60,110 @@ Device::~Device()
     foreach (libopenrazer::Led *led, leds) {
         delete led;
     }
+}
+
+void Device::introspect()
+{
+    QStringList intr;
+
+    QDBusMessage m = QDBusMessage::createMethodCall("org.razer", mObjectPath.path(), "org.freedesktop.DBus.Introspectable", "Introspect");
+    QDBusReply<QString> reply = RAZER_TEST_DBUS_BUS.call(m);
+    if (!reply.isValid()) {
+        throw DBusException(reply.error());
+    }
+    QDomDocument doc;
+    doc.setContent(reply.value());
+
+    QDomNodeList nodes = doc.documentElement().childNodes();
+    for (int i = 0; i < nodes.count(); i++) {
+        // Check if "interface" and also not org.freedesktop.DBus.Introspectable
+        QDomElement element = nodes.at(i).toElement();
+        QString interfacename = element.attributeNode("name").value();
+
+        QDomNodeList methodnodes = element.childNodes();
+        for (int ii = 0; ii < methodnodes.count(); ii++) {
+            QDomElement methodelement = methodnodes.at(ii).toElement();
+            intr.append(interfacename + ";" + methodelement.attributeNode("name").value());
+        }
+        intr.append(interfacename);
+    }
+    introspection = intr;
+}
+
+/**
+ * Fill "capabilities" list with the capabilities of the device. Names are from the pylib, parsed with the script ./scripts/capabilities_to_cpp.sh in the root of this repo.
+ */
+void Device::setupCapabilities()
+{
+    if (hasCapabilityInternal("razer.device.misc", "getKeyboardLayout"))
+        supportedFeatures.append("keyboard_layout");
+    if (hasCapabilityInternal("razer.device.dpi", "setDPI"))
+        supportedFeatures.append("dpi");
+    if (hasCapabilityInternal("razer.device.misc", "setPollRate"))
+        supportedFeatures.append("poll_rate");
+
+    if (hasCapabilityInternal("razer.device.lighting.chroma", "setNone"))
+        supportedLeds.insert(razer_test::RazerLedId::Unspecified, "Chroma");
+    if (hasCapabilityInternal("razer.device.lighting.logo"))
+        supportedLeds.insert(razer_test::RazerLedId::LogoLED, "Logo");
+    if (hasCapabilityInternal("razer.device.lighting.scroll"))
+        supportedLeds.insert(razer_test::RazerLedId::ScrollWheelLED, "Scroll");
+    if (hasCapabilityInternal("razer.device.lighting.backlight"))
+        supportedLeds.insert(razer_test::RazerLedId::BacklightLED, "Backlight");
+    if (hasCapabilityInternal("razer.device.lighting.left"))
+        supportedLeds.insert(razer_test::RazerLedId::LeftSideLED, "Left");
+    if (hasCapabilityInternal("razer.device.lighting.right"))
+        supportedLeds.insert(razer_test::RazerLedId::RightSideLED, "Right");
+
+    QString loc = supportedLeds.first();
+    QString interface;
+    // Handle the "Unspecified" led special case
+    if (loc == "Chroma")
+        interface = "razer.device.lighting.chroma";
+    else
+        interface = "razer.device.lighting." + loc.toLower();
+
+    if (hasCapabilityInternal(interface, "set" + loc + "None"))
+        supportedFx.append("off");
+    // FIXME on???
+    if (hasCapabilityInternal(interface, "set" + loc + "Static"))
+        supportedFx.append("static");
+    if (hasCapabilityInternal(interface, "set" + loc + "Blinking"))
+        supportedFx.append("blinking");
+    if (hasCapabilityInternal(interface, "set" + loc + "BreathSingle"))
+        supportedFx.append("breathing");
+    if (hasCapabilityInternal(interface, "set" + loc + "BreathDual"))
+        supportedFx.append("breathing_dual");
+    if (hasCapabilityInternal(interface, "set" + loc + "BreathRandom"))
+        supportedFx.append("breathing_random");
+    if (hasCapabilityInternal(interface, "set" + loc + "Spectrum"))
+        supportedFx.append("spectrum");
+    if (hasCapabilityInternal(interface, "set" + loc + "Wave"))
+        supportedFx.append("wave");
+    if (hasCapabilityInternal(interface, "set" + loc + "Reactive"))
+        supportedFx.append("reactive");
+
+    if (hasCapabilityInternal("razer.device.lighting.chroma", "setCustom"))
+        supportedFx.append("custom_frame");
+
+    if (loc == "Chroma") {
+        if (hasCapabilityInternal("razer.device.lighting.brightness", "setBrightness"))
+            supportedFx.append("brightness");
+    } else {
+        if (hasCapabilityInternal(interface, "set" + loc + "Brightness"))
+            supportedFx.append("brightness");
+    }
+}
+
+/**
+ * Internal method to determine whether a device has a given capability based on interface and method names.
+ */
+bool Device::hasCapabilityInternal(const QString &interface, const QString &method)
+{
+    if (method.isNull()) {
+        return introspection.contains(interface);
+    }
+    return introspection.contains(interface + ";" + method);
 }
 
 /*!
@@ -143,38 +252,11 @@ QString Device::getPngUrl()
     return getRazerUrls().value("top_img").toString();
 }
 
-QList<QDBusObjectPath> Device::getLedObjectPaths()
-{
-    QVariant reply = deviceIface()->property("Leds");
-    if (!reply.isNull())
-        return qdbus_cast<QList<QDBusObjectPath>>(reply);
-    else
-        throw DBusException("Error getting Leds", "");
-}
-
 // ----- DBUS METHODS -----
 
 QList<Led *> Device::getLeds()
 {
     return leds;
-}
-
-QStringList Device::getSupportedFx()
-{
-    QVariant reply = deviceIface()->property("SupportedFx");
-    if (!reply.isNull())
-        return reply.toStringList();
-    else
-        throw DBusException("Error getting SupportedFx", "");
-}
-
-QStringList Device::getSupportedFeatures()
-{
-    QVariant reply = deviceIface()->property("SupportedFeatures");
-    if (!reply.isNull())
-        return reply.toStringList();
-    else
-        throw DBusException("Error getting SupportedFeatures", "");
 }
 
 /*!
@@ -186,7 +268,9 @@ QStringList Device::getSupportedFeatures()
  */
 QString Device::getDeviceMode()
 {
-    return "error"; // FIXME
+    return "error";
+    // QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceMode");
+    // return handleStringReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -208,7 +292,7 @@ bool Device::setDeviceMode(uchar mode_id, uchar param)
 
 QString Device::getSerial()
 {
-    QDBusReply<QString> reply = deviceIface()->call("getSerial");
+    QDBusReply<QString> reply = deviceMiscIface()->call("getSerial");
     return handleStringReply(reply, Q_FUNC_INFO);
 }
 
@@ -219,11 +303,8 @@ QString Device::getSerial()
  */
 QString Device::getDeviceName()
 {
-    QVariant reply = deviceIface()->property("Name");
-    if (!reply.isNull())
-        return reply.toString();
-    else
-        throw DBusException("Error getting Name", "");
+    QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceName");
+    return handleStringReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -233,11 +314,8 @@ QString Device::getDeviceName()
  */
 QString Device::getDeviceType()
 {
-    QVariant reply = deviceIface()->property("Type");
-    if (!reply.isNull())
-        return reply.toString();
-    else
-        throw DBusException("Error getting Type", "");
+    QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceType");
+    return handleStringReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -247,7 +325,7 @@ QString Device::getDeviceType()
  */
 QString Device::getFirmwareVersion()
 {
-    QDBusReply<QString> reply = deviceIface()->call("getFirmwareVersion");
+    QDBusReply<QString> reply = deviceMiscIface()->call("getFirmware");
     return handleStringReply(reply, Q_FUNC_INFO);
 }
 
@@ -258,7 +336,7 @@ QString Device::getFirmwareVersion()
  */
 QString Device::getKeyboardLayout()
 {
-    QDBusReply<QString> reply = deviceIface()->call("getKeyboardLayout");
+    QDBusReply<QString> reply = deviceMiscIface()->call("getKeyboardLayout");
     return handleStringReply(reply, Q_FUNC_INFO);
 }
 
@@ -281,7 +359,7 @@ QVariantHash Device::getRazerUrls()
  */
 ushort Device::getPollRate()
 {
-    QDBusReply<ushort> reply = deviceIface()->call("getPollRate");
+    QDBusReply<int> reply = deviceMiscIface()->call("getPollRate");
     if (reply.isValid()) {
         return reply.value();
     } else {
@@ -299,8 +377,9 @@ ushort Device::getPollRate()
  */
 bool Device::setPollRate(ushort pollrate)
 {
-    QDBusReply<bool> reply = deviceIface()->call("setPollRate", QVariant::fromValue(pollrate));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = deviceMiscIface()->call("setPollRate", QVariant::fromValue(pollrate));
+    handleVoidReply(reply, Q_FUNC_INFO);
+    return true;
 }
 
 /*!
@@ -312,8 +391,9 @@ bool Device::setPollRate(ushort pollrate)
  */
 bool Device::setDPI(razer_test::RazerDPI dpi)
 {
-    QDBusReply<bool> reply = deviceIface()->call("setDPI", QVariant::fromValue(dpi));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = deviceDpiIface()->call("setDPI", QVariant::fromValue(dpi.dpi_x), QVariant::fromValue(dpi.dpi_y));
+    handleVoidReply(reply, Q_FUNC_INFO);
+    return true;
 }
 
 /*!
@@ -323,9 +403,16 @@ bool Device::setDPI(razer_test::RazerDPI dpi)
  */
 razer_test::RazerDPI Device::getDPI()
 {
-    QDBusReply<razer_test::RazerDPI> reply = deviceIface()->call("getDPI");
+    QDBusReply<QList<int>> reply = deviceDpiIface()->call("getDPI");
     if (reply.isValid()) {
-        return reply.value();
+        QList<int> dpi = reply.value();
+        if (dpi.size() == 1) {
+            return { static_cast<ushort>(dpi[0]), 0 };
+        } else if (dpi.size() == 2) {
+            return { static_cast<ushort>(dpi[0]), static_cast<ushort>(dpi[1]) };
+        } else {
+            throw DBusException("Invalid return array from DPI", "The DPI return array has an invalid size.");
+        }
     } else {
         printDBusError(reply.error(), Q_FUNC_INFO);
         throw DBusException(reply.error());
@@ -339,7 +426,7 @@ razer_test::RazerDPI Device::getDPI()
  */
 ushort libopenrazer::Device::maxDPI()
 {
-    QDBusReply<ushort> reply = deviceIface()->call("getMaxDPI");
+    QDBusReply<int> reply = deviceDpiIface()->call("maxDPI");
     if (reply.isValid()) {
         return reply.value();
     } else {
@@ -359,7 +446,7 @@ ushort libopenrazer::Device::maxDPI()
  */
 bool Device::displayCustomFrame()
 {
-    QDBusReply<bool> reply = deviceIface()->call("displayCustomFrame");
+    QDBusReply<bool> reply = deviceMiscIface()->call("displayCustomFrame");
     return handleBoolReply(reply, Q_FUNC_INFO);
 }
 
@@ -383,13 +470,13 @@ bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QV
         rgbData.append(color.green());
         rgbData.append(color.blue());
     }
-    QDBusReply<bool> reply = deviceIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), rgbData);
+    QDBusReply<bool> reply = deviceMiscIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), rgbData);
     return handleBoolReply(reply, Q_FUNC_INFO);
 }
 
 razer_test::MatrixDimensions Device::getMatrixDimensions()
 {
-    QVariant reply = deviceIface()->property("MatrixDimensions");
+    QVariant reply = deviceMiscIface()->property("MatrixDimensions");
     if (!reply.isNull())
         return reply.value<razer_test::MatrixDimensions>();
     else

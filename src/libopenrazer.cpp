@@ -48,6 +48,17 @@ void printDBusError(QDBusError error, const char *functionname)
     qWarning("libopenrazer: %s", qUtf8Printable(error.message()));
 }
 
+// TODO Could generics help here?
+
+void handleVoidReply(QDBusReply<void> reply, const char *functionname)
+{
+    if (reply.isValid()) {
+        return;
+    }
+    printDBusError(reply.error(), functionname);
+    throw DBusException(reply.error());
+}
+
 bool handleBoolReply(QDBusReply<bool> reply, const char *functionname)
 {
     if (reply.isValid()) {
@@ -66,36 +77,71 @@ QString handleStringReply(QDBusReply<QString> reply, const char *functionname)
     throw DBusException(reply.error());
 }
 
-QDBusInterface *Device::deviceIface()
+QStringList handleStringListReply(QDBusReply<QStringList> reply, const char *functionname)
 {
-    if (iface == nullptr) {
-        iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "io.github.openrazer1.Device",
-                                   RAZER_TEST_DBUS_BUS, this);
+    if (reply.isValid()) {
+        return reply.value();
     }
-    if (!iface->isValid()) {
-        fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
-    }
-    return iface;
+    printDBusError(reply.error(), functionname);
+    throw DBusException(reply.error());
 }
 
-QDBusInterface *Manager::managerIface()
+QDBusInterface *Device::deviceMiscIface()
 {
-    if (iface == nullptr) {
-        iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager",
-                                   RAZER_TEST_DBUS_BUS, this);
+    if (ifaceMisc == nullptr) {
+        ifaceMisc = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.misc",
+                                       RAZER_TEST_DBUS_BUS, this);
     }
-    if (!iface->isValid()) {
+    if (!ifaceMisc->isValid()) {
         fprintf(stderr, "%s\n",
                 qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
     }
-    return iface;
+    return ifaceMisc;
+}
+
+QDBusInterface *Device::deviceDpiIface()
+{
+    if (ifaceDpi == nullptr) {
+        ifaceDpi = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.dpi",
+                                      RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceDpi->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceDpi;
+}
+
+QDBusInterface *Manager::managerDaemonIface()
+{
+    if (ifaceDaemon == nullptr) {
+        ifaceDaemon = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.daemon",
+                                         RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceDaemon->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceDaemon;
+}
+
+QDBusInterface *Manager::managerDevicesIface()
+{
+    if (ifaceDevices == nullptr) {
+        ifaceDevices = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices",
+                                          RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceDevices->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceDevices;
 }
 
 QDBusInterface *Led::ledIface()
 {
     if (iface == nullptr) {
-        iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "io.github.openrazer1.Led",
+        iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting." + someStr.toLower(),
                                    RAZER_TEST_DBUS_BUS, this);
     }
     if (!iface->isValid()) {
@@ -103,6 +149,19 @@ QDBusInterface *Led::ledIface()
                 qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
     }
     return iface;
+}
+
+QDBusInterface *Led::ledBrightnessIface()
+{
+    if (ifaceBrightness == nullptr) {
+        ifaceBrightness = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting.brightness",
+                                             RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceBrightness->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceBrightness;
 }
 
 DBusException::DBusException(const QDBusError &error)
