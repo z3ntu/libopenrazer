@@ -38,14 +38,11 @@ int main()
             qDebug() << "Pollrate:" << device->getPollRate();
         }
 
-        foreach (const QDBusObjectPath &ledPath, device->getLeds()) {
-            libopenrazer::Led *led = new libopenrazer::Led(ledPath);
-
+        foreach (libopenrazer::Led *led, device->getLeds()) {
             if (device->hasFx("brightness")) {
                 qDebug() << "getBrightness";
                 qDebug() << led->getBrightness();
             }
-            delete led;
         }
 
         if (device->hasFeature("kbd_layout")) {

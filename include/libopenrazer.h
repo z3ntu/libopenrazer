@@ -77,59 +77,6 @@ public:
     bool connectDevicesChanged(QObject *receiver, const char *slot);
 };
 
-class Device : public QObject
-{
-    Q_OBJECT
-private:
-    QDBusInterface *iface = nullptr;
-    QDBusInterface *deviceIface();
-
-    QDBusObjectPath mObjectPath;
-
-    QStringList supportedFx;
-    QStringList supportedFeatures;
-
-public:
-    Device(QDBusObjectPath objectPath);
-    ~Device() override;
-
-    QDBusObjectPath objectPath();
-    bool hasFx(const QString &fxStr);
-    bool hasFx(razer_test::RazerEffect fx);
-    bool hasFeature(const QString &featureStr);
-    QString getPngFilename();
-    QString getPngUrl();
-
-    QList<QDBusObjectPath> getLeds();
-
-    QStringList getSupportedFx();
-    QStringList getSupportedFeatures();
-
-    // --- MISC METHODS ---
-    QString getDeviceMode();
-    bool setDeviceMode(uchar mode_id, uchar param);
-    QString getSerial();
-    QString getDeviceName();
-    QString getDeviceType();
-    QString getFirmwareVersion();
-    QString getKeyboardLayout();
-    QVariantHash getRazerUrls();
-
-    // --- POLL RATE ---
-    ushort getPollRate();
-    bool setPollRate(ushort pollrate);
-
-    // --- DPI ---
-    bool setDPI(razer_test::RazerDPI dpi);
-    razer_test::RazerDPI getDPI();
-    ushort maxDPI();
-
-    // - Custom frame -
-    bool displayCustomFrame();
-    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData);
-    razer_test::MatrixDimensions getMatrixDimensions();
-};
-
 class Led : public QObject
 {
     Q_OBJECT
@@ -160,6 +107,62 @@ public:
 
     bool setBrightness(uchar brightness);
     uchar getBrightness();
+};
+
+class Device : public QObject
+{
+    Q_OBJECT
+private:
+    QDBusInterface *iface = nullptr;
+    QDBusInterface *deviceIface();
+
+    QDBusObjectPath mObjectPath;
+
+    QStringList supportedFx;
+    QStringList supportedFeatures;
+
+    QList<Led *> leds;
+    QList<QDBusObjectPath> getLedObjectPaths();
+
+public:
+    Device(QDBusObjectPath objectPath);
+    ~Device() override;
+
+    QDBusObjectPath objectPath();
+    bool hasFx(const QString &fxStr);
+    bool hasFx(razer_test::RazerEffect fx);
+    bool hasFeature(const QString &featureStr);
+    QString getPngFilename();
+    QString getPngUrl();
+
+    QList<Led *> getLeds();
+
+    QStringList getSupportedFx();
+    QStringList getSupportedFeatures();
+
+    // --- MISC METHODS ---
+    QString getDeviceMode();
+    bool setDeviceMode(uchar mode_id, uchar param);
+    QString getSerial();
+    QString getDeviceName();
+    QString getDeviceType();
+    QString getFirmwareVersion();
+    QString getKeyboardLayout();
+    QVariantHash getRazerUrls();
+
+    // --- POLL RATE ---
+    ushort getPollRate();
+    bool setPollRate(ushort pollrate);
+
+    // --- DPI ---
+    bool setDPI(razer_test::RazerDPI dpi);
+    razer_test::RazerDPI getDPI();
+    ushort maxDPI();
+
+    // - Custom frame -
+    bool displayCustomFrame();
+    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData);
+    razer_test::MatrixDimensions getMatrixDimensions();
 };
 
 class DBusException : public QException

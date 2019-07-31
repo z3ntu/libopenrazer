@@ -38,15 +38,24 @@ namespace libopenrazer {
 Device::Device(QDBusObjectPath objectPath)
 {
     mObjectPath = objectPath;
-    // FIXME Initialize LEDs for device
     supportedFx = this->getSupportedFx();
     supportedFeatures = this->getSupportedFeatures();
+
+    foreach (const QDBusObjectPath &ledPath, getLedObjectPaths()) {
+        libopenrazer::Led *led = new libopenrazer::Led(ledPath);
+        leds.append(led);
+    }
 }
 
 /*
  * Destructor
  */
-Device::~Device() = default;
+Device::~Device()
+{
+    foreach (libopenrazer::Led *led, leds) {
+        delete led;
+    }
+}
 
 /*!
  * \fn QString libopenrazer::Device::serial()
@@ -134,15 +143,20 @@ QString Device::getPngUrl()
     return getRazerUrls().value("top_img").toString();
 }
 
-// ----- DBUS METHODS -----
-
-QList<QDBusObjectPath> Device::getLeds()
+QList<QDBusObjectPath> Device::getLedObjectPaths()
 {
     QVariant reply = deviceIface()->property("Leds");
     if (!reply.isNull())
         return qdbus_cast<QList<QDBusObjectPath>>(reply);
     else
         throw DBusException("Error getting Leds", "");
+}
+
+// ----- DBUS METHODS -----
+
+QList<Led *> Device::getLeds()
+{
+    return leds;
 }
 
 QStringList Device::getSupportedFx()
