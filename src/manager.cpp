@@ -63,7 +63,7 @@ QVariantHash Manager::getSupportedDevices()
 QList<QDBusObjectPath> Manager::getDevices()
 {
     QDBusReply<QStringList> reply = managerDevicesIface()->call("getDevices");
-    QStringList serialList = handleStringListReply(reply, Q_FUNC_INFO);
+    QStringList serialList = handleDBusReply(reply, Q_FUNC_INFO);
     QList<QDBusObjectPath> ret;
     foreach (const QString &serial, serialList) {
         ret.append(QDBusObjectPath("/org/razer/device/" + serial));
@@ -107,7 +107,7 @@ bool Manager::getSyncEffects()
 QString Manager::getDaemonVersion()
 {
     QDBusReply<QString> reply = managerDaemonIface()->call("version");
-    return handleStringReply(reply, Q_FUNC_INFO);
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!

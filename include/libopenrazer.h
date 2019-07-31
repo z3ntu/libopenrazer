@@ -42,11 +42,35 @@ enum DaemonStatus { Enabled,
                     NoSystemd,
                     Unknown };
 
+class DBusException : public QException
+{
+public:
+    DBusException(const QDBusError &error);
+    DBusException(const QString &name, const QString &message);
+
+    void raise() const override;
+    DBusException *clone() const override;
+
+    QString getName();
+    QString getMessage();
+
+private:
+    QString name;
+    QString message;
+};
+
 void printDBusError(QDBusError error, const char *functionname);
-void handleVoidReply(QDBusReply<void> reply, const char *functionname);
-bool handleBoolReply(QDBusReply<bool> reply, const char *functionname);
-QString handleStringReply(QDBusReply<QString> reply, const char *functionname);
-QStringList handleStringListReply(QDBusReply<QStringList> reply, const char *functionname);
+bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname);
+
+template<typename T>
+T handleDBusReply(QDBusReply<T> reply, const char *functionname)
+{
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    printDBusError(reply.error(), functionname);
+    throw DBusException(reply.error());
+}
 
 class Manager : public QObject
 {
@@ -96,10 +120,11 @@ private:
     QDBusObjectPath mObjectPath;
 
     razer_test::RazerLedId ledId;
-    QString someStr; // FIXME Called "loc" in setupCapabilities()
+    QString lightingLocation;
+    QString lightingLocationMethod;
 
 public:
-    Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString someStr);
+    Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation);
     ~Led() override;
 
     QDBusObjectPath getObjectPath();
@@ -127,8 +152,10 @@ class Device : public QObject
 private:
     QDBusInterface *ifaceMisc = nullptr;
     QDBusInterface *ifaceDpi = nullptr;
+    QDBusInterface *ifaceLightingChroma = nullptr;
     QDBusInterface *deviceMiscIface();
     QDBusInterface *deviceDpiIface();
+    QDBusInterface *deviceLightingChromaIface();
 
     QDBusObjectPath mObjectPath;
 
@@ -181,23 +208,6 @@ public:
     bool displayCustomFrame();
     bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData);
     razer_test::MatrixDimensions getMatrixDimensions();
-};
-
-class DBusException : public QException
-{
-public:
-    DBusException(const QDBusError &error);
-    DBusException(const QString &name, const QString &message);
-
-    void raise() const override;
-    DBusException *clone() const override;
-
-    QString getName();
-    QString getMessage();
-
-private:
-    QString name;
-    QString message;
 };
 
 class RazerCapability

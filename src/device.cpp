@@ -115,42 +115,48 @@ void Device::setupCapabilities()
     if (hasCapabilityInternal("razer.device.lighting.right"))
         supportedLeds.insert(razer_test::RazerLedId::RightSideLED, "Right");
 
-    QString loc = supportedLeds.first();
+    QString lightingLocation = supportedLeds.first();
+    QString lightingLocationMethod;
+    // Leave lightingLocationMethod empty in case it's Chroma
+    if (lightingLocation != "Chroma") {
+        lightingLocationMethod = lightingLocation;
+    }
     QString interface;
     // Handle the "Unspecified" led special case
-    if (loc == "Chroma")
+    if (lightingLocation == "Chroma")
         interface = "razer.device.lighting.chroma";
     else
-        interface = "razer.device.lighting." + loc.toLower();
+        interface = "razer.device.lighting." + lightingLocation.toLower();
 
-    if (hasCapabilityInternal(interface, "set" + loc + "None"))
+    // FIXME loc is Chroma in that case
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "None"))
         supportedFx.append("off");
-    // FIXME on???
-    if (hasCapabilityInternal(interface, "set" + loc + "Static"))
+    // FIXME on??? this active stuff I think
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Static"))
         supportedFx.append("static");
-    if (hasCapabilityInternal(interface, "set" + loc + "Blinking"))
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Blinking"))
         supportedFx.append("blinking");
-    if (hasCapabilityInternal(interface, "set" + loc + "BreathSingle"))
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathSingle"))
         supportedFx.append("breathing");
-    if (hasCapabilityInternal(interface, "set" + loc + "BreathDual"))
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathDual"))
         supportedFx.append("breathing_dual");
-    if (hasCapabilityInternal(interface, "set" + loc + "BreathRandom"))
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathRandom"))
         supportedFx.append("breathing_random");
-    if (hasCapabilityInternal(interface, "set" + loc + "Spectrum"))
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Spectrum"))
         supportedFx.append("spectrum");
-    if (hasCapabilityInternal(interface, "set" + loc + "Wave"))
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Wave"))
         supportedFx.append("wave");
-    if (hasCapabilityInternal(interface, "set" + loc + "Reactive"))
+    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Reactive"))
         supportedFx.append("reactive");
 
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setCustom"))
         supportedFx.append("custom_frame");
 
-    if (loc == "Chroma") {
+    if (lightingLocation == "Chroma") {
         if (hasCapabilityInternal("razer.device.lighting.brightness", "setBrightness"))
             supportedFx.append("brightness");
     } else {
-        if (hasCapabilityInternal(interface, "set" + loc + "Brightness"))
+        if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Brightness"))
             supportedFx.append("brightness");
     }
 }
@@ -270,7 +276,7 @@ QString Device::getDeviceMode()
 {
     return "error";
     // QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceMode");
-    // return handleStringReply(reply, Q_FUNC_INFO);
+    // return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -293,7 +299,7 @@ bool Device::setDeviceMode(uchar mode_id, uchar param)
 QString Device::getSerial()
 {
     QDBusReply<QString> reply = deviceMiscIface()->call("getSerial");
-    return handleStringReply(reply, Q_FUNC_INFO);
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -304,7 +310,7 @@ QString Device::getSerial()
 QString Device::getDeviceName()
 {
     QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceName");
-    return handleStringReply(reply, Q_FUNC_INFO);
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -315,7 +321,7 @@ QString Device::getDeviceName()
 QString Device::getDeviceType()
 {
     QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceType");
-    return handleStringReply(reply, Q_FUNC_INFO);
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -326,7 +332,7 @@ QString Device::getDeviceType()
 QString Device::getFirmwareVersion()
 {
     QDBusReply<QString> reply = deviceMiscIface()->call("getFirmware");
-    return handleStringReply(reply, Q_FUNC_INFO);
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -337,7 +343,7 @@ QString Device::getFirmwareVersion()
 QString Device::getKeyboardLayout()
 {
     QDBusReply<QString> reply = deviceMiscIface()->call("getKeyboardLayout");
-    return handleStringReply(reply, Q_FUNC_INFO);
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -378,8 +384,7 @@ ushort Device::getPollRate()
 bool Device::setPollRate(ushort pollrate)
 {
     QDBusReply<void> reply = deviceMiscIface()->call("setPollRate", QVariant::fromValue(pollrate));
-    handleVoidReply(reply, Q_FUNC_INFO);
-    return true;
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -392,8 +397,7 @@ bool Device::setPollRate(ushort pollrate)
 bool Device::setDPI(razer_test::RazerDPI dpi)
 {
     QDBusReply<void> reply = deviceDpiIface()->call("setDPI", QVariant::fromValue(dpi.dpi_x), QVariant::fromValue(dpi.dpi_y));
-    handleVoidReply(reply, Q_FUNC_INFO);
-    return true;
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -446,8 +450,8 @@ ushort libopenrazer::Device::maxDPI()
  */
 bool Device::displayCustomFrame()
 {
-    QDBusReply<bool> reply = deviceMiscIface()->call("displayCustomFrame");
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = deviceLightingChromaIface()->call("setCustom");
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -464,23 +468,26 @@ bool Device::displayCustomFrame()
  */
 bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData)
 {
-    QByteArray rgbData;
+    QByteArray data;
+    data.append(row);
+    data.append(startColumn);
+    data.append(endColumn);
     foreach (const QColor &color, colorData) {
-        rgbData.append(color.red());
-        rgbData.append(color.green());
-        rgbData.append(color.blue());
+        data.append(color.red());
+        data.append(color.green());
+        data.append(color.blue());
     }
-    QDBusReply<bool> reply = deviceMiscIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), rgbData);
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = deviceLightingChromaIface()->call("setKeyRow", data);
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 razer_test::MatrixDimensions Device::getMatrixDimensions()
 {
-    QVariant reply = deviceMiscIface()->property("MatrixDimensions");
-    if (!reply.isNull())
-        return reply.value<razer_test::MatrixDimensions>();
-    else
-        throw DBusException("Error getting MatrixDimensions", "");
+    QDBusReply<QList<int>> reply = deviceMiscIface()->call("getMatrixDimensions");
+    QList<int> dims = handleDBusReply(reply, Q_FUNC_INFO);
+    if (dims.size() != 2)
+        throw DBusException("Invalid return array from getMatrixDimensions", "The getMatrixDimensions return array has an invalid size.");
+    return { static_cast<uchar>(dims[0]), static_cast<uchar>(dims[1]) };
 }
 
 }

@@ -20,13 +20,20 @@
 
 #include "libopenrazer.h"
 
-#define QCOLOR_TO_QVARIANT(c) QVariant::fromValue(razer_test::RGB { static_cast<uchar>(c.red()), static_cast<uchar>(c.green()), static_cast<uchar>(c.blue()) })
+#define QCOLOR_TO_QVARIANT(c)               \
+    QVariant::fromValue(c.red()),           \
+            QVariant::fromValue(c.green()), \
+            QVariant::fromValue(c.blue())
 
 namespace libopenrazer {
 
-Led::Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString someStr)
-    : mObjectPath(objectPath), ledId(ledId), someStr(someStr)
+Led::Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation)
+    : mObjectPath(objectPath), ledId(ledId), lightingLocation(lightingLocation)
 {
+    // Leave lightingLocationMethod empty in case it's Chroma
+    if (lightingLocation != "Chroma") {
+        lightingLocationMethod = lightingLocation;
+    }
 }
 
 /*
@@ -65,8 +72,8 @@ razer_test::RazerLedId Led::getLedId()
  */
 bool Led::setOff()
 {
-    QDBusReply<bool> reply = ledIface()->call("setOff");
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "None");
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -78,8 +85,8 @@ bool Led::setOff()
  */
 bool Led::setStatic(QColor color)
 {
-    QDBusReply<bool> reply = ledIface()->call("setStatic", QCOLOR_TO_QVARIANT(color));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "Static", QCOLOR_TO_QVARIANT(color));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -91,8 +98,8 @@ bool Led::setStatic(QColor color)
  */
 bool Led::setBreathing(QColor color)
 {
-    QDBusReply<bool> reply = ledIface()->call("setBreathing", QCOLOR_TO_QVARIANT(color));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "BreathSingle", QCOLOR_TO_QVARIANT(color));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -104,8 +111,8 @@ bool Led::setBreathing(QColor color)
  */
 bool Led::setBreathingDual(QColor color, QColor color2)
 {
-    QDBusReply<bool> reply = ledIface()->call("setBreathingDual", QCOLOR_TO_QVARIANT(color), QCOLOR_TO_QVARIANT(color2));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "BreathDual", QCOLOR_TO_QVARIANT(color), QCOLOR_TO_QVARIANT(color2));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -117,8 +124,8 @@ bool Led::setBreathingDual(QColor color, QColor color2)
  */
 bool Led::setBreathingRandom()
 {
-    QDBusReply<bool> reply = ledIface()->call("setBreathingRandom");
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "BreathRandom");
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -130,8 +137,8 @@ bool Led::setBreathingRandom()
  */
 bool Led::setBlinking(QColor color)
 {
-    QDBusReply<bool> reply = ledIface()->call("setBlinking", QCOLOR_TO_QVARIANT(color));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "Blinking", QCOLOR_TO_QVARIANT(color));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -143,8 +150,8 @@ bool Led::setBlinking(QColor color)
  */
 bool Led::setSpectrum()
 {
-    QDBusReply<bool> reply = ledIface()->call("setSpectrum");
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "Spectrum");
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -156,8 +163,8 @@ bool Led::setSpectrum()
  */
 bool Led::setWave(razer_test::WaveDirection direction)
 {
-    QDBusReply<bool> reply = ledIface()->call("setWave", QVariant::fromValue(direction));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "Wave", QVariant::fromValue(direction));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -169,8 +176,8 @@ bool Led::setWave(razer_test::WaveDirection direction)
  */
 bool Led::setReactive(QColor color, razer_test::ReactiveSpeed speed)
 {
-    QDBusReply<bool> reply = ledIface()->call("setReactive", QVariant::fromValue(speed), QCOLOR_TO_QVARIANT(color));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+    QDBusReply<void> reply = ledIface()->call("set" + lightingLocationMethod + "Reactive", static_cast<uchar>(speed), QCOLOR_TO_QVARIANT(color));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -183,12 +190,12 @@ bool Led::setReactive(QColor color, razer_test::ReactiveSpeed speed)
 bool Led::setBrightness(uchar brightness)
 {
     double dbusBrightness = brightness / 255 * 100;
-    QDBusReply<bool> reply;
-    if (someStr == "Chroma")
+    QDBusReply<void> reply;
+    if (lightingLocation == "Chroma")
         reply = ledBrightnessIface()->call("setBrightness", QVariant::fromValue(dbusBrightness));
     else
-        reply = ledIface()->call("setBrightness", QVariant::fromValue(dbusBrightness));
-    return handleBoolReply(reply, Q_FUNC_INFO);
+        reply = ledIface()->call("set" + lightingLocationMethod + "Brightness", QVariant::fromValue(dbusBrightness));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 /*!
@@ -199,10 +206,10 @@ bool Led::setBrightness(uchar brightness)
 uchar Led::getBrightness()
 {
     QDBusReply<double> reply;
-    if (someStr == "Chroma")
+    if (lightingLocation == "Chroma")
         reply = ledBrightnessIface()->call("getBrightness");
     else
-        reply = ledIface()->call("get" + someStr + "Brightness");
+        reply = ledIface()->call("get" + lightingLocationMethod + "Brightness");
     if (reply.isValid()) {
         return reply.value() / 100 * 255;
     } else {

@@ -48,39 +48,10 @@ void printDBusError(QDBusError error, const char *functionname)
     qWarning("libopenrazer: %s", qUtf8Printable(error.message()));
 }
 
-// TODO Could generics help here?
-
-void handleVoidReply(QDBusReply<void> reply, const char *functionname)
-{
-    if (reply.isValid()) {
-        return;
-    }
-    printDBusError(reply.error(), functionname);
-    throw DBusException(reply.error());
-}
-
-bool handleBoolReply(QDBusReply<bool> reply, const char *functionname)
+bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname)
 {
     if (reply.isValid()) {
         return true;
-    }
-    printDBusError(reply.error(), functionname);
-    throw DBusException(reply.error());
-}
-
-QString handleStringReply(QDBusReply<QString> reply, const char *functionname)
-{
-    if (reply.isValid()) {
-        return reply.value();
-    }
-    printDBusError(reply.error(), functionname);
-    throw DBusException(reply.error());
-}
-
-QStringList handleStringListReply(QDBusReply<QStringList> reply, const char *functionname)
-{
-    if (reply.isValid()) {
-        return reply.value();
     }
     printDBusError(reply.error(), functionname);
     throw DBusException(reply.error());
@@ -112,6 +83,19 @@ QDBusInterface *Device::deviceDpiIface()
     return ifaceDpi;
 }
 
+QDBusInterface *Device::deviceLightingChromaIface()
+{
+    if (ifaceLightingChroma == nullptr) {
+        ifaceLightingChroma = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting.chroma",
+                                                 RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceLightingChroma->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceLightingChroma;
+}
+
 QDBusInterface *Manager::managerDaemonIface()
 {
     if (ifaceDaemon == nullptr) {
@@ -141,7 +125,7 @@ QDBusInterface *Manager::managerDevicesIface()
 QDBusInterface *Led::ledIface()
 {
     if (iface == nullptr) {
-        iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting." + someStr.toLower(),
+        iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting." + lightingLocation.toLower(),
                                    RAZER_TEST_DBUS_BUS, this);
     }
     if (!iface->isValid()) {
