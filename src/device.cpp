@@ -16,14 +16,14 @@
  *
  */
 
-#include <QDBusReply>
-#include <QVector>
-#include <QColor>
-#include <QDomDocument>
-#include <QDebug>
-
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
+
+#include <QColor>
+#include <QDBusReply>
+#include <QDebug>
+#include <QDomDocument>
+#include <QVector>
 
 namespace libopenrazer {
 

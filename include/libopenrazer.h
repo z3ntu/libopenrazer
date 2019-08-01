@@ -19,14 +19,14 @@
 #ifndef LIBRAZER_H
 #define LIBRAZER_H
 
-#include <razer_test.h>
-
 #include "libopenrazer/dbusexception.h"
 #include "libopenrazer/device.h"
 #include "libopenrazer/led.h"
 #include "libopenrazer/manager.h"
 #include "libopenrazer/misc.h"
 #include "libopenrazer/razercapability.h"
+
+#include <razer_test.h>
 
 // NOTE: DBus types -> Qt/C++ types: http://doc.qt.io/qt-5/qdbustypesystem.html#primitive-types
 

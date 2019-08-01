@@ -18,9 +18,9 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#include <QDBusInterface>
-
 #include "libopenrazer/misc.h"
+
+#include <QDBusInterface>
 
 namespace libopenrazer {
 

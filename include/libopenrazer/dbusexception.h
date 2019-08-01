@@ -18,8 +18,8 @@
 #ifndef DBUSEXCEPTION_H
 #define DBUSEXCEPTION_H
 
-#include <QException>
 #include <QDBusError>
+#include <QException>
 
 namespace libopenrazer {
 

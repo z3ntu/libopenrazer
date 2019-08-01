@@ -16,23 +16,23 @@
  *
  */
 
+#include "libopenrazer.h"
+
+#include "libopenrazer_private.h"
+
 #include <QDBusArgument>
-#include <QDBusMessage>
 #include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDBusMetaType>
+#include <QDBusReply>
 #include <QDebug>
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProcess>
 #include <QVariantHash>
-#include <QDBusReply>
 #include <QtGui/qcolor.h>
-
 #include <iostream>
-
-#include "libopenrazer.h"
-#include "libopenrazer_private.h"
 
 /*!
     \namespace libopenrazer

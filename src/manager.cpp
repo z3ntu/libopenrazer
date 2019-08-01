@@ -16,13 +16,13 @@
  *
  */
 
-#include <QProcess>
+#include "libopenrazer.h"
+#include "libopenrazer_private.h"
+
 #include <QDBusMetaType>
 #include <QDBusReply>
 #include <QFileInfo>
-
-#include "libopenrazer.h"
-#include "libopenrazer_private.h"
+#include <QProcess>
 
 namespace libopenrazer {
 

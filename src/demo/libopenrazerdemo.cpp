@@ -1,4 +1,5 @@
 #include "libopenrazer.h"
+
 #include <QDebug>
 
 // Main method for testing / playing.

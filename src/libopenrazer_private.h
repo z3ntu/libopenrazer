@@ -19,6 +19,8 @@
 #ifndef LIBOPENRAZER_PRIVATE_H
 #define LIBOPENRAZER_PRIVATE_H
 
+#include <QDBusReply>
+
 #define OPENRAZER_SERVICE_NAME "org.razer"
 
 #undef RAZER_TEST_DBUS_BUS

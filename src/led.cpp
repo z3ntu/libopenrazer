@@ -16,11 +16,11 @@
  *
  */
 
-#include <QColor>
-#include <QDBusReply>
-
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
+
+#include <QColor>
+#include <QDBusReply>
 
 #define QCOLOR_TO_QVARIANT(c)               \
     QVariant::fromValue(c.red()),           \
