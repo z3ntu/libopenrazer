@@ -71,130 +71,60 @@ razer_test::RazerLedId Led::getLedId()
     return d->ledId;
 }
 
-/*!
- * \fn bool libopenrazer::Led::setOff()
- *
- * Sets the LED to none / off.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setOff()
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "None");
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setStatic(QColor color)
- *
- * Sets the lighting to static lighting in the specified \a color.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setStatic(QColor color)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Static", QCOLOR_TO_QVARIANT(color));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setBreathSingle(QColor color)
- *
- * Sets the lighting to the single breath effect with the specified \a color.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setBreathing(QColor color)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathSingle", QCOLOR_TO_QVARIANT(color));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setBreathDual(QColor color, QColor color2)
- *
- * Sets the lighting to the dual breath effect with the specified \a color and \a color2.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setBreathingDual(QColor color, QColor color2)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathDual", QCOLOR_TO_QVARIANT(color), QCOLOR_TO_QVARIANT(color2));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setBreathRandom()
- *
- * Sets the lighting wheel to the random breath effect.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setBreathingRandom()
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathRandom");
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setBreathRandom()
- *
- * Sets the lighting wheel to the random breath effect.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setBlinking(QColor color)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Blinking", QCOLOR_TO_QVARIANT(color));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setSpectrum()
- *
- * Sets the lighting to spectrum mode.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setSpectrum()
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Spectrum");
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setWave(WaveDirection direction)
- *
- * Sets the lighting effect to wave, in the direction \a direction.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setWave(razer_test::WaveDirection direction)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Wave", QVariant::fromValue(direction));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setReactive(QColor color, ReactiveSpeed speed)
- *
- * Sets the lighting to reactive mode with the specified \a color and \a speed.
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setReactive(QColor color, razer_test::ReactiveSpeed speed)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Reactive", static_cast<uchar>(speed), QCOLOR_TO_QVARIANT(color));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::Led::setBrightness(double brightness)
- *
- * Sets the \a brightness (0-100).
- *
- * Returns if the D-Bus call was successful.
- */
 bool Led::setBrightness(uchar brightness)
 {
     double dbusBrightness = brightness / 255 * 100;
@@ -206,11 +136,6 @@ bool Led::setBrightness(uchar brightness)
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn double libopenrazer::Led::getBrightness()
- *
- * Returns the current brightness (0-100).
- */
 uchar Led::getBrightness()
 {
     QDBusReply<double> reply;

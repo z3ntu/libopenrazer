@@ -36,36 +36,17 @@ Manager::Manager()
     razer_test::registerMetaTypes();
 }
 
-/*!
- * \fn bool libopenrazer::isDaemonRunning()
- *
- * Returns if the daemon is running (and responding to the version call).
- */
 bool Manager::isDaemonRunning()
 {
     QDBusReply<QString> reply = d->managerDaemonIface()->call("version");
     return reply.isValid();
 }
 
-/*!
- * \fn QVariantHash libopenrazer::getSupportedDevices()
- *
- * Returns a list of supported devices in the format of \c {QHash<QString(DeviceName), QList<double(VID), double(PID)>>}.
- *
- * \sa Device::getVid(), Device::getPid()
- */
 QVariantHash Manager::getSupportedDevices()
 {
     return QVariantHash(); // FIXME
 }
 
-/*!
- * \fn QStringList libopenrazer::getConnectedDevices()
- *
- * Returns a list of connected devices in form of their serial number (e.g. \c ['XX0000000001', 'PM1439131641838']).
- *
- * Can be used to create a libopenrazer::Device object and get further information about the device.
- */
 QList<QDBusObjectPath> Manager::getDevices()
 {
     QDBusReply<QStringList> reply = d->managerDevicesIface()->call("getDevices");
@@ -77,76 +58,32 @@ QList<QDBusObjectPath> Manager::getDevices()
     return ret;
 }
 
-/*!
- * \fn bool libopenrazer::syncEffects(bool yes)
- *
- * If devices should sync effects, as specified by \a yes.
- *
- * Example: Set it to \c 'on', set the lighting on one device to something, other devices connected will automatically get set to the same effect.
- *
- * Returns if the D-Bus call was successful.
- *
- * \sa getSyncEffects()
- */
 bool Manager::syncEffects(bool yes)
 {
     return false; // FIXME
 }
 
-/*!
- * \fn bool libopenrazer::getSyncEffects()
- *
- * Returns if devices should sync effect.
- *
- * \sa syncEffects()
- */
 bool Manager::getSyncEffects()
 {
     return false; // FIXME
 }
 
-/*!
- * \fn QString libopenrazer::getDaemonVersion()
- *
- * Returns the daemon version currently running (e.g. \c '2.3.0').
- */
 QString Manager::getDaemonVersion()
 {
     QDBusReply<QString> reply = d->managerDaemonIface()->call("version");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-/*!
- * \fn bool libopenrazer::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
- *
- * Sets if the LEDs should turn off if the screensaver is turned on, as specified by \a turnOffOnScreensaver.
- *
- * Returns if the D-Bus call was successful.
- *
- * \sa getTurnOffOnScreensaver()
- */
 bool Manager::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
 {
     return false; // FIXME
 }
 
-/*!
- * \fn bool libopenrazer::getTurnOffOnScreensaver()
- *
- * Returns if the LEDs should turn off if the screensaver is turned on.
- *
- * \sa setTurnOffOnScreensaver()
- */
 bool Manager::getTurnOffOnScreensaver()
 {
     return false; // FIXME
 }
 
-/*!
- * \fn DaemonStatus libopenrazer::getDaemonStatus()
- *
- * Returns status of the daemon, see DaemonStatus.
- */
 DaemonStatus Manager::getDaemonStatus()
 {
     // Scenarios to handle:
@@ -178,11 +115,6 @@ DaemonStatus Manager::getDaemonStatus()
     }
 }
 
-/*!
- * \fn QString libopenrazer::getDaemonStatusOutput()
- *
- * Returns the multiline output of \c {"systemctl status razer_test.service"}.
- */
 QString Manager::getDaemonStatusOutput()
 {
     QProcess process;
@@ -196,13 +128,6 @@ QString Manager::getDaemonStatusOutput()
     return output + "\n" + error;
 }
 
-/*!
- * \fn bool libopenrazer::enableDaemon()
- *
- * Enables the systemd unit for the OpenRazer daemon to auto-start when the user logs in. Runs \c {"systemctl enable razer_test.service"}
- *
- * Returns if the call was successful.
- */
 bool Manager::enableDaemon()
 {
     QProcess process;
@@ -212,20 +137,6 @@ bool Manager::enableDaemon()
     return process.exitCode() == 0;
 }
 
-/*!
- * \fn bool libopenrazer::connectDeviceAdded(QObject *receiver, const char *slot)
- *
- * Connects the \c device_added signal of the daemon to the specified method using the \a receiver and \a slot.
- *
- * Can be used in the Qt4-style Signal&Slot syntax, e.g.:
- * \code
- * libopenrazer::connectDeviceAdded(this, SLOT(deviceAdded()));
- * \endcode
- *
- * Returns if the connection was successful.
- *
- * \sa connectDeviceRemoved()
- */
 // TODO New Qt5 connect style syntax - maybe https://stackoverflow.com/a/35501065/3527128
 bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
 {

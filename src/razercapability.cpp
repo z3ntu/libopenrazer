@@ -19,12 +19,7 @@
 #include "libopenrazer.h"
 
 namespace libopenrazer {
-/*!
- * \class libopenrazer::RazerCapability
- * \inmodule libopenrazer
- *
- * \brief The libopenrazer::RazerCapability class provides helper-class used by libopenrazer for providing lists of lighting effect capabilities that can be implemented e.g. in a combobox. It can contain the number of colors an effect needs, if the effect is the 'Wave' effect and a human readable string for displaying in the UI.
- */
+
 RazerCapability::RazerCapability()
 {
     this->identifier = razer_test::RazerEffect::Off;
@@ -56,45 +51,21 @@ RazerCapability::RazerCapability(const RazerCapability &other)
 
 RazerCapability::~RazerCapability() = default;
 
-/*!
- * \fn int libopenrazer::RazerCapability::getNumColors() const
- *
- * Returns the number of colors this capability can use.
- */
 int RazerCapability::getNumColors() const
 {
     return numColors;
 }
 
-/*!
- * \fn razer_test::RazerEffect libopenrazer::RazerCapability::getIdentifier() const
- *
- * Returns a string identifying the capability
- *
- * e.g. \c "lighting_logo_spectrum"
- */
 razer_test::RazerEffect RazerCapability::getIdentifier() const
 {
     return identifier;
 }
 
-/*!
- * \fn QString libopenrazer::RazerCapability::getDisplayString() const
- *
- * Returns a human-readable string describing the capability
- *
- * e.g. \c "Spectrum"
- */
 QString RazerCapability::getDisplayString() const
 {
     return displayString;
 }
 
-/*!
- * \fn bool libopenrazer::RazerCapability::isWave() const
- *
- * Returns if the capability is the wave effect.
- */
 bool RazerCapability::isWave() const
 {
     return wave;

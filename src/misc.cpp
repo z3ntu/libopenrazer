@@ -21,12 +21,6 @@
 
 #include <QDBusReply>
 
-/*!
-    \namespace libopenrazer
-    \inmodule libopenrazer
-
-    \brief Contains methods, enums and classes to interface with the OpenRazer daemon via the D-Bus interface.
-*/
 namespace libopenrazer {
 
 void printDBusError(QDBusError error, const char *functionname)

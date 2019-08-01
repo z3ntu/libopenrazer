@@ -30,6 +30,12 @@
 
 // NOTE: DBus types -> Qt/C++ types: http://doc.qt.io/qt-5/qdbustypesystem.html#primitive-types
 
+/*!
+ * \namespace libopenrazer
+ * \inmodule libopenrazer
+ *
+ * \brief Contains methods, enums and classes to interface with the OpenRazer daemon via the D-Bus interface.
+*/
 namespace libopenrazer {
 
 const QList<RazerCapability> ledFxList {

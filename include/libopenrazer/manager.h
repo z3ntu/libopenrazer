@@ -32,27 +32,118 @@ class Manager : public QObject
 public:
     Manager();
 
+    /*!
+     * \fn QStringList libopenrazer::getDevices()
+     *
+     * Returns a list of connected devices in form of their DBus object paths.
+     *
+     * Can be used to create a libopenrazer::Device object and get further information about the device.
+     */
     QList<QDBusObjectPath> getDevices();
+
+    /*!
+     * \fn QString libopenrazer::getDaemonVersion()
+     *
+     * Returns the daemon version currently running (e.g. \c '2.3.0').
+     */
     QString getDaemonVersion();
+
+    /*!
+     * \fn bool libopenrazer::isDaemonRunning()
+     *
+     * Returns if the daemon is running (and responding to the version call).
+     */
     bool isDaemonRunning();
 
+    /*!
+     * \fn QVariantHash libopenrazer::getSupportedDevices()
+     *
+     * Returns a list of supported devices in the format of \c {QHash<QString(DeviceName), QList<double(VID), double(PID)>>}.
+     *
+     * \sa Device::getVid(), Device::getPid()
+     */
     QVariantHash getSupportedDevices();
 
-    // Sync
+    /*!
+     * \fn bool libopenrazer::syncEffects(bool yes)
+     *
+     * If devices should sync effects, as specified by \a yes.
+     *
+     * Example: Set it to \c 'on', set the lighting on one device to something, other devices connected will automatically get set to the same effect.
+     *
+     * Returns if the D-Bus call was successful.
+     *
+     * \sa getSyncEffects()
+     */
     bool syncEffects(bool yes);
+
+    /*!
+     * \fn bool libopenrazer::getSyncEffects()
+     *
+     * Returns if devices should sync effect.
+     *
+     * \sa syncEffects()
+     */
     bool getSyncEffects();
 
-    // Screensaver
+    /*!
+     * \fn bool libopenrazer::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
+     *
+     * Sets if the LEDs should turn off if the screensaver is turned on, as specified by \a turnOffOnScreensaver.
+     *
+     * Returns if the D-Bus call was successful.
+     *
+     * \sa getTurnOffOnScreensaver()
+     */
     bool setTurnOffOnScreensaver(bool turnOffOnScreensaver);
+
+    /*!
+     * \fn bool libopenrazer::getTurnOffOnScreensaver()
+     *
+     * Returns if the LEDs should turn off if the screensaver is turned on.
+     *
+     * \sa setTurnOffOnScreensaver()
+     */
     bool getTurnOffOnScreensaver();
 
-    // Misc
+    /*!
+     * \fn DaemonStatus libopenrazer::getDaemonStatus()
+     *
+     * Returns status of the daemon, see DaemonStatus.
+     */
     DaemonStatus getDaemonStatus();
+
+    /*!
+     * \fn QString libopenrazer::getDaemonStatusOutput()
+     *
+     * Returns the multiline output of \c {"systemctl status razer_test.service"}.
+     */
     QString getDaemonStatusOutput();
+
+    /*!
+     * \fn bool libopenrazer::enableDaemon()
+     *
+     * Enables the systemd unit for the OpenRazer daemon to auto-start when the user logs in. Runs \c {"systemctl enable razer_test.service"}
+     *
+     * Returns if the call was successful.
+     */
     bool enableDaemon();
     // bool disableDaemon();
 
-    // - Signal Connect Mehtods -
+    /*!
+     * \fn bool libopenrazer::connectDeviceAdded(QObject *receiver, const char *slot)
+     *
+     * Connects the \c device_added signal of the daemon to the specified method using the \a receiver and \a slot.
+     *
+     * Can be used in the Qt4-style Signal&Slot syntax, e.g.:
+     * \code
+     * libopenrazer::connectDeviceAdded(this, SLOT(deviceAdded()));
+     * \endcode
+     *
+     * Returns if the connection was successful.
+     *
+     * \sa connectDeviceRemoved()
+     */
     bool connectDevicesChanged(QObject *receiver, const char *slot);
 
 private:
