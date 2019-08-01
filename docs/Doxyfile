@@ -1,0 +1,25 @@
+# Doxyfile 1.8.15
+PROJECT_NAME           = "libopenrazer"
+PROJECT_NUMBER         = 0.0.1
+PROJECT_BRIEF          =
+PROJECT_LOGO           =
+WARN_AS_ERROR          = YES
+INPUT                  = ../include
+RECURSIVE              = YES
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+HTML_HEADER            =
+HTML_FOOTER            =
+HTML_STYLESHEET        =
+HTML_EXTRA_STYLESHEET  =
+HTML_EXTRA_FILES       =
+HTML_COLORSTYLE_HUE    = 220
+HTML_COLORSTYLE_SAT    = 100
+HTML_COLORSTYLE_GAMMA  = 80
+HTML_TIMESTAMP         = NO
+HTML_DYNAMIC_MENUS     = YES
+HTML_DYNAMIC_SECTIONS  = NO
+HTML_INDEX_NUM_ENTRIES = 100
+GENERATE_LATEX         = NO
+QUIET                  = YES
