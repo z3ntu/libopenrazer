@@ -128,21 +128,21 @@ public:
     QString getKeyboardLayout();
 
     /*!
-     * Returns a QVariantHash (\c {QHash<QString, QVariant>}).
-     * Most likely contains keys \c "top_img", \c "side_img", \c "store" and \c "perspective_img".
-     * Values are \c QVariant<QString> with a full URL as value.
+     * Returns a QVariantHash (`QHash<QString, QVariant>`).
+     * Most likely contains keys `"top_img"`, `"side_img"`, `"store"` and `"perspective_img"`.
+     * Values are `QVariant<QString>` with a full URL as value.
      */
     QVariantHash getRazerUrls();
 
     /*!
-     * Returns the current poll rate, e.g. \c 125 , \c 500 or \c 1000.
+     * Returns the current poll rate, e.g. `125`, `500` or `1000`.
      *
      * \sa setPollRate()
      */
     ushort getPollRate();
 
     /*!
-     * Sets the poll rate of the mouse to the specified \a pollrate, e.g. \c 125 , \c 500 or \c 1000.
+     * Sets the poll rate of the mouse to the specified \a pollrate, e.g. `125`, `500` or `1000`.
      *
      * Returns if the D-Bus call was successful.
      *

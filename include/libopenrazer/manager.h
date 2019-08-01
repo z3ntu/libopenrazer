@@ -43,7 +43,7 @@ public:
     QList<QDBusObjectPath> getDevices();
 
     /*!
-     * Returns the daemon version currently running (e.g. \c '2.3.0').
+     * Returns the daemon version currently running (e.g. `2.3.0`).
      */
     QString getDaemonVersion();
 
@@ -53,7 +53,7 @@ public:
     bool isDaemonRunning();
 
     /*!
-     * Returns a list of supported devices in the format of \c {QHash<QString(DeviceName), QList<double(VID), double(PID)>>}.
+     * Returns a list of supported devices in the format of `QHash<QString(DeviceName), QList<double(VID), double(PID)>>`.
      *
      * \sa Device::getVid(), Device::getPid()
      */
@@ -99,12 +99,12 @@ public:
     DaemonStatus getDaemonStatus();
 
     /*!
-     * Returns the multiline output of \c {"systemctl status razer_test.service"}.
+     * Returns the multiline output of systemctl status.
      */
     QString getDaemonStatusOutput();
 
     /*!
-     * Enables the systemd unit for the OpenRazer daemon to auto-start when the user logs in. Runs \c {"systemctl enable razer_test.service"}
+     * Enables the systemd unit for the OpenRazer daemon to auto-start when the user logs in.
      *
      * Returns if the call was successful.
      */

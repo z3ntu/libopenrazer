@@ -122,14 +122,14 @@ public:
     bool setReactive(QColor color, razer_test::ReactiveSpeed speed);
 
     /*!
-     * Sets the \a brightness (0-100).
+     * Sets the \a brightness (`0` - `255`).
      *
      * Returns if the D-Bus call was successful.
      */
     bool setBrightness(uchar brightness);
 
     /*!
-     * Returns the current brightness (0-100).
+     * Returns the current brightness (`0` - `255`).
      */
     uchar getBrightness();
 
