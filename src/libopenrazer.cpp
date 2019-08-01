@@ -148,25 +148,4 @@ QDBusInterface *Led::ledBrightnessIface()
     return ifaceBrightness;
 }
 
-DBusException::DBusException(const QDBusError &error)
-    : name(error.name()), message(error.message()) {}
-DBusException::DBusException(const QString &name, const QString &message)
-    : name(name), message(message) {}
-void DBusException::raise() const
-{
-    throw *this;
-}
-DBusException *DBusException::clone() const
-{
-    return new DBusException(*this);
-}
-QString DBusException::getName()
-{
-    return name;
-}
-QString DBusException::getMessage()
-{
-    return message;
-}
-
 }

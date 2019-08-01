@@ -8,6 +8,7 @@ qt5_dep = dependency('qt5', modules : ['Core', 'DBus', 'Gui', 'Xml'])
 razer_test_dep = dependency('razer_test', fallback : ['razer_test', 'razer_test_dep'])
 
 sources = [
+    'src/dbusexception.cpp',
     'src/device.cpp',
     'src/led.cpp',
     'src/libopenrazer.cpp',
@@ -39,6 +40,7 @@ if meson.is_subproject()
 endif
 
 install_headers('include/libopenrazer.h')
+install_headers('include/libopenrazer/dbusexception.h', subdir : 'libopenrazer')
 
 pkg = import('pkgconfig')
 pkg.generate(name : meson.project_name(),

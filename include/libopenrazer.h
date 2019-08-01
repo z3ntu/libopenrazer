@@ -27,6 +27,8 @@
 
 #include <razer_test.h>
 
+#include "libopenrazer/dbusexception.h"
+
 #undef RAZER_TEST_DBUS_BUS
 #define RAZER_TEST_DBUS_BUS QDBusConnection::sessionBus()
 
@@ -41,23 +43,6 @@ enum DaemonStatus { Enabled,
                     NotInstalled,
                     NoSystemd,
                     Unknown };
-
-class DBusException : public QException
-{
-public:
-    DBusException(const QDBusError &error);
-    DBusException(const QString &name, const QString &message);
-
-    void raise() const override;
-    DBusException *clone() const override;
-
-    QString getName();
-    QString getMessage();
-
-private:
-    QString name;
-    QString message;
-};
 
 void printDBusError(QDBusError error, const char *functionname);
 bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname);
