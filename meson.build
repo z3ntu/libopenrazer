@@ -17,7 +17,6 @@ sources = [
 ]
 sources += qt5.preprocess(
     moc_headers : [
-        'include/libopenrazer.h',
         'include/libopenrazer/device.h',
         'include/libopenrazer/led.h',
         'include/libopenrazer/manager.h',

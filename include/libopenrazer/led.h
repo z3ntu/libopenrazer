@@ -23,21 +23,11 @@
 
 namespace libopenrazer {
 
+class LedPrivate;
+
 class Led : public QObject
 {
     Q_OBJECT
-private:
-    QDBusInterface *iface = nullptr;
-    QDBusInterface *ifaceBrightness = nullptr;
-    QDBusInterface *ledIface();
-    QDBusInterface *ledBrightnessIface();
-
-    QDBusObjectPath mObjectPath;
-
-    razer_test::RazerLedId ledId;
-    QString lightingLocation;
-    QString lightingLocationMethod;
-
 public:
     Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation);
     ~Led() override;
@@ -59,6 +49,9 @@ public:
 
     bool setBrightness(uchar brightness);
     uchar getBrightness();
+
+private:
+    LedPrivate *d;
 };
 
 }
