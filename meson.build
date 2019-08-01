@@ -9,11 +9,11 @@ razer_test_dep = dependency('razer_test', fallback : ['razer_test', 'razer_test_
 
 sources = [
     'src/dbusexception.cpp',
-    'src/device.cpp',
-    'src/led.cpp',
-    'src/libopenrazer.cpp',
-    'src/manager.cpp',
-    'src/razercapability.cpp'
+    'src/misc.cpp',
+    'src/razercapability.cpp',
+    'src/openrazer/device.cpp',
+    'src/openrazer/led.cpp',
+    'src/openrazer/manager.cpp',
 ]
 sources += qt5.preprocess(
     moc_headers : [
@@ -25,12 +25,13 @@ sources += qt5.preprocess(
 )
 
 inc = include_directories('include')
+srcinc = include_directories('src')
 
 openrazerlib = library('openrazer',
                        sources,
                        version : meson.project_version(),
                        dependencies : [qt5_dep, razer_test_dep],
-                       include_directories : inc,
+                       include_directories : [inc, srcinc],
                        install : not meson.is_subproject())
 
 libopenrazer_dep = declare_dependency(

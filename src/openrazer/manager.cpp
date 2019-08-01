@@ -228,4 +228,30 @@ bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
     return RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager", "devicesChanged", receiver, slot);
 }
 
+QDBusInterface *Manager::managerDaemonIface()
+{
+    if (ifaceDaemon == nullptr) {
+        ifaceDaemon = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.daemon",
+                                         RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceDaemon->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceDaemon;
+}
+
+QDBusInterface *Manager::managerDevicesIface()
+{
+    if (ifaceDevices == nullptr) {
+        ifaceDevices = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices",
+                                          RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceDevices->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceDevices;
+}
+
 }

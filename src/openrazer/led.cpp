@@ -220,4 +220,30 @@ uchar Led::getBrightness()
     }
 }
 
+QDBusInterface *Led::ledIface()
+{
+    if (iface == nullptr) {
+        iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting." + lightingLocation.toLower(),
+                                   RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!iface->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return iface;
+}
+
+QDBusInterface *Led::ledBrightnessIface()
+{
+    if (ifaceBrightness == nullptr) {
+        ifaceBrightness = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting.brightness",
+                                             RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceBrightness->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceBrightness;
+}
+
 }

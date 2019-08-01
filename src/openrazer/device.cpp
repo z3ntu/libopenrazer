@@ -492,4 +492,43 @@ razer_test::MatrixDimensions Device::getMatrixDimensions()
     return { static_cast<uchar>(dims[0]), static_cast<uchar>(dims[1]) };
 }
 
+QDBusInterface *Device::deviceMiscIface()
+{
+    if (ifaceMisc == nullptr) {
+        ifaceMisc = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.misc",
+                                       RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceMisc->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceMisc;
+}
+
+QDBusInterface *Device::deviceDpiIface()
+{
+    if (ifaceDpi == nullptr) {
+        ifaceDpi = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.dpi",
+                                      RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceDpi->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceDpi;
+}
+
+QDBusInterface *Device::deviceLightingChromaIface()
+{
+    if (ifaceLightingChroma == nullptr) {
+        ifaceLightingChroma = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting.chroma",
+                                                 RAZER_TEST_DBUS_BUS, this);
+    }
+    if (!ifaceLightingChroma->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+    }
+    return ifaceLightingChroma;
+}
+
 }
