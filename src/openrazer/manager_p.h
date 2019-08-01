@@ -15,50 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MANAGER_H
-#define MANAGER_H
+#ifndef MANAGER_P_H
+#define MANAGER_P_H
 
-#include "libopenrazer/misc.h"
+#include "libopenrazer/manager.h"
 
 #include <QDBusInterface>
 
 namespace libopenrazer {
 
-class ManagerPrivate;
-
-class Manager : public QObject
+class ManagerPrivate
 {
-    Q_OBJECT
 public:
-    Manager();
+    Manager *mParent = nullptr;
 
-    QList<QDBusObjectPath> getDevices();
-    QString getDaemonVersion();
-    bool isDaemonRunning();
-
-    QVariantHash getSupportedDevices();
-
-    // Sync
-    bool syncEffects(bool yes);
-    bool getSyncEffects();
-
-    // Screensaver
-    bool setTurnOffOnScreensaver(bool turnOffOnScreensaver);
-    bool getTurnOffOnScreensaver();
-
-    // Misc
-    DaemonStatus getDaemonStatus();
-    QString getDaemonStatusOutput();
-    bool enableDaemon();
-    // bool disableDaemon();
-
-    // - Signal Connect Mehtods -
-    bool connectDevicesChanged(QObject *receiver, const char *slot);
-
-private:
-    ManagerPrivate *d;
+    QDBusInterface *ifaceDaemon = nullptr;
+    QDBusInterface *ifaceDevices = nullptr;
+    QDBusInterface *managerDaemonIface();
+    QDBusInterface *managerDevicesIface();
 };
 
 }
 
-#endif // MANAGER_H
+#endif // MANAGER_P_H

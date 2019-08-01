@@ -18,6 +18,7 @@
 
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
+#include "manager_p.h"
 
 #include <QDBusMetaType>
 #include <QDBusReply>
@@ -28,6 +29,9 @@ namespace libopenrazer {
 
 Manager::Manager()
 {
+    d = new ManagerPrivate();
+    d->mParent = this;
+
     // Register the enums with the Qt system
     razer_test::registerMetaTypes();
 }
@@ -39,7 +43,7 @@ Manager::Manager()
  */
 bool Manager::isDaemonRunning()
 {
-    QDBusReply<QString> reply = managerDaemonIface()->call("version");
+    QDBusReply<QString> reply = d->managerDaemonIface()->call("version");
     return reply.isValid();
 }
 
@@ -64,7 +68,7 @@ QVariantHash Manager::getSupportedDevices()
  */
 QList<QDBusObjectPath> Manager::getDevices()
 {
-    QDBusReply<QStringList> reply = managerDevicesIface()->call("getDevices");
+    QDBusReply<QStringList> reply = d->managerDevicesIface()->call("getDevices");
     QStringList serialList = handleDBusReply(reply, Q_FUNC_INFO);
     QList<QDBusObjectPath> ret;
     foreach (const QString &serial, serialList) {
@@ -108,7 +112,7 @@ bool Manager::getSyncEffects()
  */
 QString Manager::getDaemonVersion()
 {
-    QDBusReply<QString> reply = managerDaemonIface()->call("version");
+    QDBusReply<QString> reply = d->managerDaemonIface()->call("version");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -228,11 +232,11 @@ bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
     return RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager", "devicesChanged", receiver, slot);
 }
 
-QDBusInterface *Manager::managerDaemonIface()
+QDBusInterface *ManagerPrivate::managerDaemonIface()
 {
     if (ifaceDaemon == nullptr) {
         ifaceDaemon = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.daemon",
-                                         RAZER_TEST_DBUS_BUS, this);
+                                         RAZER_TEST_DBUS_BUS, mParent);
     }
     if (!ifaceDaemon->isValid()) {
         fprintf(stderr, "%s\n",
@@ -241,11 +245,11 @@ QDBusInterface *Manager::managerDaemonIface()
     return ifaceDaemon;
 }
 
-QDBusInterface *Manager::managerDevicesIface()
+QDBusInterface *ManagerPrivate::managerDevicesIface()
 {
     if (ifaceDevices == nullptr) {
         ifaceDevices = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices",
-                                          RAZER_TEST_DBUS_BUS, this);
+                                          RAZER_TEST_DBUS_BUS, mParent);
     }
     if (!ifaceDevices->isValid()) {
         fprintf(stderr, "%s\n",
