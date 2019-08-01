@@ -25,21 +25,39 @@ namespace libopenrazer {
 
 class LedPrivate;
 
+/*!
+ * \brief Abstraction for accessing Led objects via D-Bus.
+ */
 class Led : public QObject
 {
     Q_OBJECT
 public:
+    /// @cond
     Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation);
     ~Led() override;
+    /// @endcond
 
+    /*!
+     * Returns the D-Bus object path of the Led
+     */
     QDBusObjectPath getObjectPath();
+
+    /*!
+     * Returns the currently active effect
+     */
     razer_test::RazerEffect getCurrentEffect();
+
+    /*!
+     * Returns the currently active colors (the list will have at least 3 elements)
+     */
     QList<razer_test::RGB> getCurrentColors();
+
+    /*!
+     * Returns the Led ID of this Led
+     */
     razer_test::RazerLedId getLedId();
 
     /*!
-     * \fn bool libopenrazer::Led::setOff()
-     *
      * Sets the LED to none / off.
      *
      * Returns if the D-Bus call was successful.
@@ -47,8 +65,6 @@ public:
     bool setOff();
 
     /*!
-     * \fn bool libopenrazer::Led::setStatic(QColor color)
-     *
      * Sets the lighting to static lighting in the specified \a color.
      *
      * Returns if the D-Bus call was successful.
@@ -56,8 +72,6 @@ public:
     bool setStatic(QColor color);
 
     /*!
-     * \fn bool libopenrazer::Led::setBreathSingle(QColor color)
-     *
      * Sets the lighting to the single breath effect with the specified \a color.
      *
      * Returns if the D-Bus call was successful.
@@ -65,8 +79,6 @@ public:
     bool setBreathing(QColor color);
 
     /*!
-     * \fn bool libopenrazer::Led::setBreathDual(QColor color, QColor color2)
-     *
      * Sets the lighting to the dual breath effect with the specified \a color and \a color2.
      *
      * Returns if the D-Bus call was successful.
@@ -74,8 +86,6 @@ public:
     bool setBreathingDual(QColor color, QColor color2);
 
     /*!
-     * \fn bool libopenrazer::Led::setBreathRandom()
-     *
      * Sets the lighting wheel to the random breath effect.
      *
      * Returns if the D-Bus call was successful.
@@ -83,8 +93,6 @@ public:
     bool setBreathingRandom();
 
     /*!
-     * \fn bool libopenrazer::Led::setBreathRandom()
-     *
      * Sets the lighting wheel to the random breath effect.
      *
      * Returns if the D-Bus call was successful.
@@ -92,8 +100,6 @@ public:
     bool setBlinking(QColor color);
 
     /*!
-     * \fn bool libopenrazer::Led::setSpectrum()
-     *
      * Sets the lighting to spectrum mode.
      *
      * Returns if the D-Bus call was successful.
@@ -101,8 +107,6 @@ public:
     bool setSpectrum();
 
     /*!
-     * \fn bool libopenrazer::Led::setWave(WaveDirection direction)
-     *
      * Sets the lighting effect to wave, in the direction \a direction.
      *
      * Returns if the D-Bus call was successful.
@@ -110,8 +114,6 @@ public:
     bool setWave(razer_test::WaveDirection direction);
 
     /*!
-     * \fn bool libopenrazer::Led::setReactive(QColor color, ReactiveSpeed speed)
-     *
      * Sets the lighting to reactive mode with the specified \a color and \a speed.
      *
      * Returns if the D-Bus call was successful.
@@ -119,8 +121,6 @@ public:
     bool setReactive(QColor color, razer_test::ReactiveSpeed speed);
 
     /*!
-     * \fn bool libopenrazer::Led::setBrightness(double brightness)
-     *
      * Sets the \a brightness (0-100).
      *
      * Returns if the D-Bus call was successful.
@@ -128,8 +128,6 @@ public:
     bool setBrightness(uchar brightness);
 
     /*!
-     * \fn double libopenrazer::Led::getBrightness()
-     *
      * Returns the current brightness (0-100).
      */
     uchar getBrightness();

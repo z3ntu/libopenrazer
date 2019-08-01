@@ -28,71 +28,71 @@ namespace libopenrazer {
 class DevicePrivate;
 
 /*!
- * \class libopenrazer::Device
- * \inmodule libopenrazer
- *
- * \brief The libopenrazer::Device class provides an abstraction for the OpenRazer daemon D-Bus interface for easy interaction from C++ applications.
+ * \brief Abstraction for accessing Device objects via D-Bus.
  */
 class Device : public QObject
 {
     Q_OBJECT
 public:
     /*!
-     * \fn libopenrazer::Device::Device(QDBusObjectPath objectPath)
-     *
      * Constructs a new device object with the given \a objectPath.
      */
     Device(QDBusObjectPath objectPath);
     ~Device() override;
 
     /*!
-     * \fn QString libopenrazer::Device::objectPath()
-     *
      * Returns the DBus object path.
      */
     QDBusObjectPath objectPath();
+
+    /*!
+     * Returns if the device has the specified \a fxStr
+     */
     bool hasFx(const QString &fxStr);
+
+    /*!
+     * Returns if the device has the specified \a fx
+     */
     bool hasFx(razer_test::RazerEffect fx);
+
+    /*!
+     * Returns if the device has the specified \a featureStr
+     */
     bool hasFeature(const QString &featureStr);
 
     /*!
-     * \fn QString libopenrazer::Device::getPngFilename()
+     * Returns the filename for the `top_img` picture (e.g. `razer-naga-hex-gallery-12.png`).
      *
-     * Returns the filename for the \c top_img picture (e.g. \c razer-naga-hex-gallery-12.png).
-     *
-     * Could return an empty string (qstring.isEmpty()) if no picture was found.
+     * Could return an empty string if no picture was found.
      *
      * \sa getRazerUrls(), getPngUrl()
      */
     QString getPngFilename();
 
     /*!
-     * \fn QString libopenrazer::Device::getPngUrl()
-     *
      * Returns the URL for the \c top_img picture.
      *
-     * Could return an empty string (\c qstring.isEmpty()) if no picture was found.
+     * Could return an empty string if no picture was found.
      *
      * \sa getRazerUrls(), getPngFilename()
      */
     QString getPngUrl();
 
+    /*!
+     * Returns a list of Leds supported on the device.
+     */
     QList<Led *> getLeds();
 
     /*!
-     * \fn QString libopenrazer::Device::getDeviceMode()
-     *
-     * Returns the device mode of the device, like '0:0' or '3:0' for normal mode and driver mode respetively.
+     * Returns the device mode of the device, like `0:0` or `3:0` for normal mode and driver mode respetively.
      *
      * \sa setDeviceMode()
      */
     QString getDeviceMode();
 
     /*!
-     * \fn bool libopenrazer::Device::setDeviceMode(uchar mode_id, uchar param)
-     *
      * Sets the device mode to the specified \a mode_id and \a param.
-     * Allowed values are 0x00 (normal mode) and 0x03 (driver mode) for \a mode_id and 0x00 for param.
+     * Allowed values are `0x00` (normal mode) and `0x03` (driver mode) for \a mode_id and `0x00` for param.
      *
      * When the device is set to Driver Mode, tilting the mouse wheel stops working, and the 'Up DPI' and 'Down DPI' buttons don't actually do anything. Razer Synapse on Windows is supposed to change the DPI instead of the mouse.
      *
@@ -101,39 +101,33 @@ public:
      * \sa getDeviceMode()
      */
     bool setDeviceMode(uchar mode_id, uchar param);
+
+    /*!
+     * Returns the serial number of the device which can be used to identify the device.
+     */
     QString getSerial();
 
     /*!
-     * \fn QString libopenrazer::Device::getDeviceName()
-     *
-     * Returns a human readable device name like \c {"Razer DeathAdder Chroma"} or \c {"Razer Kraken 7.1"}.
+     * Returns a human readable device name like `Razer DeathAdder Chroma` or `Razer Kraken 7.1`.
      */
     QString getDeviceName();
 
     /*!
-     * \fn QString libopenrazer::Device::getDeviceType()
-     *
-     * Returns the type of the device. Could be one of \c 'keyboard', \c 'mouse', \c 'mousemat', \c 'core', \c 'keypad', \c 'headset', \c 'mug' or another type, if added to the daemon.
+     * Returns the type of the device. Could be one of `accessory`, `headset`, `keyboard`, `keypad`, `mouse`, `mousepad` or another type, if added to the daemon.
      */
     QString getDeviceType();
 
     /*!
-     * \fn QString libopenrazer::Device::getFirmwareVersion()
-     *
-     * Returns the firmware version of the device (e.g. \c 'v1.0').
+     * Returns the firmware version of the device (e.g. `v1.0`).
      */
     QString getFirmwareVersion();
 
     /*!
-     * \fn QString libopenrazer::Device::getKeyboardLayout()
-     *
-     * Returns the physical layout of the keyboard (e.g. \c 'de_DE', \c 'en_US', \c 'en_GB' or \c 'unknown')
+     * Returns the physical layout of the keyboard (e.g. `de_DE`, `en_US`, `en_GB` or `unknown`)
      */
     QString getKeyboardLayout();
 
     /*!
-     * \fn QVariantHash libopenrazer::Device::getRazerUrls()
-     *
      * Returns a QVariantHash (\c {QHash<QString, QVariant>}).
      * Most likely contains keys \c "top_img", \c "side_img", \c "store" and \c "perspective_img".
      * Values are \c QVariant<QString> with a full URL as value.
@@ -141,68 +135,70 @@ public:
     QVariantHash getRazerUrls();
 
     /*!
-     * \fn int libopenrazer::Device::getPollRate()
+     * Returns the current poll rate, e.g. \c 125 , \c 500 or \c 1000.
      *
-     * Returns the current poll rate.
+     * \sa setPollRate()
      */
     ushort getPollRate();
 
     /*!
-     * \fn bool libopenrazer::Device::setPollRate(ushort pollrate)
-     *
-     * Sets the poll rate of the mouse to the specified \a pollrate.
+     * Sets the poll rate of the mouse to the specified \a pollrate, e.g. \c 125 , \c 500 or \c 1000.
      *
      * Returns if the D-Bus call was successful.
+     *
+     * \sa getPollRate()
      */
     bool setPollRate(ushort pollrate);
 
     /*!
-     * \fn bool libopenrazer::Device::setDPI(int dpi_x, int dpi_y)
-     *
      * Sets the DPI of the mouse to the specified \a dpi_x for the x-Axis and \a dpi_y for the y-Axis. Maximum value is what is returned by maxDPI().
      *
      * Returns if the D-Bus call was successful.
+     *
+     * \sa getDPI(), maxDPI()
      */
     bool setDPI(razer_test::RazerDPI dpi);
 
     /*!
-     * \fn QList<int> libopenrazer::Device::getDPI()
+     * Returns the DPI of the mouse (e.g. `[800, 800]`).
      *
-     * Returns the DPI of the mouse (e.g. \c [800, 800]).
+     * \sa setDPI()
      */
     razer_test::RazerDPI getDPI();
 
     /*!
-     * \fn int libopenrazer::Device::maxDPI()
-     *
      * Returns the maximum DPI possible for the device.
+     *
+     * \sa getDPI(), setDPI()
      */
     ushort maxDPI();
 
     /*!
-     * \fn bool libopenrazer::Device::setCustom()
-     *
-     * Sets the lighting to custom mode (applies effects set from setKeyRow()).
+     * Sets the lighting to custom mode (applies effects set from defineCustomFrame()).
      *
      * Returns if the D-Bus call was successful.
      *
-     * \sa setKeyRow()
+     * \sa defineCustomFrame()
      */
     bool displayCustomFrame();
 
     /*!
-     * \fn bool libopenrazer::Device::setKeyRow(uchar row, uchar startcol, uchar endcol, QVector<QColor> colors)
-     *
-     * Sets the lighting of a key row to the specified \a colors.
-     * \a row is the row in the matrix, \a startcol the column the \a colors list starts and \a endcol where the list ends.
-     * Note, that you have to call setCustom() after setting otherwise the effect won't be displayed (even if you have already called setCustom() before).
+     * Sets the lighting of a key row to the specified \a colorData.
+     * \a row is the row in the matrix, \a startColumn the column the \a colorData list starts and \a endColumn where the list ends.
+     * Note, that you have to call displayCustomFrame() after setting otherwise the effect won't be displayed (even if you have already called displayCustomFrame() before).
      * Currently the driver only accepts whole rows that are sent.
      *
      * Returns if the D-Bus call was successful.
      *
-     * \sa setCustom()
+     * \sa displayCustomFrame()
      */
     bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData);
+
+    /*!
+     * Returns the dimension of the matrix supported on the device.
+     *
+     * \sa defineCustomFrame()
+     */
     razer_test::MatrixDimensions getMatrixDimensions();
 
 private:

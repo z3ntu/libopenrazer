@@ -23,16 +23,32 @@
 
 namespace libopenrazer {
 
+/*!
+ * \brief Custom exception containing a name and message
+ *
+ * This provides an exception which will be thrown by libopenrazer in case of errors.
+ *
+ * You can get information about this exception using the getName() and getMessage() methods.
+ */
 class DBusException : public QException
 {
 public:
+    /// @cond
     DBusException(const QDBusError &error);
     DBusException(const QString &name, const QString &message);
 
     void raise() const override;
     DBusException *clone() const override;
+    /// @endcond
 
+    /*!
+     * Returns the "title" of this exception
+     */
     QString getName();
+
+    /*!
+     * Returns a detailed message from this exception.
+     */
     QString getMessage();
 
 private:

@@ -32,12 +32,14 @@
 
 /*!
  * \namespace libopenrazer
- * \inmodule libopenrazer
  *
- * \brief Contains methods, enums and classes to interface with the OpenRazer daemon via the D-Bus interface.
+ * \brief C++/Qt bindings for the OpenRazer D-Bus interface.
 */
 namespace libopenrazer {
 
+/*!
+ * List of effects provided by OpenRazer.
+ */
 const QList<RazerCapability> ledFxList {
     RazerCapability(razer_test::RazerEffect::Off, Led::tr("Off"), 0),
     RazerCapability(razer_test::RazerEffect::Static, Led::tr("Static"), 1),
@@ -50,6 +52,9 @@ const QList<RazerCapability> ledFxList {
     RazerCapability(razer_test::RazerEffect::Reactive, Led::tr("Reactive"), 1),
 };
 
+/*!
+ * Mapping from razer_test::RazerLedId to a human readable string
+ */
 const QHash<razer_test::RazerLedId, QString> ledIdToStringTable {
     { razer_test::RazerLedId::Unspecified, Led::tr("Unspecified") },
     { razer_test::RazerLedId::ScrollWheelLED, Led::tr("Scroll Wheel") },
