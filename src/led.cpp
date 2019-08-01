@@ -17,8 +17,10 @@
  */
 
 #include <QColor>
+#include <QDBusReply>
 
 #include "libopenrazer.h"
+#include "libopenrazer_private.h"
 
 #define QCOLOR_TO_QVARIANT(c)               \
     QVariant::fromValue(c.red()),           \

@@ -19,12 +19,6 @@
 #ifndef LIBRAZER_H
 #define LIBRAZER_H
 
-#include <QDBusMessage>
-#include <QDBusObjectPath>
-#include <QDBusInterface>
-#include <QDBusReply>
-#include <QException>
-
 #include <razer_test.h>
 
 #include "libopenrazer/dbusexception.h"
@@ -34,27 +28,9 @@
 #include "libopenrazer/misc.h"
 #include "libopenrazer/razercapability.h"
 
-#undef RAZER_TEST_DBUS_BUS
-#define RAZER_TEST_DBUS_BUS QDBusConnection::sessionBus()
-
-#define OPENRAZER_SERVICE_NAME "org.razer"
-
 // NOTE: DBus types -> Qt/C++ types: http://doc.qt.io/qt-5/qdbustypesystem.html#primitive-types
 
 namespace libopenrazer {
-
-void printDBusError(QDBusError error, const char *functionname);
-bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname);
-
-template<typename T>
-T handleDBusReply(QDBusReply<T> reply, const char *functionname)
-{
-    if (reply.isValid()) {
-        return reply.value();
-    }
-    printDBusError(reply.error(), functionname);
-    throw DBusException(reply.error());
-}
 
 const QList<RazerCapability> ledFxList {
     RazerCapability(razer_test::RazerEffect::Off, Led::tr("Off"), 0),

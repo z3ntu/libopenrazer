@@ -32,6 +32,7 @@
 #include <iostream>
 
 #include "libopenrazer.h"
+#include "libopenrazer_private.h"
 
 /*!
     \namespace libopenrazer

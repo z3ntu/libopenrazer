@@ -18,9 +18,11 @@
 
 #include <QProcess>
 #include <QDBusMetaType>
+#include <QDBusReply>
 #include <QFileInfo>
 
 #include "libopenrazer.h"
+#include "libopenrazer_private.h"
 
 namespace libopenrazer {
 
