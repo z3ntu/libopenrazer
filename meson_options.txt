@@ -1,0 +1,4 @@
+option('daemon_target',
+       type : 'combo',
+       choices : ['openrazer', 'razer_test'],
+       value : 'openrazer')

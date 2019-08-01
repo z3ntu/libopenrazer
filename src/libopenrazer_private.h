@@ -21,6 +21,9 @@
 
 #include <QDBusReply>
 
+// FIXME
+// #define OPENRAZER_SERVICE_NAME "io.github.openrazer1"
+
 #define OPENRAZER_SERVICE_NAME "org.razer"
 
 #undef RAZER_TEST_DBUS_BUS
@@ -39,6 +42,16 @@ T handleDBusReply(QDBusReply<T> reply, const char *functionname)
     }
     printDBusError(reply.error(), functionname);
     throw DBusException(reply.error());
+}
+
+template<typename T>
+T handleDBusVariant(QVariant variant, QDBusError error, const char *functionname)
+{
+    if (variant.isValid()) {
+        return variant.value<T>();
+    }
+    printDBusError(error, functionname);
+    throw DBusException(error);
 }
 
 }

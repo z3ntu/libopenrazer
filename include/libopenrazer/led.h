@@ -33,7 +33,8 @@ class Led : public QObject
     Q_OBJECT
 public:
     /// @cond
-    Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation);
+    Led(QDBusObjectPath objectPath); // used by razer_test
+    Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation); // used by openrazer
     ~Led() override;
     /// @endcond
 
