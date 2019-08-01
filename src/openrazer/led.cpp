@@ -56,13 +56,13 @@ QDBusObjectPath Led::getObjectPath()
 
 razer_test::RazerEffect Led::getCurrentEffect()
 {
-    // FIXME
+    // TODO Needs OpenRazer implementation
     return razer_test::RazerEffect::Spectrum;
 }
 
 QList<razer_test::RGB> Led::getCurrentColors()
 {
-    // FIXME
+    // TODO Needs OpenRazer implementation
     return { { 0, 255, 0 }, { 255, 0, 0 }, { 0, 0, 255 } };
 }
 

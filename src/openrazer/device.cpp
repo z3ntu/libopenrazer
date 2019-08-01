@@ -118,7 +118,6 @@ void DevicePrivate::setupCapabilities()
     else
         interface = "razer.device.lighting." + lightingLocation.toLower();
 
-    // FIXME loc is Chroma in that case
     if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "None"))
         supportedFx.append("off");
     // FIXME on??? this active stuff I think
@@ -234,14 +233,14 @@ QList<Led *> Device::getLeds()
 
 QString Device::getDeviceMode()
 {
-    return "error";
-    // QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceMode");
-    // return handleDBusReply(reply, Q_FUNC_INFO);
+    QDBusReply<QString> reply = d->deviceMiscIface()->call("getDeviceMode");
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Device::setDeviceMode(uchar mode_id, uchar param)
 {
-    return false; // FIXME
+    QDBusReply<void> reply = d->deviceMiscIface()->call("setDeviceMode");
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 QString Device::getSerial()

@@ -60,12 +60,14 @@ QList<QDBusObjectPath> Manager::getDevices()
 
 bool Manager::syncEffects(bool yes)
 {
-    return false; // FIXME
+    QDBusReply<void> reply = d->managerDevicesIface()->call("syncEffects", QVariant::fromValue(yes));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Manager::getSyncEffects()
 {
-    return false; // FIXME
+    QDBusReply<bool> reply = d->managerDevicesIface()->call("getSyncEffects");
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 QString Manager::getDaemonVersion()
@@ -76,12 +78,14 @@ QString Manager::getDaemonVersion()
 
 bool Manager::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
 {
-    return false; // FIXME
+    QDBusReply<void> reply = d->managerDevicesIface()->call("enableTurnOffOnScreensaver", QVariant::fromValue(turnOffOnScreensaver));
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Manager::getTurnOffOnScreensaver()
 {
-    return false; // FIXME
+    QDBusReply<bool> reply = d->managerDevicesIface()->call("getOffOnScreensaver");
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 DaemonStatus Manager::getDaemonStatus()
@@ -92,7 +96,7 @@ DaemonStatus Manager::getDaemonStatus()
     // Daemon can be not installed but enabled -.-
     QProcess process;
     process.start("systemctl", QStringList() << "is-enabled"
-                                             << "razer_test.service");
+                                             << "openrazer-daemon.service");
     process.waitForFinished();
     QString output(process.readAllStandardOutput());
     QString error(process.readAllStandardError());
@@ -100,10 +104,10 @@ DaemonStatus Manager::getDaemonStatus()
         return DaemonStatus::Enabled;
     else if (output == "disabled\n")
         return DaemonStatus::Disabled;
-    else if (error == "Failed to get unit file state for razer_test.service: No such file or directory\n")
+    else if (error == "Failed to get unit file state for openrazer-daemon.service: No such file or directory\n")
         return DaemonStatus::NotInstalled;
     else if (process.error() == QProcess::FailedToStart) { // check if systemctl could be started - fails on non-systemd distros and flatpak
-        QFileInfo daemonFile("/usr/bin/razer_test");
+        QFileInfo daemonFile("/usr/bin/openrazer-daemon");
         // if the daemon executable does not exist, show the not_installed message - probably flatpak
         if (!daemonFile.exists())
             return DaemonStatus::NotInstalled;
@@ -119,7 +123,7 @@ QString Manager::getDaemonStatusOutput()
 {
     QProcess process;
     process.start("systemctl", QStringList() << "status"
-                                             << "razer_test.service");
+                                             << "openrazer-daemon.service");
     process.waitForFinished();
     QString output(process.readAllStandardOutput());
     QString error(process.readAllStandardError());
@@ -132,7 +136,7 @@ bool Manager::enableDaemon()
 {
     QProcess process;
     process.start("systemctl", QStringList() << "enable"
-                                             << "razer_test.service");
+                                             << "openrazer-daemon.service");
     process.waitForFinished();
     return process.exitCode() == 0;
 }
@@ -140,7 +144,9 @@ bool Manager::enableDaemon()
 // TODO New Qt5 connect style syntax - maybe https://stackoverflow.com/a/35501065/3527128
 bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
 {
-    return RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager", "devicesChanged", receiver, slot);
+    bool ret = RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices", "device_added", receiver, slot);
+    ret &= RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices", "device_removed", receiver, slot);
+    return ret;
 }
 
 QDBusInterface *ManagerPrivate::managerDaemonIface()

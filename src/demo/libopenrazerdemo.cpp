@@ -16,10 +16,13 @@ int main()
         qDebug() << "-----------------";
         libopenrazer::Device *device = new libopenrazer::Device(devicePath);
         qDebug() << "Devicename:" << device->getDeviceName();
-        qDebug() << "Devicemode:" << device->getDeviceMode();
+        qDebug() << "Firmware version:" << device->getFirmwareVersion();
+        try { // fake driver doesn't have device_mode
+            qDebug() << "Devicemode:" << device->getDeviceMode();
+        } catch (QException &e) {
+        }
         // device->setDeviceMode(0x03, 0x00);
         // qDebug() << "Devicemode:" << device->getDeviceMode();
-        // qDebug() << "Driver version:" << device->getDriverVersion();
         qDebug() << "Serial: " << device->getSerial();
 
         if (device->hasFeature("dpi")) {
