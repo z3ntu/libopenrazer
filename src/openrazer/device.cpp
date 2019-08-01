@@ -16,6 +16,7 @@
  *
  */
 
+#include "device_p.h"
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
 
@@ -41,15 +42,17 @@ namespace libopenrazer {
  */
 Device::Device(QDBusObjectPath objectPath)
 {
-    mObjectPath = objectPath;
+    d = new DevicePrivate();
+    d->mParent = this;
+    d->mObjectPath = objectPath;
 
-    introspect();
-    setupCapabilities();
+    d->introspect();
+    d->setupCapabilities();
 
-    QMap<razer_test::RazerLedId, QString>::const_iterator i = supportedLeds.constBegin();
-    while (i != supportedLeds.constEnd()) {
-        libopenrazer::Led *led = new libopenrazer::Led(mObjectPath, i.key(), i.value());
-        leds.append(led);
+    QMap<razer_test::RazerLedId, QString>::const_iterator i = d->supportedLeds.constBegin();
+    while (i != d->supportedLeds.constEnd()) {
+        libopenrazer::Led *led = new libopenrazer::Led(d->mObjectPath, i.key(), i.value());
+        d->leds.append(led);
         ++i;
     }
 }
@@ -59,12 +62,12 @@ Device::Device(QDBusObjectPath objectPath)
  */
 Device::~Device()
 {
-    foreach (libopenrazer::Led *led, leds) {
+    foreach (libopenrazer::Led *led, d->leds) {
         delete led;
     }
 }
 
-void Device::introspect()
+void DevicePrivate::introspect()
 {
     QStringList intr;
 
@@ -95,7 +98,7 @@ void Device::introspect()
 /**
  * Fill "capabilities" list with the capabilities of the device. Names are from the pylib, parsed with the script ./scripts/capabilities_to_cpp.sh in the root of this repo.
  */
-void Device::setupCapabilities()
+void DevicePrivate::setupCapabilities()
 {
     if (hasCapabilityInternal("razer.device.misc", "getKeyboardLayout"))
         supportedFeatures.append("keyboard_layout");
@@ -166,7 +169,7 @@ void Device::setupCapabilities()
 /**
  * Internal method to determine whether a device has a given capability based on interface and method names.
  */
-bool Device::hasCapabilityInternal(const QString &interface, const QString &method)
+bool DevicePrivate::hasCapabilityInternal(const QString &interface, const QString &method)
 {
     if (method.isNull()) {
         return introspection.contains(interface);
@@ -181,12 +184,12 @@ bool Device::hasCapabilityInternal(const QString &interface, const QString &meth
  */
 QDBusObjectPath Device::objectPath()
 {
-    return mObjectPath;
+    return d->mObjectPath;
 }
 
 bool Device::hasFx(const QString &fxStr)
 {
-    return supportedFx.contains(fxStr);
+    return d->supportedFx.contains(fxStr);
 }
 
 bool Device::hasFx(razer_test::RazerEffect fx)
@@ -229,7 +232,7 @@ bool Device::hasFx(razer_test::RazerEffect fx)
 
 bool Device::hasFeature(const QString &featureStr)
 {
-    return supportedFeatures.contains(featureStr);
+    return d->supportedFeatures.contains(featureStr);
 }
 
 /*!
@@ -264,7 +267,7 @@ QString Device::getPngUrl()
 
 QList<Led *> Device::getLeds()
 {
-    return leds;
+    return d->leds;
 }
 
 /*!
@@ -300,7 +303,7 @@ bool Device::setDeviceMode(uchar mode_id, uchar param)
 
 QString Device::getSerial()
 {
-    QDBusReply<QString> reply = deviceMiscIface()->call("getSerial");
+    QDBusReply<QString> reply = d->deviceMiscIface()->call("getSerial");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -311,7 +314,7 @@ QString Device::getSerial()
  */
 QString Device::getDeviceName()
 {
-    QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceName");
+    QDBusReply<QString> reply = d->deviceMiscIface()->call("getDeviceName");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -322,7 +325,7 @@ QString Device::getDeviceName()
  */
 QString Device::getDeviceType()
 {
-    QDBusReply<QString> reply = deviceMiscIface()->call("getDeviceType");
+    QDBusReply<QString> reply = d->deviceMiscIface()->call("getDeviceType");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -333,7 +336,7 @@ QString Device::getDeviceType()
  */
 QString Device::getFirmwareVersion()
 {
-    QDBusReply<QString> reply = deviceMiscIface()->call("getFirmware");
+    QDBusReply<QString> reply = d->deviceMiscIface()->call("getFirmware");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -344,7 +347,7 @@ QString Device::getFirmwareVersion()
  */
 QString Device::getKeyboardLayout()
 {
-    QDBusReply<QString> reply = deviceMiscIface()->call("getKeyboardLayout");
+    QDBusReply<QString> reply = d->deviceMiscIface()->call("getKeyboardLayout");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -367,7 +370,7 @@ QVariantHash Device::getRazerUrls()
  */
 ushort Device::getPollRate()
 {
-    QDBusReply<int> reply = deviceMiscIface()->call("getPollRate");
+    QDBusReply<int> reply = d->deviceMiscIface()->call("getPollRate");
     if (reply.isValid()) {
         return reply.value();
     } else {
@@ -385,7 +388,7 @@ ushort Device::getPollRate()
  */
 bool Device::setPollRate(ushort pollrate)
 {
-    QDBusReply<void> reply = deviceMiscIface()->call("setPollRate", QVariant::fromValue(pollrate));
+    QDBusReply<void> reply = d->deviceMiscIface()->call("setPollRate", QVariant::fromValue(pollrate));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -398,7 +401,7 @@ bool Device::setPollRate(ushort pollrate)
  */
 bool Device::setDPI(razer_test::RazerDPI dpi)
 {
-    QDBusReply<void> reply = deviceDpiIface()->call("setDPI", QVariant::fromValue(dpi.dpi_x), QVariant::fromValue(dpi.dpi_y));
+    QDBusReply<void> reply = d->deviceDpiIface()->call("setDPI", QVariant::fromValue(dpi.dpi_x), QVariant::fromValue(dpi.dpi_y));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -409,7 +412,7 @@ bool Device::setDPI(razer_test::RazerDPI dpi)
  */
 razer_test::RazerDPI Device::getDPI()
 {
-    QDBusReply<QList<int>> reply = deviceDpiIface()->call("getDPI");
+    QDBusReply<QList<int>> reply = d->deviceDpiIface()->call("getDPI");
     if (reply.isValid()) {
         QList<int> dpi = reply.value();
         if (dpi.size() == 1) {
@@ -432,7 +435,7 @@ razer_test::RazerDPI Device::getDPI()
  */
 ushort libopenrazer::Device::maxDPI()
 {
-    QDBusReply<int> reply = deviceDpiIface()->call("maxDPI");
+    QDBusReply<int> reply = d->deviceDpiIface()->call("maxDPI");
     if (reply.isValid()) {
         return reply.value();
     } else {
@@ -452,7 +455,7 @@ ushort libopenrazer::Device::maxDPI()
  */
 bool Device::displayCustomFrame()
 {
-    QDBusReply<void> reply = deviceLightingChromaIface()->call("setCustom");
+    QDBusReply<void> reply = d->deviceLightingChromaIface()->call("setCustom");
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -479,24 +482,24 @@ bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QV
         data.append(color.green());
         data.append(color.blue());
     }
-    QDBusReply<void> reply = deviceLightingChromaIface()->call("setKeyRow", data);
+    QDBusReply<void> reply = d->deviceLightingChromaIface()->call("setKeyRow", data);
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 razer_test::MatrixDimensions Device::getMatrixDimensions()
 {
-    QDBusReply<QList<int>> reply = deviceMiscIface()->call("getMatrixDimensions");
+    QDBusReply<QList<int>> reply = d->deviceMiscIface()->call("getMatrixDimensions");
     QList<int> dims = handleDBusReply(reply, Q_FUNC_INFO);
     if (dims.size() != 2)
         throw DBusException("Invalid return array from getMatrixDimensions", "The getMatrixDimensions return array has an invalid size.");
     return { static_cast<uchar>(dims[0]), static_cast<uchar>(dims[1]) };
 }
 
-QDBusInterface *Device::deviceMiscIface()
+QDBusInterface *DevicePrivate::deviceMiscIface()
 {
     if (ifaceMisc == nullptr) {
         ifaceMisc = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.misc",
-                                       RAZER_TEST_DBUS_BUS, this);
+                                       RAZER_TEST_DBUS_BUS, mParent);
     }
     if (!ifaceMisc->isValid()) {
         fprintf(stderr, "%s\n",
@@ -505,11 +508,11 @@ QDBusInterface *Device::deviceMiscIface()
     return ifaceMisc;
 }
 
-QDBusInterface *Device::deviceDpiIface()
+QDBusInterface *DevicePrivate::deviceDpiIface()
 {
     if (ifaceDpi == nullptr) {
         ifaceDpi = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.dpi",
-                                      RAZER_TEST_DBUS_BUS, this);
+                                      RAZER_TEST_DBUS_BUS, mParent);
     }
     if (!ifaceDpi->isValid()) {
         fprintf(stderr, "%s\n",
@@ -518,11 +521,11 @@ QDBusInterface *Device::deviceDpiIface()
     return ifaceDpi;
 }
 
-QDBusInterface *Device::deviceLightingChromaIface()
+QDBusInterface *DevicePrivate::deviceLightingChromaIface()
 {
     if (ifaceLightingChroma == nullptr) {
         ifaceLightingChroma = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting.chroma",
-                                                 RAZER_TEST_DBUS_BUS, this);
+                                                 RAZER_TEST_DBUS_BUS, mParent);
     }
     if (!ifaceLightingChroma->isValid()) {
         fprintf(stderr, "%s\n",

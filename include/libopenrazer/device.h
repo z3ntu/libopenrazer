@@ -25,32 +25,11 @@
 
 namespace libopenrazer {
 
+class DevicePrivate;
+
 class Device : public QObject
 {
     Q_OBJECT
-private:
-    QDBusInterface *ifaceMisc = nullptr;
-    QDBusInterface *ifaceDpi = nullptr;
-    QDBusInterface *ifaceLightingChroma = nullptr;
-    QDBusInterface *deviceMiscIface();
-    QDBusInterface *deviceDpiIface();
-    QDBusInterface *deviceLightingChromaIface();
-
-    QDBusObjectPath mObjectPath;
-
-    QStringList supportedFx;
-    QStringList supportedFeatures;
-
-    QList<Led *> leds;
-
-    void introspect();
-    void setupCapabilities();
-    bool hasCapabilityInternal(const QString &interface, const QString &method = QString());
-    QStringList introspection;
-
-    // Maps RazerLedId to "Chroma" or "Scroll" (the string put e.g. into setScrollSpectrum)
-    QMap<razer_test::RazerLedId, QString> supportedLeds;
-
 public:
     Device(QDBusObjectPath objectPath);
     ~Device() override;
@@ -87,6 +66,9 @@ public:
     bool displayCustomFrame();
     bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData);
     razer_test::MatrixDimensions getMatrixDimensions();
+
+private:
+    DevicePrivate *d;
 };
 
 }
