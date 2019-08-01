@@ -13,33 +13,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-#ifndef DBUSEXCEPTION_H
-#define DBUSEXCEPTION_H
-
-#include <QException>
-#include <QDBusError>
+#ifndef MISC_H
+#define MISC_H
 
 namespace libopenrazer {
 
-class DBusException : public QException
-{
-public:
-    DBusException(const QDBusError &error);
-    DBusException(const QString &name, const QString &message);
-
-    void raise() const override;
-    DBusException *clone() const override;
-
-    QString getName();
-    QString getMessage();
-
-private:
-    QString name;
-    QString message;
+enum DaemonStatus {
+    Enabled,
+    Disabled,
+    NotInstalled,
+    NoSystemd,
+    Unknown,
 };
 
 }
 
-#endif // DBUSEXCEPTION_H
+#endif // MISC_H

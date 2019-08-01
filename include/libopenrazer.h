@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2018  Luca Weiss <luca (at) z3ntu (dot) xyz>
+ * Copyright (C) 2016-2019  Luca Weiss <luca (at) z3ntu (dot) xyz>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,11 @@
 #include <razer_test.h>
 
 #include "libopenrazer/dbusexception.h"
+#include "libopenrazer/device.h"
+#include "libopenrazer/led.h"
+#include "libopenrazer/manager.h"
+#include "libopenrazer/misc.h"
+#include "libopenrazer/razercapability.h"
 
 #undef RAZER_TEST_DBUS_BUS
 #define RAZER_TEST_DBUS_BUS QDBusConnection::sessionBus()
@@ -37,12 +42,6 @@
 // NOTE: DBus types -> Qt/C++ types: http://doc.qt.io/qt-5/qdbustypesystem.html#primitive-types
 
 namespace libopenrazer {
-
-enum DaemonStatus { Enabled,
-                    Disabled,
-                    NotInstalled,
-                    NoSystemd,
-                    Unknown };
 
 void printDBusError(QDBusError error, const char *functionname);
 bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname);
@@ -56,165 +55,6 @@ T handleDBusReply(QDBusReply<T> reply, const char *functionname)
     printDBusError(reply.error(), functionname);
     throw DBusException(reply.error());
 }
-
-class Manager : public QObject
-{
-    Q_OBJECT
-private:
-    QDBusInterface *ifaceDaemon = nullptr;
-    QDBusInterface *ifaceDevices = nullptr;
-    QDBusInterface *managerDaemonIface();
-    QDBusInterface *managerDevicesIface();
-
-public:
-    Manager();
-
-    QList<QDBusObjectPath> getDevices();
-    QString getDaemonVersion();
-    bool isDaemonRunning();
-
-    QVariantHash getSupportedDevices();
-
-    // Sync
-    bool syncEffects(bool yes);
-    bool getSyncEffects();
-
-    // Screensaver
-    bool setTurnOffOnScreensaver(bool turnOffOnScreensaver);
-    bool getTurnOffOnScreensaver();
-
-    // Misc
-    DaemonStatus getDaemonStatus();
-    QString getDaemonStatusOutput();
-    bool enableDaemon();
-    // bool disableDaemon();
-
-    // - Signal Connect Mehtods -
-    bool connectDevicesChanged(QObject *receiver, const char *slot);
-};
-
-class Led : public QObject
-{
-    Q_OBJECT
-private:
-    QDBusInterface *iface = nullptr;
-    QDBusInterface *ifaceBrightness = nullptr;
-    QDBusInterface *ledIface();
-    QDBusInterface *ledBrightnessIface();
-
-    QDBusObjectPath mObjectPath;
-
-    razer_test::RazerLedId ledId;
-    QString lightingLocation;
-    QString lightingLocationMethod;
-
-public:
-    Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation);
-    ~Led() override;
-
-    QDBusObjectPath getObjectPath();
-    razer_test::RazerEffect getCurrentEffect();
-    QList<razer_test::RGB> getCurrentColors();
-    razer_test::RazerLedId getLedId();
-
-    bool setOff();
-    bool setStatic(QColor color);
-    bool setBreathing(QColor color);
-    bool setBreathingDual(QColor color, QColor color2);
-    bool setBreathingRandom();
-    bool setBlinking(QColor color);
-    bool setSpectrum();
-    bool setWave(razer_test::WaveDirection direction);
-    bool setReactive(QColor color, razer_test::ReactiveSpeed speed);
-
-    bool setBrightness(uchar brightness);
-    uchar getBrightness();
-};
-
-class Device : public QObject
-{
-    Q_OBJECT
-private:
-    QDBusInterface *ifaceMisc = nullptr;
-    QDBusInterface *ifaceDpi = nullptr;
-    QDBusInterface *ifaceLightingChroma = nullptr;
-    QDBusInterface *deviceMiscIface();
-    QDBusInterface *deviceDpiIface();
-    QDBusInterface *deviceLightingChromaIface();
-
-    QDBusObjectPath mObjectPath;
-
-    QStringList supportedFx;
-    QStringList supportedFeatures;
-
-    QList<Led *> leds;
-
-    void introspect();
-    void setupCapabilities();
-    bool hasCapabilityInternal(const QString &interface, const QString &method = QString());
-    QStringList introspection;
-
-    // Maps RazerLedId to "Chroma" or "Scroll" (the string put e.g. into setScrollSpectrum)
-    QMap<razer_test::RazerLedId, QString> supportedLeds;
-
-public:
-    Device(QDBusObjectPath objectPath);
-    ~Device() override;
-
-    QDBusObjectPath objectPath();
-    bool hasFx(const QString &fxStr);
-    bool hasFx(razer_test::RazerEffect fx);
-    bool hasFeature(const QString &featureStr);
-    QString getPngFilename();
-    QString getPngUrl();
-
-    QList<Led *> getLeds();
-
-    // --- MISC METHODS ---
-    QString getDeviceMode();
-    bool setDeviceMode(uchar mode_id, uchar param);
-    QString getSerial();
-    QString getDeviceName();
-    QString getDeviceType();
-    QString getFirmwareVersion();
-    QString getKeyboardLayout();
-    QVariantHash getRazerUrls();
-
-    // --- POLL RATE ---
-    ushort getPollRate();
-    bool setPollRate(ushort pollrate);
-
-    // --- DPI ---
-    bool setDPI(razer_test::RazerDPI dpi);
-    razer_test::RazerDPI getDPI();
-    ushort maxDPI();
-
-    // - Custom frame -
-    bool displayCustomFrame();
-    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData);
-    razer_test::MatrixDimensions getMatrixDimensions();
-};
-
-class RazerCapability
-{
-public:
-    RazerCapability();
-    RazerCapability(razer_test::RazerEffect identifier, QString displayString, int numColors);
-    RazerCapability(razer_test::RazerEffect, QString displayString, bool wave);
-    RazerCapability(const RazerCapability &other);
-    ~RazerCapability();
-
-    int getNumColors() const;
-    razer_test::RazerEffect getIdentifier() const;
-    QString getDisplayString() const;
-    bool isWave() const;
-
-private:
-    int numColors;
-    razer_test::RazerEffect identifier;
-    QString displayString;
-    bool wave;
-};
 
 const QList<RazerCapability> ledFxList {
     RazerCapability(razer_test::RazerEffect::Off, Led::tr("Off"), 0),
@@ -244,7 +84,5 @@ const QHash<razer_test::RazerLedId, QString> ledIdToStringTable {
 };
 
 }
-
-Q_DECLARE_METATYPE(libopenrazer::RazerCapability)
 
 #endif // LIBRAZER_H

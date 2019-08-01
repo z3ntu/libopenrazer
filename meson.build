@@ -16,7 +16,12 @@ sources = [
     'src/razercapability.cpp'
 ]
 sources += qt5.preprocess(
-    moc_headers : ['include/libopenrazer.h']
+    moc_headers : [
+        'include/libopenrazer.h',
+        'include/libopenrazer/device.h',
+        'include/libopenrazer/led.h',
+        'include/libopenrazer/manager.h',
+    ]
 )
 
 inc = include_directories('include')
@@ -40,7 +45,9 @@ if meson.is_subproject()
 endif
 
 install_headers('include/libopenrazer.h')
-install_headers('include/libopenrazer/dbusexception.h', subdir : 'libopenrazer')
+install_headers('include/libopenrazer/dbusexception.h',
+                'include/libopenrazer/manager.h',
+                subdir : 'libopenrazer')
 
 pkg = import('pkgconfig')
 pkg.generate(name : meson.project_name(),

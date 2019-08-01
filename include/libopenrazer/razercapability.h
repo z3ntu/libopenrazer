@@ -15,31 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DBUSEXCEPTION_H
-#define DBUSEXCEPTION_H
-
-#include <QException>
-#include <QDBusError>
+#ifndef RAZERCAPABILITY_H
+#define RAZERCAPABILITY_H
 
 namespace libopenrazer {
 
-class DBusException : public QException
+class RazerCapability
 {
 public:
-    DBusException(const QDBusError &error);
-    DBusException(const QString &name, const QString &message);
+    RazerCapability();
+    RazerCapability(razer_test::RazerEffect identifier, QString displayString, int numColors);
+    RazerCapability(razer_test::RazerEffect, QString displayString, bool wave);
+    RazerCapability(const RazerCapability &other);
+    ~RazerCapability();
 
-    void raise() const override;
-    DBusException *clone() const override;
-
-    QString getName();
-    QString getMessage();
+    int getNumColors() const;
+    razer_test::RazerEffect getIdentifier() const;
+    QString getDisplayString() const;
+    bool isWave() const;
 
 private:
-    QString name;
-    QString message;
+    int numColors;
+    razer_test::RazerEffect identifier;
+    QString displayString;
+    bool wave;
 };
 
 }
 
-#endif // DBUSEXCEPTION_H
+Q_DECLARE_METATYPE(libopenrazer::RazerCapability)
+
+#endif // RAZERCAPABILITY_H
