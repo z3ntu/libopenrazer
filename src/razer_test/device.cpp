@@ -99,14 +99,9 @@ bool Device::hasFeature(const QString &featureStr)
     return d->supportedFeatures.contains(featureStr);
 }
 
-QString Device::getPngFilename()
+QString Device::getDeviceImageUrl()
 {
-    return getRazerUrls().value("top_img").toString().split("/").takeLast();
-}
-
-QString Device::getPngUrl()
-{
-    return getRazerUrls().value("top_img").toString();
+    return ""; // FIXME
 }
 
 QList<QDBusObjectPath> DevicePrivate::getLedObjectPaths()
@@ -170,11 +165,6 @@ QString Device::getKeyboardLayout()
 {
     QDBusReply<QString> reply = d->deviceIface()->call("getKeyboardLayout");
     return handleDBusReply(reply, Q_FUNC_INFO);
-}
-
-QVariantHash Device::getRazerUrls()
-{
-    return {}; // FIXME
 }
 
 ushort Device::getPollRate()

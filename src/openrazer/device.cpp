@@ -22,8 +22,9 @@
 
 #include <QColor>
 #include <QDBusReply>
-#include <QDebug>
 #include <QDomDocument>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QVector>
 
 namespace libopenrazer {
@@ -214,14 +215,11 @@ bool Device::hasFeature(const QString &featureStr)
     return d->supportedFeatures.contains(featureStr);
 }
 
-QString Device::getPngFilename()
+QString Device::getDeviceImageUrl()
 {
-    return getRazerUrls().value("top_img").toString().split("/").takeLast();
-}
-
-QString Device::getPngUrl()
-{
-    return getRazerUrls().value("top_img").toString();
+    QDBusReply<QString> reply = d->deviceMiscIface()->call("getRazerUrls");
+    QString json = handleDBusReply(reply, Q_FUNC_INFO);
+    return QJsonDocument::fromJson(json.toUtf8()).object().value("top_img").toString();
 }
 
 // ----- DBUS METHODS -----
@@ -271,11 +269,6 @@ QString Device::getKeyboardLayout()
 {
     QDBusReply<QString> reply = d->deviceMiscIface()->call("getKeyboardLayout");
     return handleDBusReply(reply, Q_FUNC_INFO);
-}
-
-QVariantHash Device::getRazerUrls()
-{
-    return {}; // FIXME
 }
 
 ushort Device::getPollRate()

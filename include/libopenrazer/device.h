@@ -61,22 +61,9 @@ public:
     bool hasFeature(const QString &featureStr);
 
     /*!
-     * Returns the filename for the `top_img` picture (e.g. `razer-naga-hex-gallery-12.png`).
-     *
-     * Could return an empty string if no picture was found.
-     *
-     * \sa getRazerUrls(), getPngUrl()
+     * Returns the URL of an image that shows this device. Could return an empty string if no image was found.
      */
-    QString getPngFilename();
-
-    /*!
-     * Returns the URL for the \c top_img picture.
-     *
-     * Could return an empty string if no picture was found.
-     *
-     * \sa getRazerUrls(), getPngFilename()
-     */
-    QString getPngUrl();
+    QString getDeviceImageUrl();
 
     /*!
      * Returns a list of Leds supported on the device.
@@ -126,13 +113,6 @@ public:
      * Returns the physical layout of the keyboard (e.g. `de_DE`, `en_US`, `en_GB` or `unknown`)
      */
     QString getKeyboardLayout();
-
-    /*!
-     * Returns a QVariantHash (`QHash<QString, QVariant>`).
-     * Most likely contains keys `"top_img"`, `"side_img"`, `"store"` and `"perspective_img"`.
-     * Values are `QVariant<QString>` with a full URL as value.
-     */
-    QVariantHash getRazerUrls();
 
     /*!
      * Returns the current poll rate, e.g. `125`, `500` or `1000`.
