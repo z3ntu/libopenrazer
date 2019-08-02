@@ -115,19 +115,19 @@ bool Led::setSpectrum()
 
 bool Led::setWave(razer_test::WaveDirection direction)
 {
-    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Wave", QVariant::fromValue(direction));
+    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Wave", static_cast<int>(direction));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Led::setReactive(QColor color, razer_test::ReactiveSpeed speed)
 {
-    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Reactive", static_cast<uchar>(speed), QCOLOR_TO_QVARIANT(color));
+    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Reactive", QCOLOR_TO_QVARIANT(color), static_cast<uchar>(speed));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Led::setBrightness(uchar brightness)
 {
-    double dbusBrightness = brightness / 255 * 100;
+    double dbusBrightness = (double)brightness / 255 * 100;
     QDBusReply<void> reply;
     if (d->lightingLocation == "Chroma")
         reply = d->ledBrightnessIface()->call("setBrightness", QVariant::fromValue(dbusBrightness));
