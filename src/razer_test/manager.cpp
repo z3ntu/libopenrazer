@@ -46,7 +46,7 @@ bool Manager::isDaemonRunning()
 
 QVariantHash Manager::getSupportedDevices()
 {
-    return QVariantHash(); // FIXME
+    return QVariantHash(); // TODO Needs implementation
 }
 
 QList<QDBusObjectPath> Manager::getDevices()
@@ -57,12 +57,12 @@ QList<QDBusObjectPath> Manager::getDevices()
 
 bool Manager::syncEffects(bool yes)
 {
-    return false; // FIXME
+    return false; // TODO Needs implementation
 }
 
 bool Manager::getSyncEffects()
 {
-    return false; // FIXME
+    return false; // TODO Needs implementation
 }
 
 QString Manager::getDaemonVersion()
@@ -73,12 +73,12 @@ QString Manager::getDaemonVersion()
 
 bool Manager::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
 {
-    return false; // FIXME
+    return false; // TODO Needs implementation
 }
 
 bool Manager::getTurnOffOnScreensaver()
 {
-    return false; // FIXME
+    return false; // TODO Needs implementation
 }
 
 DaemonStatus Manager::getDaemonStatus()

@@ -101,7 +101,7 @@ bool Device::hasFeature(const QString &featureStr)
 
 QString Device::getDeviceImageUrl()
 {
-    return ""; // FIXME
+    return ""; // TODO Needs implementation
 }
 
 QList<QDBusObjectPath> DevicePrivate::getLedObjectPaths()
@@ -129,12 +129,12 @@ QStringList DevicePrivate::getSupportedFeatures()
 
 QString Device::getDeviceMode()
 {
-    return "error"; // FIXME
+    return "error"; // TODO Needs implementation
 }
 
 bool Device::setDeviceMode(uchar mode_id, uchar param)
 {
-    return false; // FIXME
+    return false; // TODO Needs implementation
 }
 
 QString Device::getSerial()
