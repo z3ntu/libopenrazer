@@ -256,7 +256,15 @@ QString Device::getDeviceName()
 QString Device::getDeviceType()
 {
     QDBusReply<QString> reply = d->deviceMiscIface()->call("getDeviceType");
-    return handleDBusReply(reply, Q_FUNC_INFO);
+    QString type = handleDBusReply(reply, Q_FUNC_INFO);
+    const QHash<QString, QString> translationTable = {
+        { "core", "accessory" },
+        { "mousemat", "mousepad" },
+        { "mug", "accessory" },
+    };
+    if (translationTable.contains(type))
+        return translationTable.value(type);
+    return type;
 }
 
 QString Device::getFirmwareVersion()
@@ -268,7 +276,22 @@ QString Device::getFirmwareVersion()
 QString Device::getKeyboardLayout()
 {
     QDBusReply<QString> reply = d->deviceMiscIface()->call("getKeyboardLayout");
-    return handleDBusReply(reply, Q_FUNC_INFO);
+    QString layout = handleDBusReply(reply, Q_FUNC_INFO);
+    const QHash<QString, QString> translationTable = {
+        { "de_DE", "German" },
+        { "el_GR", "Greek" },
+        { "en_GB", "UK" },
+        { "en_US", "US" },
+        { "en_US_mac", "US-mac" },
+        { "es_ES", "Spanish" },
+        { "fr_FR", "French" },
+        { "it_IT", "Italian" },
+        { "ja_JP", "Japanese" },
+        { "pt_PT", "Portuguese" },
+    };
+    if (translationTable.contains(layout))
+        return translationTable.value(layout);
+    return layout;
 }
 
 ushort Device::getPollRate()
