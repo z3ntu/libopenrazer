@@ -21,15 +21,11 @@
 
 #include <QDBusReply>
 
-// FIXME
-// #define OPENRAZER_SERVICE_NAME "io.github.openrazer1"
-
-#define OPENRAZER_SERVICE_NAME "org.razer"
-
-#undef RAZER_TEST_DBUS_BUS
-#define RAZER_TEST_DBUS_BUS QDBusConnection::sessionBus()
-
 namespace libopenrazer {
+
+// Set in the implementation manager.cpp
+extern const char *OPENRAZER_SERVICE_NAME;
+extern QDBusConnection OPENRAZER_DBUS_BUS;
 
 void printDBusError(QDBusError error, const char *functionname);
 bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname);

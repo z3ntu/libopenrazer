@@ -225,11 +225,11 @@ QDBusInterface *DevicePrivate::deviceIface()
 {
     if (iface == nullptr) {
         iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "io.github.openrazer1.Device",
-                                   RAZER_TEST_DBUS_BUS, mParent);
+                                   OPENRAZER_DBUS_BUS, mParent);
     }
     if (!iface->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return iface;
 }

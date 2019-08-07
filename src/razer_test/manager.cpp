@@ -26,6 +26,9 @@
 
 namespace libopenrazer {
 
+const char *OPENRAZER_SERVICE_NAME = "io.github.openrazer1";
+QDBusConnection OPENRAZER_DBUS_BUS = RAZER_TEST_DBUS_BUS;
+
 Manager::Manager()
 {
     d = new ManagerPrivate();
@@ -134,18 +137,18 @@ bool Manager::enableDaemon()
 // TODO New Qt5 connect style syntax - maybe https://stackoverflow.com/a/35501065/3527128
 bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
 {
-    return RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager", "devicesChanged", receiver, slot);
+    return OPENRAZER_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager", "devicesChanged", receiver, slot);
 }
 
 QDBusInterface *ManagerPrivate::managerIface()
 {
     if (iface == nullptr) {
         iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager",
-                                   RAZER_TEST_DBUS_BUS, mParent);
+                                   OPENRAZER_DBUS_BUS, mParent);
     }
     if (!iface->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return iface;
 }

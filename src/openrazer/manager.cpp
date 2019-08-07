@@ -27,6 +27,9 @@
 
 namespace libopenrazer {
 
+const char *OPENRAZER_SERVICE_NAME = "org.razer";
+QDBusConnection OPENRAZER_DBUS_BUS = QDBusConnection::sessionBus();
+
 Manager::Manager()
 {
     d = new ManagerPrivate();
@@ -144,8 +147,8 @@ bool Manager::enableDaemon()
 // TODO New Qt5 connect style syntax - maybe https://stackoverflow.com/a/35501065/3527128
 bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
 {
-    bool ret = RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices", "device_added", receiver, slot);
-    ret &= RAZER_TEST_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices", "device_removed", receiver, slot);
+    bool ret = OPENRAZER_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices", "device_added", receiver, slot);
+    ret &= OPENRAZER_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices", "device_removed", receiver, slot);
     return ret;
 }
 
@@ -153,11 +156,11 @@ QDBusInterface *ManagerPrivate::managerDaemonIface()
 {
     if (ifaceDaemon == nullptr) {
         ifaceDaemon = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.daemon",
-                                         RAZER_TEST_DBUS_BUS, mParent);
+                                         OPENRAZER_DBUS_BUS, mParent);
     }
     if (!ifaceDaemon->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceDaemon;
 }
@@ -166,11 +169,11 @@ QDBusInterface *ManagerPrivate::managerDevicesIface()
 {
     if (ifaceDevices == nullptr) {
         ifaceDevices = new QDBusInterface(OPENRAZER_SERVICE_NAME, "/org/razer", "razer.devices",
-                                          RAZER_TEST_DBUS_BUS, mParent);
+                                          OPENRAZER_DBUS_BUS, mParent);
     }
     if (!ifaceDevices->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceDevices;
 }

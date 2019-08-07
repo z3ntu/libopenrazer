@@ -155,11 +155,11 @@ QDBusInterface *LedPrivate::ledIface()
 {
     if (iface == nullptr) {
         iface = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting." + lightingLocation.toLower(),
-                                   RAZER_TEST_DBUS_BUS, mParent);
+                                   OPENRAZER_DBUS_BUS, mParent);
     }
     if (!iface->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return iface;
 }
@@ -168,11 +168,11 @@ QDBusInterface *LedPrivate::ledBrightnessIface()
 {
     if (ifaceBrightness == nullptr) {
         ifaceBrightness = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting.brightness",
-                                             RAZER_TEST_DBUS_BUS, mParent);
+                                             OPENRAZER_DBUS_BUS, mParent);
     }
     if (!ifaceBrightness->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceBrightness;
 }

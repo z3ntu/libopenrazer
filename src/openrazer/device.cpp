@@ -58,7 +58,7 @@ void DevicePrivate::introspect()
     QStringList intr;
 
     QDBusMessage m = QDBusMessage::createMethodCall("org.razer", mObjectPath.path(), "org.freedesktop.DBus.Introspectable", "Introspect");
-    QDBusReply<QString> reply = RAZER_TEST_DBUS_BUS.call(m);
+    QDBusReply<QString> reply = OPENRAZER_DBUS_BUS.call(m);
     if (!reply.isValid()) {
         throw DBusException(reply.error());
     }
@@ -380,11 +380,11 @@ QDBusInterface *DevicePrivate::deviceMiscIface()
 {
     if (ifaceMisc == nullptr) {
         ifaceMisc = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.misc",
-                                       RAZER_TEST_DBUS_BUS, mParent);
+                                       OPENRAZER_DBUS_BUS, mParent);
     }
     if (!ifaceMisc->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceMisc;
 }
@@ -393,11 +393,11 @@ QDBusInterface *DevicePrivate::deviceDpiIface()
 {
     if (ifaceDpi == nullptr) {
         ifaceDpi = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.dpi",
-                                      RAZER_TEST_DBUS_BUS, mParent);
+                                      OPENRAZER_DBUS_BUS, mParent);
     }
     if (!ifaceDpi->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceDpi;
 }
@@ -406,11 +406,11 @@ QDBusInterface *DevicePrivate::deviceLightingChromaIface()
 {
     if (ifaceLightingChroma == nullptr) {
         ifaceLightingChroma = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting.chroma",
-                                                 RAZER_TEST_DBUS_BUS, mParent);
+                                                 OPENRAZER_DBUS_BUS, mParent);
     }
     if (!ifaceLightingChroma->isValid()) {
         fprintf(stderr, "%s\n",
-                qPrintable(RAZER_TEST_DBUS_BUS.lastError().message()));
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceLightingChroma;
 }
