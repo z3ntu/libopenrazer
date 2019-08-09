@@ -46,16 +46,6 @@ public:
     QDBusObjectPath objectPath();
 
     /*!
-     * Returns if the device has the specified \a fxStr
-     */
-    bool hasFx(const QString &fxStr);
-
-    /*!
-     * Returns if the device has the specified \a fx
-     */
-    bool hasFx(razer_test::RazerEffect fx);
-
-    /*!
      * Returns if the device has the specified \a featureStr
      */
     bool hasFeature(const QString &featureStr);
@@ -183,6 +173,8 @@ public:
 
 private:
     DevicePrivate *d;
+    friend class LedPrivate;
+    friend class Led;
 };
 
 }

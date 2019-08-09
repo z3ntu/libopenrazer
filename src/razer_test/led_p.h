@@ -32,6 +32,7 @@ public:
     QDBusInterface *iface = nullptr;
     QDBusInterface *ledIface();
 
+    Device *device;
     QDBusObjectPath mObjectPath;
 };
 

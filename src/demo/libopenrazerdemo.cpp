@@ -43,7 +43,7 @@ int main()
         }
 
         foreach (libopenrazer::Led *led, device->getLeds()) {
-            if (device->hasFx("brightness")) {
+            if (led->hasFx("brightness")) {
                 qDebug() << "getBrightness";
                 qDebug() << led->getBrightness();
             }

@@ -40,7 +40,7 @@ Device::Device(QDBusObjectPath objectPath)
 
     QMap<razer_test::RazerLedId, QString>::const_iterator i = d->supportedLeds.constBegin();
     while (i != d->supportedLeds.constEnd()) {
-        libopenrazer::Led *led = new libopenrazer::Led(d->mObjectPath, i.key(), i.value());
+        libopenrazer::Led *led = new libopenrazer::Led(this, d->mObjectPath, i.key(), i.value());
         d->leds.append(led);
         ++i;
     }
@@ -95,7 +95,10 @@ void DevicePrivate::setupCapabilities()
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setCustom"))
         supportedFeatures.append("custom_frame");
 
-    if (hasCapabilityInternal("razer.device.lighting.chroma", "setNone"))
+    // razer.device.lighting.chroma more than only the normal fx, so check for methods directly
+    if (hasCapabilityInternal("razer.device.lighting.chroma", "setNone")
+        || hasCapabilityInternal("razer.device.lighting.chroma", "setStatic")
+        || hasCapabilityInternal("razer.device.lighting.bw2013"))
         supportedLeds.insert(razer_test::RazerLedId::Unspecified, "Chroma");
     if (hasCapabilityInternal("razer.device.lighting.logo"))
         supportedLeds.insert(razer_test::RazerLedId::LogoLED, "Logo");
@@ -107,48 +110,6 @@ void DevicePrivate::setupCapabilities()
         supportedLeds.insert(razer_test::RazerLedId::LeftSideLED, "Left");
     if (hasCapabilityInternal("razer.device.lighting.right"))
         supportedLeds.insert(razer_test::RazerLedId::RightSideLED, "Right");
-
-    QString lightingLocation = supportedLeds.first();
-    QString lightingLocationMethod;
-    // Leave lightingLocationMethod empty in case it's Chroma
-    if (lightingLocation != "Chroma") {
-        lightingLocationMethod = lightingLocation;
-    }
-    QString interface;
-    // Handle the "Unspecified" led special case
-    if (lightingLocation == "Chroma")
-        interface = "razer.device.lighting.chroma";
-    else
-        interface = "razer.device.lighting." + lightingLocation.toLower();
-
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "None"))
-        supportedFx.append("off");
-    // FIXME on??? this active stuff I think
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Static"))
-        supportedFx.append("static");
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Blinking"))
-        supportedFx.append("blinking");
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathSingle"))
-        supportedFx.append("breathing");
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathDual"))
-        supportedFx.append("breathing_dual");
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathRandom"))
-        supportedFx.append("breathing_random");
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Spectrum"))
-        supportedFx.append("spectrum");
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Wave"))
-        supportedFx.append("wave");
-    if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Reactive"))
-        supportedFx.append("reactive");
-
-
-    if (lightingLocation == "Chroma") {
-        if (hasCapabilityInternal("razer.device.lighting.brightness", "setBrightness"))
-            supportedFx.append("brightness");
-    } else {
-        if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Brightness"))
-            supportedFx.append("brightness");
-    }
 }
 
 /**
@@ -165,49 +126,6 @@ bool DevicePrivate::hasCapabilityInternal(const QString &interface, const QStrin
 QDBusObjectPath Device::objectPath()
 {
     return d->mObjectPath;
-}
-
-bool Device::hasFx(const QString &fxStr)
-{
-    return d->supportedFx.contains(fxStr);
-}
-
-bool Device::hasFx(razer_test::RazerEffect fx)
-{
-    QString fxStr;
-    switch (fx) {
-    case razer_test::RazerEffect::Off:
-        fxStr = "off";
-        break;
-    case razer_test::RazerEffect::On:
-        fxStr = "on";
-        break;
-    case razer_test::RazerEffect::Static:
-        fxStr = "static";
-        break;
-    case razer_test::RazerEffect::Breathing:
-        fxStr = "breathing";
-        break;
-    case razer_test::RazerEffect::BreathingDual:
-        fxStr = "breathing_dual";
-        break;
-    case razer_test::RazerEffect::BreathingRandom:
-        fxStr = "breathing_random";
-        break;
-    case razer_test::RazerEffect::Blinking:
-        fxStr = "blinking";
-        break;
-    case razer_test::RazerEffect::Spectrum:
-        fxStr = "spectrum";
-        break;
-    case razer_test::RazerEffect::Wave:
-        fxStr = "wave";
-        break;
-    case razer_test::RazerEffect::Reactive:
-        fxStr = "reactive";
-        break;
-    }
-    return hasFx(fxStr);
 }
 
 bool Device::hasFeature(const QString &featureStr)

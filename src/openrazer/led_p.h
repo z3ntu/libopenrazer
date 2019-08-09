@@ -31,14 +31,22 @@ public:
 
     QDBusInterface *iface = nullptr;
     QDBusInterface *ifaceBrightness = nullptr;
+    QDBusInterface *ifaceBw2013 = nullptr;
     QDBusInterface *ledIface();
     QDBusInterface *ledBrightnessIface();
+    QDBusInterface *ledBw2013Iface();
 
+    Device *device;
     QDBusObjectPath mObjectPath;
+
+    QStringList supportedFx;
 
     razer_test::RazerLedId ledId;
     QString lightingLocation;
     QString lightingLocationMethod;
+    QString interface;
+
+    void setupCapabilities();
 };
 
 }

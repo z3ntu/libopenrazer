@@ -16,6 +16,7 @@
  *
  */
 
+#include "device_p.h"
 #include "led_p.h"
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
@@ -31,10 +32,11 @@
 
 namespace libopenrazer {
 
-Led::Led(QDBusObjectPath objectPath)
+Led::Led(Device *device, QDBusObjectPath objectPath)
 {
     d = new LedPrivate();
     d->mParent = this;
+    d->device = device;
     d->mObjectPath = objectPath;
 }
 
@@ -43,6 +45,49 @@ Led::~Led() = default;
 QDBusObjectPath Led::getObjectPath()
 {
     return d->mObjectPath;
+}
+
+bool Led::hasFx(const QString &fxStr)
+{
+    return d->device->d->supportedFx.contains(fxStr);
+}
+
+bool Led::hasFx(razer_test::RazerEffect fx)
+{
+    QString fxStr;
+    switch (fx) {
+    case razer_test::RazerEffect::Off:
+        fxStr = "off";
+        break;
+    case razer_test::RazerEffect::On:
+        fxStr = "on";
+        break;
+    case razer_test::RazerEffect::Static:
+        fxStr = "static";
+        break;
+    case razer_test::RazerEffect::Breathing:
+        fxStr = "breathing";
+        break;
+    case razer_test::RazerEffect::BreathingDual:
+        fxStr = "breathing_dual";
+        break;
+    case razer_test::RazerEffect::BreathingRandom:
+        fxStr = "breathing_random";
+        break;
+    case razer_test::RazerEffect::Blinking:
+        fxStr = "blinking";
+        break;
+    case razer_test::RazerEffect::Spectrum:
+        fxStr = "spectrum";
+        break;
+    case razer_test::RazerEffect::Wave:
+        fxStr = "wave";
+        break;
+    case razer_test::RazerEffect::Reactive:
+        fxStr = "reactive";
+        break;
+    }
+    return hasFx(fxStr);
 }
 
 razer_test::RazerEffect Led::getCurrentEffect()
@@ -66,6 +111,12 @@ razer_test::RazerLedId Led::getLedId()
 bool Led::setOff()
 {
     QDBusReply<bool> reply = d->ledIface()->call("setOff");
+    return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+bool Led::setOn()
+{
+    QDBusReply<bool> reply = d->ledIface()->call("setOn");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 

@@ -34,7 +34,7 @@ Device::Device(QDBusObjectPath objectPath)
     d->supportedFeatures = d->getSupportedFeatures();
 
     foreach (const QDBusObjectPath &ledPath, d->getLedObjectPaths()) {
-        libopenrazer::Led *led = new libopenrazer::Led(ledPath);
+        libopenrazer::Led *led = new libopenrazer::Led(this, ledPath);
         d->leds.append(led);
     }
 }
@@ -49,49 +49,6 @@ Device::~Device()
 QDBusObjectPath Device::objectPath()
 {
     return d->mObjectPath;
-}
-
-bool Device::hasFx(const QString &fxStr)
-{
-    return d->supportedFx.contains(fxStr);
-}
-
-bool Device::hasFx(razer_test::RazerEffect fx)
-{
-    QString fxStr;
-    switch (fx) {
-    case razer_test::RazerEffect::Off:
-        fxStr = "off";
-        break;
-    case razer_test::RazerEffect::On:
-        fxStr = "on";
-        break;
-    case razer_test::RazerEffect::Static:
-        fxStr = "static";
-        break;
-    case razer_test::RazerEffect::Breathing:
-        fxStr = "breathing";
-        break;
-    case razer_test::RazerEffect::BreathingDual:
-        fxStr = "breathing_dual";
-        break;
-    case razer_test::RazerEffect::BreathingRandom:
-        fxStr = "breathing_random";
-        break;
-    case razer_test::RazerEffect::Blinking:
-        fxStr = "blinking";
-        break;
-    case razer_test::RazerEffect::Spectrum:
-        fxStr = "spectrum";
-        break;
-    case razer_test::RazerEffect::Wave:
-        fxStr = "wave";
-        break;
-    case razer_test::RazerEffect::Reactive:
-        fxStr = "reactive";
-        break;
-    }
-    return hasFx(fxStr);
 }
 
 bool Device::hasFeature(const QString &featureStr)

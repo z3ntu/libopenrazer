@@ -23,6 +23,8 @@
 
 namespace libopenrazer {
 
+class Device;
+
 class LedPrivate;
 
 /*!
@@ -33,8 +35,8 @@ class Led : public QObject
     Q_OBJECT
 public:
     /// @cond
-    Led(QDBusObjectPath objectPath); // used by razer_test
-    Led(QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation); // used by openrazer
+    Led(Device *device, QDBusObjectPath objectPath); // used by razer_test
+    Led(Device *device, QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation); // used by openrazer
     ~Led() override;
     /// @endcond
 
@@ -42,6 +44,16 @@ public:
      * Returns the D-Bus object path of the Led
      */
     QDBusObjectPath getObjectPath();
+
+    /*!
+     * Returns if the led has the specified \a fxStr
+     */
+    bool hasFx(const QString &fxStr);
+
+    /*!
+     * Returns if the device has the specified \a fx
+     */
+    bool hasFx(razer_test::RazerEffect fx);
 
     /*!
      * Returns the currently active effect
@@ -64,6 +76,13 @@ public:
      * Returns if the D-Bus call was successful.
      */
     bool setOff();
+
+    /*!
+     * Sets the LED to on.
+     *
+     * Returns if the D-Bus call was successful.
+     */
+    bool setOn();
 
     /*!
      * Sets the lighting to static lighting in the specified \a color.

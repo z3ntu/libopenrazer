@@ -42,6 +42,7 @@ namespace libopenrazer {
  */
 const QList<RazerCapability> ledFxList {
     RazerCapability(razer_test::RazerEffect::Off, Led::tr("Off"), 0),
+    RazerCapability(razer_test::RazerEffect::On, Led::tr("On"), 0),
     RazerCapability(razer_test::RazerEffect::Static, Led::tr("Static"), 1),
     RazerCapability(razer_test::RazerEffect::Breathing, Led::tr("Breathing"), 1),
     RazerCapability(razer_test::RazerEffect::BreathingDual, Led::tr("Breathing Dual"), 2),

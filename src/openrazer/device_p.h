@@ -39,7 +39,6 @@ public:
 
     QDBusObjectPath mObjectPath;
 
-    QStringList supportedFx;
     QStringList supportedFeatures;
 
     QList<Led *> leds;
