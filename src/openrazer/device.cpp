@@ -92,6 +92,8 @@ void DevicePrivate::setupCapabilities()
         supportedFeatures.append("dpi");
     if (hasCapabilityInternal("razer.device.misc", "setPollRate"))
         supportedFeatures.append("poll_rate");
+    if (hasCapabilityInternal("razer.device.lighting.chroma", "setCustom"))
+        supportedFeatures.append("custom_frame");
 
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setNone"))
         supportedLeds.insert(razer_test::RazerLedId::Unspecified, "Chroma");
@@ -139,8 +141,6 @@ void DevicePrivate::setupCapabilities()
     if (hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Reactive"))
         supportedFx.append("reactive");
 
-    if (hasCapabilityInternal("razer.device.lighting.chroma", "setCustom"))
-        supportedFx.append("custom_frame");
 
     if (lightingLocation == "Chroma") {
         if (hasCapabilityInternal("razer.device.lighting.brightness", "setBrightness"))
