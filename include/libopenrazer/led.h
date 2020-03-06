@@ -63,7 +63,7 @@ public:
     /*!
      * Returns the currently active colors (the list will have at least 3 elements)
      */
-    QList<razer_test::RGB> getCurrentColors();
+    QVector<razer_test::RGB> getCurrentColors();
 
     /*!
      * Returns the Led ID of this Led

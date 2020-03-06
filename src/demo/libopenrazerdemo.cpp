@@ -47,6 +47,8 @@ int main()
                 qDebug() << "getBrightness";
                 qDebug() << led->getBrightness();
             }
+            auto colors = led->getCurrentColors();
+            qDebug() << colors[0].r << colors[0].g << colors[0].b;
         }
 
         if (device->hasFeature("kbd_layout")) {

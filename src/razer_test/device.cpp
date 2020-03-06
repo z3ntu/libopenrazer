@@ -162,13 +162,11 @@ bool Device::displayCustomFrame()
 
 bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData)
 {
-    QByteArray rgbData;
+    QVector<razer_test::RGB> rgbData;
     foreach (const QColor &color, colorData) {
-        rgbData.append(color.red());
-        rgbData.append(color.green());
-        rgbData.append(color.blue());
+        rgbData.append({ static_cast<uchar>(color.red()), static_cast<uchar>(color.green()), static_cast<uchar>(color.blue()) });
     }
-    QDBusReply<bool> reply = d->deviceIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), rgbData);
+    QDBusReply<bool> reply = d->deviceIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), QVariant::fromValue(rgbData));
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 

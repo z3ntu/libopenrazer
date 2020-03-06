@@ -96,10 +96,10 @@ razer_test::RazerEffect Led::getCurrentEffect()
     return handleDBusVariant<razer_test::RazerEffect>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
 }
 
-QList<razer_test::RGB> Led::getCurrentColors()
+QVector<razer_test::RGB> Led::getCurrentColors()
 {
     QVariant reply = d->ledIface()->property("CurrentColors");
-    return handleDBusVariant<QList<razer_test::RGB>>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
+    return handleDBusVariant<QVector<razer_test::RGB>>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
 }
 
 razer_test::RazerLedId Led::getLedId()

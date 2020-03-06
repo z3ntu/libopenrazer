@@ -151,7 +151,7 @@ razer_test::RazerEffect Led::getCurrentEffect()
     return razer_test::RazerEffect::Spectrum;
 }
 
-QList<razer_test::RGB> Led::getCurrentColors()
+QVector<razer_test::RGB> Led::getCurrentColors()
 {
     // TODO Needs OpenRazer implementation
     return { { 0, 255, 0 }, { 255, 0, 0 }, { 0, 0, 255 } };
