@@ -27,8 +27,7 @@
 
 namespace libopenrazer {
 
-const char *OPENRAZER_SERVICE_NAME = "org.razer";
-QDBusConnection OPENRAZER_DBUS_BUS = QDBusConnection::sessionBus();
+namespace openrazer {
 
 Manager::Manager()
 {
@@ -36,7 +35,7 @@ Manager::Manager()
     d->mParent = this;
 
     // Register the enums with the Qt system
-    razer_test::registerMetaTypes();
+    ::razer_test::registerMetaTypes();
 }
 
 bool Manager::isDaemonRunning()
@@ -59,6 +58,11 @@ QList<QDBusObjectPath> Manager::getDevices()
         ret.append(QDBusObjectPath("/org/razer/device/" + serial));
     }
     return ret;
+}
+
+Device *Manager::getDevice(QDBusObjectPath objectPath)
+{
+    return new Device(objectPath);
 }
 
 bool Manager::syncEffects(bool yes)
@@ -176,6 +180,8 @@ QDBusInterface *ManagerPrivate::managerDevicesIface()
                 qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceDevices;
+}
+
 }
 
 }

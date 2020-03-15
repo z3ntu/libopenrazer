@@ -25,6 +25,8 @@
 
 namespace libopenrazer {
 
+namespace razer_test {
+
 Device::Device(QDBusObjectPath objectPath)
 {
     d = new DevicePrivate();
@@ -34,7 +36,7 @@ Device::Device(QDBusObjectPath objectPath)
     d->supportedFeatures = d->getSupportedFeatures();
 
     foreach (const QDBusObjectPath &ledPath, d->getLedObjectPaths()) {
-        libopenrazer::Led *led = new libopenrazer::Led(this, ledPath);
+        Led *led = new Led(this, ledPath);
         d->leds.append(led);
     }
 }
@@ -67,7 +69,7 @@ QList<QDBusObjectPath> DevicePrivate::getLedObjectPaths()
     return handleDBusVariant<QList<QDBusObjectPath>>(reply, deviceIface()->lastError(), Q_FUNC_INFO);
 }
 
-QList<Led *> Device::getLeds()
+QList<::libopenrazer::Led *> Device::getLeds()
 {
     return d->leds;
 }
@@ -136,19 +138,19 @@ bool Device::setPollRate(ushort pollrate)
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::setDPI(razer_test::RazerDPI dpi)
+bool Device::setDPI(::razer_test::RazerDPI dpi)
 {
     QDBusReply<bool> reply = d->deviceIface()->call("setDPI", QVariant::fromValue(dpi));
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-razer_test::RazerDPI Device::getDPI()
+::razer_test::RazerDPI Device::getDPI()
 {
-    QDBusReply<razer_test::RazerDPI> reply = d->deviceIface()->call("getDPI");
+    QDBusReply<::razer_test::RazerDPI> reply = d->deviceIface()->call("getDPI");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-ushort libopenrazer::Device::maxDPI()
+ushort Device::maxDPI()
 {
     QDBusReply<ushort> reply = d->deviceIface()->call("getMaxDPI");
     return handleDBusReply(reply, Q_FUNC_INFO);
@@ -162,7 +164,7 @@ bool Device::displayCustomFrame()
 
 bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData)
 {
-    QVector<razer_test::RGB> rgbData;
+    QVector<::razer_test::RGB> rgbData;
     foreach (const QColor &color, colorData) {
         rgbData.append({ static_cast<uchar>(color.red()), static_cast<uchar>(color.green()), static_cast<uchar>(color.blue()) });
     }
@@ -170,10 +172,10 @@ bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QV
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-razer_test::MatrixDimensions Device::getMatrixDimensions()
+::razer_test::MatrixDimensions Device::getMatrixDimensions()
 {
     QVariant reply = d->deviceIface()->property("MatrixDimensions");
-    return handleDBusVariant<razer_test::MatrixDimensions>(reply, d->deviceIface()->lastError(), Q_FUNC_INFO);
+    return handleDBusVariant<::razer_test::MatrixDimensions>(reply, d->deviceIface()->lastError(), Q_FUNC_INFO);
 }
 
 QDBusInterface *DevicePrivate::deviceIface()
@@ -187,6 +189,8 @@ QDBusInterface *DevicePrivate::deviceIface()
                 qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return iface;
+}
+
 }
 
 }

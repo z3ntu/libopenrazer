@@ -15,14 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MANAGER_P_H
-#define MANAGER_P_H
+#ifndef RAZER_TEST_MANAGER_P_H
+#define RAZER_TEST_MANAGER_P_H
 
 #include "libopenrazer/manager.h"
 
 #include <QDBusInterface>
 
 namespace libopenrazer {
+
+namespace razer_test {
+
+const char *OPENRAZER_SERVICE_NAME = "io.github.openrazer1";
+QDBusConnection OPENRAZER_DBUS_BUS = RAZER_TEST_DBUS_BUS;
 
 class ManagerPrivate
 {
@@ -35,4 +40,6 @@ public:
 
 }
 
-#endif // MANAGER_P_H
+}
+
+#endif // RAZER_TEST_MANAGER_P_H

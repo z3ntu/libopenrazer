@@ -15,14 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LED_P_H
-#define LED_P_H
+#ifndef RAZER_TEST_LED_P_H
+#define RAZER_TEST_LED_P_H
 
 #include "libopenrazer/led.h"
 
 #include <QDBusInterface>
 
 namespace libopenrazer {
+
+namespace razer_test {
 
 class LedPrivate
 {
@@ -38,4 +40,6 @@ public:
 
 }
 
-#endif // LED_P_H
+}
+
+#endif // RAZER_TEST_LED_P_H

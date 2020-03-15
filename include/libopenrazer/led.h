@@ -23,10 +23,6 @@
 
 namespace libopenrazer {
 
-class Device;
-
-class LedPrivate;
-
 /*!
  * \brief Abstraction for accessing Led objects via D-Bus.
  */
@@ -34,127 +30,188 @@ class Led : public QObject
 {
     Q_OBJECT
 public:
-    /// @cond
-    Led(Device *device, QDBusObjectPath objectPath); // used by razer_test
-    Led(Device *device, QDBusObjectPath objectPath, razer_test::RazerLedId ledId, QString lightingLocation); // used by openrazer
-    ~Led() override;
-    /// @endcond
-
     /*!
      * Returns the D-Bus object path of the Led
      */
-    QDBusObjectPath getObjectPath();
+    virtual QDBusObjectPath getObjectPath() = 0;
 
     /*!
      * Returns if the led has the specified \a fxStr
      */
-    bool hasFx(const QString &fxStr);
+    virtual bool hasFx(const QString &fxStr) = 0;
 
     /*!
      * Returns if the device has the specified \a fx
      */
-    bool hasFx(razer_test::RazerEffect fx);
+    virtual bool hasFx(::razer_test::RazerEffect fx) = 0;
 
     /*!
      * Returns the currently active effect
      */
-    razer_test::RazerEffect getCurrentEffect();
+    virtual ::razer_test::RazerEffect getCurrentEffect() = 0;
 
     /*!
      * Returns the currently active colors (the list will have at least 3 elements)
      */
-    QVector<razer_test::RGB> getCurrentColors();
+    virtual QVector<::razer_test::RGB> getCurrentColors() = 0;
 
     /*!
      * Returns the Led ID of this Led
      */
-    razer_test::RazerLedId getLedId();
+    virtual ::razer_test::RazerLedId getLedId() = 0;
 
     /*!
      * Sets the LED to none / off.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setOff();
+    virtual bool setOff() = 0;
 
     /*!
      * Sets the LED to on.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setOn();
+    virtual bool setOn() = 0;
 
     /*!
      * Sets the lighting to static lighting in the specified \a color.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setStatic(QColor color);
+    virtual bool setStatic(QColor color) = 0;
 
     /*!
      * Sets the lighting to the single breath effect with the specified \a color.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setBreathing(QColor color);
+    virtual bool setBreathing(QColor color) = 0;
 
     /*!
      * Sets the lighting to the dual breath effect with the specified \a color and \a color2.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setBreathingDual(QColor color, QColor color2);
+    virtual bool setBreathingDual(QColor color, QColor color2) = 0;
 
     /*!
      * Sets the lighting wheel to the random breath effect.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setBreathingRandom();
+    virtual bool setBreathingRandom() = 0;
 
     /*!
      * Sets the lighting wheel to the random breath effect.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setBlinking(QColor color);
+    virtual bool setBlinking(QColor color) = 0;
 
     /*!
      * Sets the lighting to spectrum mode.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setSpectrum();
+    virtual bool setSpectrum() = 0;
 
     /*!
      * Sets the lighting effect to wave, in the direction \a direction.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setWave(razer_test::WaveDirection direction);
+    virtual bool setWave(::razer_test::WaveDirection direction) = 0;
 
     /*!
      * Sets the lighting to reactive mode with the specified \a color and \a speed.
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setReactive(QColor color, razer_test::ReactiveSpeed speed);
+    virtual bool setReactive(QColor color, ::razer_test::ReactiveSpeed speed) = 0;
 
     /*!
      * Sets the \a brightness (`0` - `255`).
      *
      * Returns if the D-Bus call was successful.
      */
-    bool setBrightness(uchar brightness);
+    virtual bool setBrightness(uchar brightness) = 0;
 
     /*!
      * Returns the current brightness (`0` - `255`).
      */
-    uchar getBrightness();
+    virtual uchar getBrightness() = 0;
+};
+
+namespace openrazer {
+
+class Device;
+class LedPrivate;
+class Led : public ::libopenrazer::Led
+{
+public:
+    Led(Device *device, QDBusObjectPath objectPath, ::razer_test::RazerLedId ledId, QString lightingLocation);
+    ~Led() override;
+
+    QDBusObjectPath getObjectPath() override;
+    bool hasFx(const QString &fxStr) override;
+    bool hasFx(::razer_test::RazerEffect fx) override;
+    ::razer_test::RazerEffect getCurrentEffect() override;
+    QVector<::razer_test::RGB> getCurrentColors() override;
+    ::razer_test::RazerLedId getLedId() override;
+    bool setOff() override;
+    bool setOn() override;
+    bool setStatic(QColor color) override;
+    bool setBreathing(QColor color) override;
+    bool setBreathingDual(QColor color, QColor color2) override;
+    bool setBreathingRandom() override;
+    bool setBlinking(QColor color) override;
+    bool setSpectrum() override;
+    bool setWave(::razer_test::WaveDirection direction) override;
+    bool setReactive(QColor color, ::razer_test::ReactiveSpeed speed) override;
+    bool setBrightness(uchar brightness) override;
+    uchar getBrightness() override;
 
 private:
     LedPrivate *d;
 };
+
+}
+
+namespace razer_test {
+
+class Device;
+class LedPrivate;
+class Led : public ::libopenrazer::Led
+{
+public:
+    Led(Device *device, QDBusObjectPath objectPath);
+    ~Led() override;
+
+    QDBusObjectPath getObjectPath() override;
+    bool hasFx(const QString &fxStr) override;
+    bool hasFx(::razer_test::RazerEffect fx) override;
+    ::razer_test::RazerEffect getCurrentEffect() override;
+    QVector<::razer_test::RGB> getCurrentColors() override;
+    ::razer_test::RazerLedId getLedId() override;
+    bool setOff() override;
+    bool setOn() override;
+    bool setStatic(QColor color) override;
+    bool setBreathing(QColor color) override;
+    bool setBreathingDual(QColor color, QColor color2) override;
+    bool setBreathingRandom() override;
+    bool setBlinking(QColor color) override;
+    bool setSpectrum() override;
+    bool setWave(::razer_test::WaveDirection direction) override;
+    bool setReactive(QColor color, ::razer_test::ReactiveSpeed speed) override;
+    bool setBrightness(uchar brightness) override;
+    uchar getBrightness() override;
+
+private:
+    LedPrivate *d;
+};
+
+}
 
 }
 

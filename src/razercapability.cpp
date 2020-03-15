@@ -22,12 +22,12 @@ namespace libopenrazer {
 
 RazerCapability::RazerCapability()
 {
-    this->identifier = razer_test::RazerEffect::Off;
+    this->identifier = ::razer_test::RazerEffect::Off;
     this->displayString = "";
     this->numColors = 0;
     this->wave = false;
 }
-RazerCapability::RazerCapability(razer_test::RazerEffect identifier, QString displayString, int numColors)
+RazerCapability::RazerCapability(::razer_test::RazerEffect identifier, QString displayString, int numColors)
 {
     this->identifier = identifier;
     this->displayString = displayString;
@@ -35,7 +35,7 @@ RazerCapability::RazerCapability(razer_test::RazerEffect identifier, QString dis
     this->wave = false;
 }
 
-RazerCapability::RazerCapability(razer_test::RazerEffect identifier, QString displayString, bool isWave)
+RazerCapability::RazerCapability(::razer_test::RazerEffect identifier, QString displayString, bool isWave)
     : RazerCapability(identifier, displayString, 0)
 {
     this->wave = isWave;
@@ -56,7 +56,7 @@ int RazerCapability::getNumColors() const
     return numColors;
 }
 
-razer_test::RazerEffect RazerCapability::getIdentifier() const
+::razer_test::RazerEffect RazerCapability::getIdentifier() const
 {
     return identifier;
 }

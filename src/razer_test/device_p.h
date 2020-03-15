@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DEVICE_P_H
-#define DEVICE_P_H
+#ifndef RAZER_TEST_DEVICE_P_H
+#define RAZER_TEST_DEVICE_P_H
 
 #include "libopenrazer/device.h"
 #include "libopenrazer/led.h"
@@ -24,6 +24,8 @@
 #include <QDBusInterface>
 
 namespace libopenrazer {
+
+namespace razer_test {
 
 class DevicePrivate
 {
@@ -38,7 +40,7 @@ public:
     QStringList supportedFx;
     QStringList supportedFeatures;
 
-    QList<Led *> leds;
+    QList<::libopenrazer::Led *> leds;
     QList<QDBusObjectPath> getLedObjectPaths();
 
     QStringList getSupportedFx();
@@ -47,4 +49,6 @@ public:
 
 }
 
-#endif // DEVICE_P_H
+}
+
+#endif // RAZER_TEST_DEVICE_P_H

@@ -15,14 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MANAGER_P_H
-#define MANAGER_P_H
+#ifndef OPENRAZER_MANAGER_P_H
+#define OPENRAZER_MANAGER_P_H
 
 #include "libopenrazer/manager.h"
 
 #include <QDBusInterface>
 
 namespace libopenrazer {
+
+namespace openrazer {
+
+const char *OPENRAZER_SERVICE_NAME = "org.razer";
+QDBusConnection OPENRAZER_DBUS_BUS = QDBusConnection::sessionBus();
 
 class ManagerPrivate
 {
@@ -37,4 +42,6 @@ public:
 
 }
 
-#endif // MANAGER_P_H
+}
+
+#endif // OPENRAZER_MANAGER_P_H

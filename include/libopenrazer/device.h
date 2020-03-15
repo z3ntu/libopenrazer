@@ -18,14 +18,13 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
-#include "libopenrazer/led.h"
-
 #include <QDBusInterface>
 #include <QObject>
+#include <razer_test.h>
 
 namespace libopenrazer {
 
-class DevicePrivate;
+class Led;
 
 /*!
  * \brief Abstraction for accessing Device objects via D-Bus.
@@ -35,37 +34,31 @@ class Device : public QObject
     Q_OBJECT
 public:
     /*!
-     * Constructs a new device object with the given \a objectPath.
-     */
-    Device(QDBusObjectPath objectPath);
-    ~Device() override;
-
-    /*!
      * Returns the DBus object path.
      */
-    QDBusObjectPath objectPath();
+    virtual QDBusObjectPath objectPath() = 0;
 
     /*!
      * Returns if the device has the specified \a featureStr
      */
-    bool hasFeature(const QString &featureStr);
+    virtual bool hasFeature(const QString &featureStr) = 0;
 
     /*!
      * Returns the URL of an image that shows this device. Could return an empty string if no image was found.
      */
-    QString getDeviceImageUrl();
+    virtual QString getDeviceImageUrl() = 0;
 
     /*!
      * Returns a list of Leds supported on the device.
      */
-    QList<Led *> getLeds();
+    virtual QList<Led *> getLeds() = 0;
 
     /*!
      * Returns the device mode of the device, like `0:0` or `3:0` for normal mode and driver mode respetively.
      *
      * \sa setDeviceMode()
      */
-    QString getDeviceMode();
+    virtual QString getDeviceMode() = 0;
 
     /*!
      * Sets the device mode to the specified \a mode_id and \a param.
@@ -77,39 +70,39 @@ public:
      *
      * \sa getDeviceMode()
      */
-    bool setDeviceMode(uchar mode_id, uchar param);
+    virtual bool setDeviceMode(uchar mode_id, uchar param) = 0;
 
     /*!
      * Returns the serial number of the device which can be used to identify the device.
      */
-    QString getSerial();
+    virtual QString getSerial() = 0;
 
     /*!
      * Returns a human readable device name like `Razer DeathAdder Chroma` or `Razer Kraken 7.1`.
      */
-    QString getDeviceName();
+    virtual QString getDeviceName() = 0;
 
     /*!
      * Returns the type of the device. Could be one of `accessory`, `headset`, `keyboard`, `keypad`, `mouse`, `mousepad` or another type, if added to the daemon.
      */
-    QString getDeviceType();
+    virtual QString getDeviceType() = 0;
 
     /*!
      * Returns the firmware version of the device (e.g. `v1.0`).
      */
-    QString getFirmwareVersion();
+    virtual QString getFirmwareVersion() = 0;
 
     /*!
      * Returns the physical layout of the keyboard (e.g. `de_DE`, `en_US`, `en_GB` or `unknown`)
      */
-    QString getKeyboardLayout();
+    virtual QString getKeyboardLayout() = 0;
 
     /*!
      * Returns the current poll rate, e.g. `125`, `500` or `1000`.
      *
      * \sa setPollRate()
      */
-    ushort getPollRate();
+    virtual ushort getPollRate() = 0;
 
     /*!
      * Sets the poll rate of the mouse to the specified \a pollrate, e.g. `125`, `500` or `1000`.
@@ -118,7 +111,7 @@ public:
      *
      * \sa getPollRate()
      */
-    bool setPollRate(ushort pollrate);
+    virtual bool setPollRate(ushort pollrate) = 0;
 
     /*!
      * Sets the DPI of the mouse to the specified \a dpi_x for the x-Axis and \a dpi_y for the y-Axis. Maximum value is what is returned by maxDPI().
@@ -127,21 +120,21 @@ public:
      *
      * \sa getDPI(), maxDPI()
      */
-    bool setDPI(razer_test::RazerDPI dpi);
+    virtual bool setDPI(::razer_test::RazerDPI dpi) = 0;
 
     /*!
      * Returns the DPI of the mouse (e.g. `[800, 800]`).
      *
      * \sa setDPI()
      */
-    razer_test::RazerDPI getDPI();
+    virtual ::razer_test::RazerDPI getDPI() = 0;
 
     /*!
      * Returns the maximum DPI possible for the device.
      *
      * \sa getDPI(), setDPI()
      */
-    ushort maxDPI();
+    virtual ushort maxDPI() = 0;
 
     /*!
      * Sets the lighting to custom mode (applies effects set from defineCustomFrame()).
@@ -150,7 +143,7 @@ public:
      *
      * \sa defineCustomFrame()
      */
-    bool displayCustomFrame();
+    virtual bool displayCustomFrame() = 0;
 
     /*!
      * Sets the lighting of a key row to the specified \a colorData.
@@ -162,20 +155,97 @@ public:
      *
      * \sa displayCustomFrame()
      */
-    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData);
+    virtual bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) = 0;
 
     /*!
      * Returns the dimension of the matrix supported on the device.
      *
      * \sa defineCustomFrame()
      */
-    razer_test::MatrixDimensions getMatrixDimensions();
+    virtual ::razer_test::MatrixDimensions getMatrixDimensions() = 0;
+};
+
+namespace openrazer {
+
+class DevicePrivate;
+class Led;
+class LedPrivate;
+
+class Device : public ::libopenrazer::Device
+{
+public:
+    Device(QDBusObjectPath objectPath);
+    ~Device() override;
+
+    QDBusObjectPath objectPath() override;
+    bool hasFeature(const QString &featureStr) override;
+    QString getDeviceImageUrl() override;
+    QList<::libopenrazer::Led *> getLeds() override;
+    QString getDeviceMode() override;
+    bool setDeviceMode(uchar mode_id, uchar param) override;
+    QString getSerial() override;
+    QString getDeviceName() override;
+    QString getDeviceType() override;
+    QString getFirmwareVersion() override;
+    QString getKeyboardLayout() override;
+    ushort getPollRate() override;
+    bool setPollRate(ushort pollrate) override;
+    bool setDPI(::razer_test::RazerDPI dpi) override;
+    ::razer_test::RazerDPI getDPI() override;
+    ushort maxDPI() override;
+    bool displayCustomFrame() override;
+    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) override;
+    ::razer_test::MatrixDimensions getMatrixDimensions() override;
 
 private:
     DevicePrivate *d;
-    friend class LedPrivate;
+
     friend class Led;
+    friend class LedPrivate;
 };
+
+}
+
+namespace razer_test {
+
+class DevicePrivate;
+class Led;
+class LedPrivate;
+
+class Device : public ::libopenrazer::Device
+{
+public:
+    Device(QDBusObjectPath objectPath);
+    ~Device() override;
+
+    QDBusObjectPath objectPath() override;
+    bool hasFeature(const QString &featureStr) override;
+    QString getDeviceImageUrl() override;
+    QList<::libopenrazer::Led *> getLeds() override;
+    QString getDeviceMode() override;
+    bool setDeviceMode(uchar mode_id, uchar param) override;
+    QString getSerial() override;
+    QString getDeviceName() override;
+    QString getDeviceType() override;
+    QString getFirmwareVersion() override;
+    QString getKeyboardLayout() override;
+    ushort getPollRate() override;
+    bool setPollRate(ushort pollrate) override;
+    bool setDPI(::razer_test::RazerDPI dpi) override;
+    ::razer_test::RazerDPI getDPI() override;
+    ushort maxDPI() override;
+    bool displayCustomFrame() override;
+    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) override;
+    ::razer_test::MatrixDimensions getMatrixDimensions() override;
+
+private:
+    DevicePrivate *d;
+
+    friend class Led;
+    friend class LedPrivate;
+};
+
+}
 
 }
 

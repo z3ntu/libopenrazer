@@ -23,10 +23,6 @@
 
 namespace libopenrazer {
 
-// Set in the implementation manager.cpp
-extern const char *OPENRAZER_SERVICE_NAME;
-extern QDBusConnection OPENRAZER_DBUS_BUS;
-
 void printDBusError(QDBusError error, const char *functionname);
 bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname);
 
@@ -48,6 +44,15 @@ T handleDBusVariant(QVariant variant, QDBusError error, const char *functionname
     }
     printDBusError(error, functionname);
     throw DBusException(error);
+}
+
+namespace openrazer {
+extern const char *OPENRAZER_SERVICE_NAME;
+extern QDBusConnection OPENRAZER_DBUS_BUS;
+}
+namespace razer_test {
+extern const char *OPENRAZER_SERVICE_NAME;
+extern QDBusConnection OPENRAZER_DBUS_BUS;
 }
 
 }

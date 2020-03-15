@@ -25,12 +25,14 @@
 
 #define QCOLOR_TO_QVARIANT(c)                      \
     QVariant::fromValue(                           \
-            razer_test::RGB {                      \
+            ::razer_test::RGB {                    \
                     static_cast<uchar>(c.red()),   \
                     static_cast<uchar>(c.green()), \
                     static_cast<uchar>(c.blue()) })
 
 namespace libopenrazer {
+
+namespace razer_test {
 
 Led::Led(Device *device, QDBusObjectPath objectPath)
 {
@@ -52,60 +54,60 @@ bool Led::hasFx(const QString &fxStr)
     return d->device->d->supportedFx.contains(fxStr);
 }
 
-bool Led::hasFx(razer_test::RazerEffect fx)
+bool Led::hasFx(::razer_test::RazerEffect fx)
 {
     QString fxStr;
     switch (fx) {
-    case razer_test::RazerEffect::Off:
+    case ::razer_test::RazerEffect::Off:
         fxStr = "off";
         break;
-    case razer_test::RazerEffect::On:
+    case ::razer_test::RazerEffect::On:
         fxStr = "on";
         break;
-    case razer_test::RazerEffect::Static:
+    case ::razer_test::RazerEffect::Static:
         fxStr = "static";
         break;
-    case razer_test::RazerEffect::Breathing:
+    case ::razer_test::RazerEffect::Breathing:
         fxStr = "breathing";
         break;
-    case razer_test::RazerEffect::BreathingDual:
+    case ::razer_test::RazerEffect::BreathingDual:
         fxStr = "breathing_dual";
         break;
-    case razer_test::RazerEffect::BreathingRandom:
+    case ::razer_test::RazerEffect::BreathingRandom:
         fxStr = "breathing_random";
         break;
-    case razer_test::RazerEffect::Blinking:
+    case ::razer_test::RazerEffect::Blinking:
         fxStr = "blinking";
         break;
-    case razer_test::RazerEffect::Spectrum:
+    case ::razer_test::RazerEffect::Spectrum:
         fxStr = "spectrum";
         break;
-    case razer_test::RazerEffect::Wave:
+    case ::razer_test::RazerEffect::Wave:
         fxStr = "wave";
         break;
-    case razer_test::RazerEffect::Reactive:
+    case ::razer_test::RazerEffect::Reactive:
         fxStr = "reactive";
         break;
     }
     return hasFx(fxStr);
 }
 
-razer_test::RazerEffect Led::getCurrentEffect()
+::razer_test::RazerEffect Led::getCurrentEffect()
 {
     QVariant reply = d->ledIface()->property("CurrentEffect");
-    return handleDBusVariant<razer_test::RazerEffect>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
+    return handleDBusVariant<::razer_test::RazerEffect>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
 }
 
-QVector<razer_test::RGB> Led::getCurrentColors()
+QVector<::razer_test::RGB> Led::getCurrentColors()
 {
     QVariant reply = d->ledIface()->property("CurrentColors");
-    return handleDBusVariant<QVector<razer_test::RGB>>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
+    return handleDBusVariant<QVector<::razer_test::RGB>>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
 }
 
-razer_test::RazerLedId Led::getLedId()
+::razer_test::RazerLedId Led::getLedId()
 {
     QVariant reply = d->ledIface()->property("LedId");
-    return handleDBusVariant<razer_test::RazerLedId>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
+    return handleDBusVariant<::razer_test::RazerLedId>(reply, d->ledIface()->lastError(), Q_FUNC_INFO);
 }
 
 bool Led::setOff()
@@ -156,13 +158,13 @@ bool Led::setSpectrum()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setWave(razer_test::WaveDirection direction)
+bool Led::setWave(::razer_test::WaveDirection direction)
 {
     QDBusReply<bool> reply = d->ledIface()->call("setWave", QVariant::fromValue(direction));
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setReactive(QColor color, razer_test::ReactiveSpeed speed)
+bool Led::setReactive(QColor color, ::razer_test::ReactiveSpeed speed)
 {
     QDBusReply<bool> reply = d->ledIface()->call("setReactive", QVariant::fromValue(speed), QCOLOR_TO_QVARIANT(color));
     return handleDBusReply(reply, Q_FUNC_INFO);
@@ -191,6 +193,8 @@ QDBusInterface *LedPrivate::ledIface()
                 qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return iface;
+}
+
 }
 
 }

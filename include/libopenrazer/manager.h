@@ -24,7 +24,7 @@
 
 namespace libopenrazer {
 
-class ManagerPrivate;
+class Device;
 
 /*!
  * \brief Abstraction for accessing Manager objects via D-Bus.
@@ -33,31 +33,34 @@ class Manager : public QObject
 {
     Q_OBJECT
 public:
-    Manager();
-
     /*!
      * Returns a list of connected devices in form of their DBus object paths.
      *
-     * Can be used to create a libopenrazer::Device object and get further information about the device.
+     * Can be used to call getDevice and get further information about the device.
      */
-    QList<QDBusObjectPath> getDevices();
+    virtual QList<QDBusObjectPath> getDevices() = 0;
+
+    /*!
+     * Returns a Device object with the given DBus object path.
+     */
+    virtual Device *getDevice(QDBusObjectPath objectPath) = 0;
 
     /*!
      * Returns the daemon version currently running (e.g. `2.3.0`).
      */
-    QString getDaemonVersion();
+    virtual QString getDaemonVersion() = 0;
 
     /*!
      * Returns if the daemon is running (and responding to the version call).
      */
-    bool isDaemonRunning();
+    virtual bool isDaemonRunning() = 0;
 
     /*!
      * Returns a list of supported devices in the format of `QHash<QString(DeviceName), QList<double(VID), double(PID)>>`.
      *
      * \sa Device::getVid(), Device::getPid()
      */
-    QVariantHash getSupportedDevices();
+    virtual QVariantHash getSupportedDevices() = 0;
 
     /*!
      * If devices should sync effects, as specified by \a yes.
@@ -68,14 +71,14 @@ public:
      *
      * \sa getSyncEffects()
      */
-    bool syncEffects(bool yes);
+    virtual bool syncEffects(bool yes) = 0;
 
     /*!
      * Returns if devices should sync effect.
      *
      * \sa syncEffects()
      */
-    bool getSyncEffects();
+    virtual bool getSyncEffects() = 0;
 
     /*!
      * Sets if the LEDs should turn off if the screensaver is turned on, as specified by \a turnOffOnScreensaver.
@@ -84,31 +87,31 @@ public:
      *
      * \sa getTurnOffOnScreensaver()
      */
-    bool setTurnOffOnScreensaver(bool turnOffOnScreensaver);
+    virtual bool setTurnOffOnScreensaver(bool turnOffOnScreensaver) = 0;
 
     /*!
      * Returns if the LEDs should turn off if the screensaver is turned on.
      *
      * \sa setTurnOffOnScreensaver()
      */
-    bool getTurnOffOnScreensaver();
+    virtual bool getTurnOffOnScreensaver() = 0;
 
     /*!
      * Returns status of the daemon, see DaemonStatus.
      */
-    DaemonStatus getDaemonStatus();
+    virtual DaemonStatus getDaemonStatus() = 0;
 
     /*!
      * Returns the multiline output of systemctl status.
      */
-    QString getDaemonStatusOutput();
+    virtual QString getDaemonStatusOutput() = 0;
 
     /*!
      * Enables the systemd unit for the OpenRazer daemon to auto-start when the user logs in.
      *
      * Returns if the call was successful.
      */
-    bool enableDaemon();
+    virtual bool enableDaemon() = 0;
     // bool disableDaemon();
 
     /*!
@@ -123,11 +126,62 @@ public:
      *
      * \sa connectDeviceRemoved()
      */
-    bool connectDevicesChanged(QObject *receiver, const char *slot);
+    virtual bool connectDevicesChanged(QObject *receiver, const char *slot) = 0;
+};
+
+namespace openrazer {
+
+class ManagerPrivate;
+class Manager : public ::libopenrazer::Manager
+{
+public:
+    Manager();
+    QList<QDBusObjectPath> getDevices() override;
+    Device *getDevice(QDBusObjectPath objectPath) override;
+    QString getDaemonVersion() override;
+    bool isDaemonRunning() override;
+    QVariantHash getSupportedDevices() override;
+    bool syncEffects(bool yes) override;
+    bool getSyncEffects() override;
+    bool setTurnOffOnScreensaver(bool turnOffOnScreensaver) override;
+    bool getTurnOffOnScreensaver() override;
+    DaemonStatus getDaemonStatus() override;
+    QString getDaemonStatusOutput() override;
+    bool enableDaemon() override;
+    bool connectDevicesChanged(QObject *receiver, const char *slot) override;
 
 private:
     ManagerPrivate *d;
 };
+
+}
+
+namespace razer_test {
+
+class ManagerPrivate;
+class Manager : public ::libopenrazer::Manager
+{
+public:
+    Manager();
+    QList<QDBusObjectPath> getDevices() override;
+    Device *getDevice(QDBusObjectPath objectPath) override;
+    QString getDaemonVersion() override;
+    bool isDaemonRunning() override;
+    QVariantHash getSupportedDevices() override;
+    bool syncEffects(bool yes) override;
+    bool getSyncEffects() override;
+    bool setTurnOffOnScreensaver(bool turnOffOnScreensaver) override;
+    bool getTurnOffOnScreensaver() override;
+    DaemonStatus getDaemonStatus() override;
+    QString getDaemonStatusOutput() override;
+    bool enableDaemon() override;
+    bool connectDevicesChanged(QObject *receiver, const char *slot) override;
+
+private:
+    ManagerPrivate *d;
+};
+
+}
 
 }
 

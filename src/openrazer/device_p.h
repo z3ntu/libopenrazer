@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DEVICE_P_H
-#define DEVICE_P_H
+#ifndef OPENRAZER_DEVICE_P_H
+#define OPENRAZER_DEVICE_P_H
 
 #include "libopenrazer/device.h"
 #include "libopenrazer/led.h"
@@ -24,6 +24,8 @@
 #include <QDBusInterface>
 
 namespace libopenrazer {
+
+namespace openrazer {
 
 class DevicePrivate
 {
@@ -41,7 +43,7 @@ public:
 
     QStringList supportedFeatures;
 
-    QList<Led *> leds;
+    QList<::libopenrazer::Led *> leds;
 
     void introspect();
     void setupCapabilities();
@@ -49,9 +51,11 @@ public:
     QStringList introspection;
 
     // Maps RazerLedId to "Chroma" or "Scroll" (the string put e.g. into setScrollSpectrum)
-    QMap<razer_test::RazerLedId, QString> supportedLeds;
+    QMap<::razer_test::RazerLedId, QString> supportedLeds;
 };
 
 }
 
-#endif // DEVICE_P_H
+}
+
+#endif // OPENRAZER_DEVICE_P_H

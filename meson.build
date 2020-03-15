@@ -12,26 +12,15 @@ sources = [
     'src/dbusexception.cpp',
     'src/misc.cpp',
     'src/razercapability.cpp',
-]
 
-target = get_option('daemon_target')
-if target == 'openrazer'
-    message('Building for openrazer...')
-    sources += [
-        'src/openrazer/device.cpp',
-        'src/openrazer/led.cpp',
-        'src/openrazer/manager.cpp',
-    ]
-elif target == 'razer_test'
-    message('Building for razer_test...')
-    sources += [
-        'src/razer_test/device.cpp',
-        'src/razer_test/led.cpp',
-        'src/razer_test/manager.cpp',
-    ]
-else
-    error('Unsupported daemon_target!')
-endif
+    'src/openrazer/device.cpp',
+    'src/openrazer/led.cpp',
+    'src/openrazer/manager.cpp',
+
+    'src/razer_test/device.cpp',
+    'src/razer_test/led.cpp',
+    'src/razer_test/manager.cpp',
+]
 
 sources += qt5.preprocess(
     moc_headers : [

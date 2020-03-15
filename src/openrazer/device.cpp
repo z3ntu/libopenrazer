@@ -29,6 +29,8 @@
 
 namespace libopenrazer {
 
+namespace openrazer {
+
 Device::Device(QDBusObjectPath objectPath)
 {
     d = new DevicePrivate();
@@ -38,9 +40,9 @@ Device::Device(QDBusObjectPath objectPath)
     d->introspect();
     d->setupCapabilities();
 
-    QMap<razer_test::RazerLedId, QString>::const_iterator i = d->supportedLeds.constBegin();
+    QMap<::razer_test::RazerLedId, QString>::const_iterator i = d->supportedLeds.constBegin();
     while (i != d->supportedLeds.constEnd()) {
-        libopenrazer::Led *led = new libopenrazer::Led(this, d->mObjectPath, i.key(), i.value());
+        Led *led = new Led(this, d->mObjectPath, i.key(), i.value());
         d->leds.append(led);
         ++i;
     }
@@ -99,17 +101,17 @@ void DevicePrivate::setupCapabilities()
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setNone")
         || hasCapabilityInternal("razer.device.lighting.chroma", "setStatic")
         || hasCapabilityInternal("razer.device.lighting.bw2013"))
-        supportedLeds.insert(razer_test::RazerLedId::Unspecified, "Chroma");
+        supportedLeds.insert(::razer_test::RazerLedId::Unspecified, "Chroma");
     if (hasCapabilityInternal("razer.device.lighting.logo"))
-        supportedLeds.insert(razer_test::RazerLedId::LogoLED, "Logo");
+        supportedLeds.insert(::razer_test::RazerLedId::LogoLED, "Logo");
     if (hasCapabilityInternal("razer.device.lighting.scroll"))
-        supportedLeds.insert(razer_test::RazerLedId::ScrollWheelLED, "Scroll");
+        supportedLeds.insert(::razer_test::RazerLedId::ScrollWheelLED, "Scroll");
     if (hasCapabilityInternal("razer.device.lighting.backlight"))
-        supportedLeds.insert(razer_test::RazerLedId::BacklightLED, "Backlight");
+        supportedLeds.insert(::razer_test::RazerLedId::BacklightLED, "Backlight");
     if (hasCapabilityInternal("razer.device.lighting.left"))
-        supportedLeds.insert(razer_test::RazerLedId::LeftSideLED, "Left");
+        supportedLeds.insert(::razer_test::RazerLedId::LeftSideLED, "Left");
     if (hasCapabilityInternal("razer.device.lighting.right"))
-        supportedLeds.insert(razer_test::RazerLedId::RightSideLED, "Right");
+        supportedLeds.insert(::razer_test::RazerLedId::RightSideLED, "Right");
 }
 
 /**
@@ -142,7 +144,7 @@ QString Device::getDeviceImageUrl()
 
 // ----- DBUS METHODS -----
 
-QList<Led *> Device::getLeds()
+QList<::libopenrazer::Led *> Device::getLeds()
 {
     return d->leds;
 }
@@ -229,13 +231,13 @@ bool Device::setPollRate(ushort pollrate)
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::setDPI(razer_test::RazerDPI dpi)
+bool Device::setDPI(::razer_test::RazerDPI dpi)
 {
     QDBusReply<void> reply = d->deviceDpiIface()->call("setDPI", QVariant::fromValue(dpi.dpi_x), QVariant::fromValue(dpi.dpi_y));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-razer_test::RazerDPI Device::getDPI()
+::razer_test::RazerDPI Device::getDPI()
 {
     QDBusReply<QList<int>> reply = d->deviceDpiIface()->call("getDPI");
     if (reply.isValid()) {
@@ -253,7 +255,7 @@ razer_test::RazerDPI Device::getDPI()
     }
 }
 
-ushort libopenrazer::Device::maxDPI()
+ushort Device::maxDPI()
 {
     QDBusReply<int> reply = d->deviceDpiIface()->call("maxDPI");
     if (reply.isValid()) {
@@ -285,7 +287,7 @@ bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QV
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-razer_test::MatrixDimensions Device::getMatrixDimensions()
+::razer_test::MatrixDimensions Device::getMatrixDimensions()
 {
     QDBusReply<QList<int>> reply = d->deviceMiscIface()->call("getMatrixDimensions");
     QList<int> dims = handleDBusReply(reply, Q_FUNC_INFO);
@@ -331,6 +333,8 @@ QDBusInterface *DevicePrivate::deviceLightingChromaIface()
                 qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceLightingChroma;
+}
+
 }
 
 }

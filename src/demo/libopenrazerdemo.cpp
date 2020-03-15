@@ -1,11 +1,29 @@
 #include "libopenrazer.h"
 
+#include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QDebug>
 
 // Main method for testing / playing.
-int main()
+int main(int argc, char *argv[])
 {
-    auto *manager = new libopenrazer::Manager();
+    QCoreApplication app(argc, argv);
+
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addOption({ "backend", "libopenrazer backend to use (openrazer/razer_test)", "backend" });
+    parser.process(app);
+
+    QString chosenBackend = parser.value("backend");
+
+    libopenrazer::Manager *manager;
+    if (chosenBackend == "" || chosenBackend == "openrazer") {
+        manager = new libopenrazer::openrazer::Manager();
+    } else if (chosenBackend == "razer_test") {
+        manager = new libopenrazer::razer_test::Manager();
+    } else {
+        parser.showHelp();
+    }
 
     qDebug() << "Daemon running:" << manager->isDaemonRunning();
     qDebug() << "Daemon version:" << manager->getDaemonVersion();
@@ -14,7 +32,7 @@ int main()
 
     foreach (const QDBusObjectPath &devicePath, manager->getDevices()) {
         qDebug() << "-----------------";
-        libopenrazer::Device *device = new libopenrazer::Device(devicePath);
+        libopenrazer::Device *device = manager->getDevice(devicePath);
         qDebug() << "Devicename:" << device->getDeviceName();
         qDebug() << "Firmware version:" << device->getFirmwareVersion();
         try { // fake driver doesn't have device_mode
