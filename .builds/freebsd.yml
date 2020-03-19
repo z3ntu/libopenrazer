@@ -1,0 +1,26 @@
+image: freebsd/latest
+# Install the dependencies manually for now.
+# > pkg: cached package qt5-buildtools-5.13.2_1: size mismatch, cannot continue
+# > Consider running 'pkg update -f'
+# packages:
+#   - meson
+#   - pkgconf
+#   - qt5-buildtools
+#   - qt5-dbus
+#   - qt5-widgets
+#   - qt5-xml
+sources:
+  - https://github.com/z3ntu/libopenrazer
+tasks:
+  - install-deps: |
+      sudo pkg update -f
+      yes | sudo pkg install meson pkgconf qt5-buildtools qt5-dbus qt5-widgets qt5-xml
+  - setup: |
+      cd libopenrazer
+      meson -Ddemo=true builddir
+  - build: |
+      cd libopenrazer
+      ninja -C builddir
+  - test: |
+      cd libopenrazer
+      ninja -C builddir test

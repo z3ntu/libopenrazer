@@ -1,0 +1,14 @@
+image: alpine/edge
+packages:
+  - meson
+  - qt5-qtbase-dev
+  - qt5-qttools-dev
+sources:
+  - https://github.com/z3ntu/libopenrazer
+tasks:
+  - setup: |
+      cd libopenrazer
+      meson -Ddemo=true builddir
+  - build: |
+      cd libopenrazer
+      ninja -C builddir
