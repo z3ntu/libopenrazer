@@ -75,7 +75,7 @@ pkg.generate(name : meson.project_name(),
 
 
 # Demo executable
-if get_option('buildtype') == 'debug'
+if get_option('demo') == true
   message('Building libopenrazerdemo...')
   executable('libopenrazerdemo',
              'src/demo/libopenrazerdemo.cpp',

@@ -2,3 +2,7 @@ option('daemon_target',
        type : 'combo',
        choices : ['openrazer', 'razer_test'],
        value : 'openrazer')
+option('demo',
+       type : 'boolean',
+       value : false,
+       description : 'Build a demo executable.')
