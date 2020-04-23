@@ -21,12 +21,12 @@
 namespace libopenrazer {
 
 DBusException::DBusException(const QDBusError &error)
-    : name(error.name()), message(error.message())
+    : m_name(error.name()), m_message(error.message())
 {
 }
 
 DBusException::DBusException(const QString &name, const QString &message)
-    : name(name), message(message)
+    : m_name(name), m_message(message)
 {
 }
 
@@ -40,14 +40,14 @@ DBusException *DBusException::clone() const
     return new DBusException(*this);
 }
 
-QString DBusException::getName()
+QString DBusException::name() const
 {
-    return name;
+    return m_name;
 }
 
-QString DBusException::getMessage()
+QString DBusException::message() const
 {
-    return message;
+    return m_message;
 }
 
 }

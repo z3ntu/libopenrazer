@@ -44,16 +44,16 @@ public:
     /*!
      * Returns the "title" of this exception
      */
-    QString getName();
+    QString name() const;
 
     /*!
      * Returns a detailed message from this exception.
      */
-    QString getMessage();
+    QString message() const;
 
 private:
-    QString name;
-    QString message;
+    QString m_name;
+    QString m_message;
 };
 
 }
