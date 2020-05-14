@@ -53,7 +53,11 @@ endif
 
 install_headers('include/libopenrazer.h')
 install_headers('include/libopenrazer/dbusexception.h',
+                'include/libopenrazer/device.h',
+                'include/libopenrazer/led.h',
                 'include/libopenrazer/manager.h',
+                'include/libopenrazer/misc.h',
+                'include/libopenrazer/razercapability.h',
                 subdir : 'libopenrazer')
 
 pkg = import('pkgconfig')
