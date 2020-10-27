@@ -136,6 +136,17 @@ void Device::setDPI(::openrazer::RazerDPI dpi)
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
+void Device::setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages)
+{
+    // TODO Needs implementation
+}
+
+QPair<uchar, QVector<::openrazer::RazerDPI>> Device::getDPIStages()
+{
+    // TODO Needs implementation
+    return { 0, {} };
+}
+
 ushort Device::maxDPI()
 {
     QDBusReply<ushort> reply = d->deviceIface()->call("getMaxDPI");

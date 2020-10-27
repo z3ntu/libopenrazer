@@ -111,6 +111,26 @@ public:
     virtual ::openrazer::RazerDPI getDPI() = 0;
 
     /*!
+     * Sets the DPI stages of the mouse to the specified \a dpiStages and sets stage nr. \a activeStage active.
+     * A maximum of 5 stages are possible.
+     * The active stage is 1-indexed.
+     * The DPI value of each must not exceed the maximum DPI of the device.
+     *
+     * \sa getDPIStages(), maxDPI()
+     */
+    virtual void setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages) = 0;
+
+    /*!
+     * Returns a pair of the active DPI stage and the configured DPI stages of the mouse.
+     * A maximum of 5 stages are possible.
+     * The active stage is 1-indexed.
+     * Ex: 3, [(500, 500), (1500, 1500), (1800, 1800)]
+     *
+     * \sa setDPIStages(), maxDPI()
+     */
+    virtual QPair<uchar, QVector<::openrazer::RazerDPI>> getDPIStages() = 0;
+
+    /*!
      * Returns the maximum DPI possible for the device.
      *
      * \sa getDPI(), setDPI()
@@ -180,6 +200,8 @@ public:
     QVector<ushort> getSupportedPollRates() override;
     void setDPI(::openrazer::RazerDPI dpi) override;
     ::openrazer::RazerDPI getDPI() override;
+    void setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages) override;
+    QPair<uchar, QVector<::openrazer::RazerDPI>> getDPIStages() override;
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
     void displayCustomFrame() override;
@@ -222,6 +244,8 @@ public:
     QVector<ushort> getSupportedPollRates() override;
     void setDPI(::openrazer::RazerDPI dpi) override;
     ::openrazer::RazerDPI getDPI() override;
+    void setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages) override;
+    QPair<uchar, QVector<::openrazer::RazerDPI>> getDPIStages() override;
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
     void displayCustomFrame() override;

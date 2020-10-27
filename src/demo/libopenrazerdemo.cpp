@@ -132,6 +132,13 @@ int main(int argc, char *argv[])
             } else {
                 device->setDPI({ 500, 500 });
             }
+            if (device->hasFeature("dpi_stages")) {
+                QPair<uchar, QVector<openrazer::RazerDPI>> dpiStages = device->getDPIStages();
+                qDebug() << "DPI stages:" << dpiStages;
+                device->setDPIStages(2, { { 400, 500 }, { 600, 700 }, { 800, 900 } });
+                // restore DPI stages
+                device->setDPIStages(dpiStages.first, dpiStages.second);
+            }
             qDebug() << "Maximum DPI:" << device->maxDPI();
             // restore DPI
             device->setDPI(dpi);

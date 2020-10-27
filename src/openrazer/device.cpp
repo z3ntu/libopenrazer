@@ -79,6 +79,8 @@ void DevicePrivate::setupCapabilities()
         supportedFeatures.append("dpi");
     if (hasCapabilityInternal("razer.device.dpi", "availableDPI"))
         supportedFeatures.append("restricted_dpi");
+    if (hasCapabilityInternal("razer.device.dpi", "setDPIStages"))
+        supportedFeatures.append("dpi_stages");
     if (hasCapabilityInternal("razer.device.misc", "setPollRate"))
         supportedFeatures.append("poll_rate");
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setCustom"))
@@ -247,6 +249,18 @@ void Device::setDPI(::openrazer::RazerDPI dpi)
     } else {
         throw DBusException("Invalid return array from DPI", "The DPI return array has an invalid size.");
     }
+}
+
+void Device::setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages)
+{
+    QDBusReply<void> reply = d->deviceDpiIface()->call("setDPIStages", QVariant::fromValue(activeStage), QVariant::fromValue(dpiStages));
+    handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+QPair<uchar, QVector<::openrazer::RazerDPI>> Device::getDPIStages()
+{
+    QDBusReply<QPair<uchar, QVector<::openrazer::RazerDPI>>> reply = d->deviceDpiIface()->call("getDPIStages");
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 ushort Device::maxDPI()
