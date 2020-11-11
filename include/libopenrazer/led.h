@@ -44,6 +44,11 @@ public:
     virtual QVector<::openrazer::RGB> getCurrentColors() = 0;
 
     /*!
+     * Returns the wave direction of this Led
+     */
+    virtual ::openrazer::WaveDirection getWaveDirection() = 0;
+
+    /*!
      * Returns the Led ID of this Led
      */
     virtual ::openrazer::RazerLedId getLedId() = 0;
@@ -174,6 +179,7 @@ public:
     bool hasFx(::openrazer::RazerEffect fx) override;
     ::openrazer::RazerEffect getCurrentEffect() override;
     QVector<::openrazer::RGB> getCurrentColors() override;
+    ::openrazer::WaveDirection getWaveDirection() override;
     ::openrazer::RazerLedId getLedId() override;
     void setOff() override;
     void setOn() override;
@@ -213,6 +219,7 @@ public:
     bool hasFx(::openrazer::RazerEffect fx) override;
     ::openrazer::RazerEffect getCurrentEffect() override;
     QVector<::openrazer::RGB> getCurrentColors() override;
+    ::openrazer::WaveDirection getWaveDirection() override;
     ::openrazer::RazerLedId getLedId() override;
     void setOff() override;
     void setOn() override;

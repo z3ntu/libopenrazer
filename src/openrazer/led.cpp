@@ -202,6 +202,19 @@ QVector<::openrazer::RGB> Led::getCurrentColors()
     return colors;
 }
 
+::openrazer::WaveDirection Led::getWaveDirection()
+{
+    // OpenRazer doesn't expose get*WaveDir when there's no effect supported.
+    // Also profile LEDs don't support any wave direction
+    if (!d->hasFx() || d->isProfileLed()) {
+        return ::openrazer::WaveDirection::LEFT_TO_RIGHT;
+    }
+
+    QDBusReply<int> reply = d->ledIface()->call("get" + d->lightingLocationMethod + "WaveDir");
+    int value = handleDBusReply(reply, Q_FUNC_INFO);
+    return static_cast<::openrazer::WaveDirection>(value);
+}
+
 ::openrazer::RazerLedId Led::getLedId()
 {
     return d->ledId;

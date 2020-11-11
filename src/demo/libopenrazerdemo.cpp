@@ -161,6 +161,8 @@ int main(int argc, char *argv[])
             qDebug() << "  Effect:" << effect;
             QVector<openrazer::RGB> colors = led->getCurrentColors();
             qDebug() << "  Colors:" << colors;
+            openrazer::WaveDirection waveDirection = led->getWaveDirection();
+            qDebug() << "  Wave direction:" << waveDirection;
 
             for (const libopenrazer::RazerCapability &cap : libopenrazer::ledFxList) {
                 if (led->hasFx(cap.getIdentifier())) {
