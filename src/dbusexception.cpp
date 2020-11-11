@@ -40,6 +40,11 @@ DBusException *DBusException::clone() const
     return new DBusException(*this);
 }
 
+const char *DBusException::what() const noexcept
+{
+    return QString("%1 - %2").arg(m_name, m_message).toLatin1().data();
+}
+
 QString DBusException::name() const
 {
     return m_name;

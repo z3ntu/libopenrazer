@@ -39,6 +39,7 @@ public:
 
     void raise() const override;
     DBusException *clone() const override;
+    const char *what() const noexcept override;
     /// @endcond
 
     /*!
