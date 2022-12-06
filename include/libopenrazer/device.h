@@ -18,10 +18,10 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
+#include "libopenrazer/openrazer.h"
+
 #include <QDBusInterface>
 #include <QObject>
-
-#include "libopenrazer/openrazer.h"
 
 namespace libopenrazer {
 

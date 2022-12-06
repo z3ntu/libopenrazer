@@ -33,7 +33,7 @@
  * \namespace libopenrazer
  *
  * \brief C++/Qt bindings for the OpenRazer D-Bus interface.
-*/
+ */
 namespace libopenrazer {
 
 /*!

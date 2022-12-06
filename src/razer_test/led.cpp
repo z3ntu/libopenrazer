@@ -25,7 +25,7 @@
 
 #define QCOLOR_TO_QVARIANT(c)                      \
     QVariant::fromValue(                           \
-            ::openrazer::RGB {                    \
+            ::openrazer::RGB {                     \
                     static_cast<uchar>(c.red()),   \
                     static_cast<uchar>(c.green()), \
                     static_cast<uchar>(c.blue()) })

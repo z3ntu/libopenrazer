@@ -18,9 +18,9 @@
 #ifndef LED_H
 #define LED_H
 
-#include <QDBusInterface>
-
 #include "libopenrazer/openrazer.h"
+
+#include <QDBusInterface>
 
 namespace libopenrazer {
 
