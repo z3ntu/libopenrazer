@@ -160,6 +160,11 @@ bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
     return ret;
 }
 
+QDBusServiceWatcher *Manager::getServiceWatcher()
+{
+    return new QDBusServiceWatcher(OPENRAZER_SERVICE_NAME, OPENRAZER_DBUS_BUS);
+}
+
 QDBusInterface *ManagerPrivate::managerDaemonIface()
 {
     if (ifaceDaemon == nullptr) {

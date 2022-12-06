@@ -21,6 +21,7 @@
 #include "libopenrazer/misc.h"
 
 #include <QDBusInterface>
+#include <QDBusServiceWatcher>
 
 namespace libopenrazer {
 
@@ -127,6 +128,13 @@ public:
      * \sa connectDeviceRemoved()
      */
     virtual bool connectDevicesChanged(QObject *receiver, const char *slot) = 0;
+
+    /*!
+     * Returns a \c QDBusServiceWatcher that can be used to watch the daemon status.
+     *
+     * The \c serviceRegistered and \c serviceUnregistered signals are probably the most interesting ones.
+     */
+    virtual QDBusServiceWatcher *getServiceWatcher() = 0;
 };
 
 namespace openrazer {
@@ -149,6 +157,7 @@ public:
     QString getDaemonStatusOutput() override;
     bool enableDaemon() override;
     bool connectDevicesChanged(QObject *receiver, const char *slot) override;
+    QDBusServiceWatcher *getServiceWatcher() override;
 
 private:
     ManagerPrivate *d;
@@ -176,6 +185,7 @@ public:
     QString getDaemonStatusOutput() override;
     bool enableDaemon() override;
     bool connectDevicesChanged(QObject *receiver, const char *slot) override;
+    QDBusServiceWatcher *getServiceWatcher() override;
 
 private:
     ManagerPrivate *d;

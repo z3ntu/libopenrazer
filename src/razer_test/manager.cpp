@@ -144,6 +144,11 @@ bool Manager::connectDevicesChanged(QObject *receiver, const char *slot)
     return OPENRAZER_DBUS_BUS.connect(OPENRAZER_SERVICE_NAME, "/io/github/openrazer1", "io.github.openrazer1.Manager", "devicesChanged", receiver, slot);
 }
 
+QDBusServiceWatcher *Manager::getServiceWatcher()
+{
+    return new QDBusServiceWatcher(OPENRAZER_SERVICE_NAME, OPENRAZER_DBUS_BUS);
+}
+
 QDBusInterface *ManagerPrivate::managerIface()
 {
     if (iface == nullptr) {
