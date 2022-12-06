@@ -155,8 +155,23 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
 
 QVector<::openrazer::RGB> Led::getCurrentColors()
 {
-    // TODO Needs OpenRazer implementation
-    return { { 0, 255, 0 }, { 255, 0, 0 }, { 0, 0, 255 } };
+    QDBusReply<QByteArray> reply = d->ledIface()->call("get" + d->lightingLocationMethod + "EffectColors");
+    if (!reply.isValid()) {
+        printDBusError(reply.error(), Q_FUNC_INFO);
+        throw DBusException(reply.error());
+    }
+
+    QByteArray values = reply.value();
+    if (values.size() % 3 != 0) {
+        throw DBusException("Invalid return array from EffectColors", "The EffectColors return array has an invalid size.");
+    }
+    QVector<::openrazer::RGB> colors;
+    for (int i = 0; i < values.size() / 3; i++) {
+        colors.append({ static_cast<uchar>(values[i * 3]),
+                        static_cast<uchar>(values[i * 3 + 1]),
+                        static_cast<uchar>(values[i * 3 + 2]) });
+    }
+    return colors;
 }
 
 ::openrazer::RazerLedId Led::getLedId()
