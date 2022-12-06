@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
         if (device->hasFeature("dpi")) {
             qDebug() << "DPI";
-            razer_test::RazerDPI dpi = device->getDPI();
+            openrazer::RazerDPI dpi = device->getDPI();
             qDebug() << dpi.dpi_x << dpi.dpi_y;
             device->setDPI({ 500, 500 });
             dpi = device->getDPI();

@@ -43,7 +43,7 @@ public:
 
     QStringList supportedFx;
 
-    ::razer_test::RazerLedId ledId;
+    ::openrazer::RazerLedId ledId;
     QString lightingLocation;
     QString lightingLocationMethod;
     QString interface;

@@ -33,7 +33,7 @@ namespace libopenrazer {
 
 namespace openrazer {
 
-Led::Led(Device *device, QDBusObjectPath objectPath, ::razer_test::RazerLedId ledId, QString lightingLocation)
+Led::Led(Device *device, QDBusObjectPath objectPath, ::openrazer::RazerLedId ledId, QString lightingLocation)
 {
     d = new LedPrivate();
     d->mParent = this;
@@ -109,57 +109,57 @@ bool Led::hasFx(const QString &fxStr)
     return d->supportedFx.contains(fxStr);
 }
 
-bool Led::hasFx(::razer_test::RazerEffect fx)
+bool Led::hasFx(::openrazer::RazerEffect fx)
 {
     QString fxStr;
     switch (fx) {
-    case ::razer_test::RazerEffect::Off:
+    case ::openrazer::RazerEffect::Off:
         fxStr = "off";
         break;
-    case ::razer_test::RazerEffect::On:
+    case ::openrazer::RazerEffect::On:
         fxStr = "on";
         break;
-    case ::razer_test::RazerEffect::Static:
+    case ::openrazer::RazerEffect::Static:
         fxStr = "static";
         break;
-    case ::razer_test::RazerEffect::Breathing:
+    case ::openrazer::RazerEffect::Breathing:
         fxStr = "breathing";
         break;
-    case ::razer_test::RazerEffect::BreathingDual:
+    case ::openrazer::RazerEffect::BreathingDual:
         fxStr = "breathing_dual";
         break;
-    case ::razer_test::RazerEffect::BreathingRandom:
+    case ::openrazer::RazerEffect::BreathingRandom:
         fxStr = "breathing_random";
         break;
-    case ::razer_test::RazerEffect::Blinking:
+    case ::openrazer::RazerEffect::Blinking:
         fxStr = "blinking";
         break;
-    case ::razer_test::RazerEffect::Spectrum:
+    case ::openrazer::RazerEffect::Spectrum:
         fxStr = "spectrum";
         break;
-    case ::razer_test::RazerEffect::Wave:
+    case ::openrazer::RazerEffect::Wave:
         fxStr = "wave";
         break;
-    case ::razer_test::RazerEffect::Reactive:
+    case ::openrazer::RazerEffect::Reactive:
         fxStr = "reactive";
         break;
     }
     return hasFx(fxStr);
 }
 
-::razer_test::RazerEffect Led::getCurrentEffect()
+::openrazer::RazerEffect Led::getCurrentEffect()
 {
     // TODO Needs OpenRazer implementation
-    return ::razer_test::RazerEffect::Spectrum;
+    return ::openrazer::RazerEffect::Spectrum;
 }
 
-QVector<::razer_test::RGB> Led::getCurrentColors()
+QVector<::openrazer::RGB> Led::getCurrentColors()
 {
     // TODO Needs OpenRazer implementation
     return { { 0, 255, 0 }, { 255, 0, 0 }, { 0, 0, 255 } };
 }
 
-::razer_test::RazerLedId Led::getLedId()
+::openrazer::RazerLedId Led::getLedId()
 {
     return d->ledId;
 }
@@ -224,13 +224,13 @@ bool Led::setSpectrum()
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setWave(::razer_test::WaveDirection direction)
+bool Led::setWave(::openrazer::WaveDirection direction)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Wave", static_cast<int>(direction));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setReactive(QColor color, ::razer_test::ReactiveSpeed speed)
+bool Led::setReactive(QColor color, ::openrazer::ReactiveSpeed speed)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Reactive", QCOLOR_TO_QVARIANT(color), static_cast<uchar>(speed));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);

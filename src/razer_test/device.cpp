@@ -138,15 +138,15 @@ bool Device::setPollRate(ushort pollrate)
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::setDPI(::razer_test::RazerDPI dpi)
+bool Device::setDPI(::openrazer::RazerDPI dpi)
 {
     QDBusReply<bool> reply = d->deviceIface()->call("setDPI", QVariant::fromValue(dpi));
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-::razer_test::RazerDPI Device::getDPI()
+::openrazer::RazerDPI Device::getDPI()
 {
-    QDBusReply<::razer_test::RazerDPI> reply = d->deviceIface()->call("getDPI");
+    QDBusReply<::openrazer::RazerDPI> reply = d->deviceIface()->call("getDPI");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -164,7 +164,7 @@ bool Device::displayCustomFrame()
 
 bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData)
 {
-    QVector<::razer_test::RGB> rgbData;
+    QVector<::openrazer::RGB> rgbData;
     foreach (const QColor &color, colorData) {
         rgbData.append({ static_cast<uchar>(color.red()), static_cast<uchar>(color.green()), static_cast<uchar>(color.blue()) });
     }
@@ -172,10 +172,10 @@ bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QV
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-::razer_test::MatrixDimensions Device::getMatrixDimensions()
+::openrazer::MatrixDimensions Device::getMatrixDimensions()
 {
     QVariant reply = d->deviceIface()->property("MatrixDimensions");
-    return handleDBusVariant<::razer_test::MatrixDimensions>(reply, d->deviceIface()->lastError(), Q_FUNC_INFO);
+    return handleDBusVariant<::openrazer::MatrixDimensions>(reply, d->deviceIface()->lastError(), Q_FUNC_INFO);
 }
 
 QDBusInterface *DevicePrivate::deviceIface()

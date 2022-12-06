@@ -51,7 +51,7 @@ public:
     QStringList introspection;
 
     // Maps RazerLedId to "Chroma" or "Scroll" (the string put e.g. into setScrollSpectrum)
-    QMap<::razer_test::RazerLedId, QString> supportedLeds;
+    QMap<::openrazer::RazerLedId, QString> supportedLeds;
 };
 
 }

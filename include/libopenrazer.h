@@ -24,9 +24,8 @@
 #include "libopenrazer/led.h"
 #include "libopenrazer/manager.h"
 #include "libopenrazer/misc.h"
+#include "libopenrazer/openrazer.h"
 #include "libopenrazer/razercapability.h"
-
-#include <razer_test.h>
 
 // NOTE: DBus types -> Qt/C++ types: http://doc.qt.io/qt-5/qdbustypesystem.html#primitive-types
 
@@ -41,34 +40,34 @@ namespace libopenrazer {
  * List of effects provided by OpenRazer.
  */
 const QList<RazerCapability> ledFxList {
-    RazerCapability(::razer_test::RazerEffect::Off, Led::tr("Off"), 0),
-    RazerCapability(::razer_test::RazerEffect::On, Led::tr("On"), 0),
-    RazerCapability(::razer_test::RazerEffect::Static, Led::tr("Static"), 1),
-    RazerCapability(::razer_test::RazerEffect::Breathing, Led::tr("Breathing"), 1),
-    RazerCapability(::razer_test::RazerEffect::BreathingDual, Led::tr("Breathing Dual"), 2),
-    RazerCapability(::razer_test::RazerEffect::BreathingRandom, Led::tr("Breathing Random"), 0),
-    RazerCapability(::razer_test::RazerEffect::Blinking, Led::tr("Blinking"), 1),
-    RazerCapability(::razer_test::RazerEffect::Spectrum, Led::tr("Spectrum"), 0),
-    RazerCapability(::razer_test::RazerEffect::Wave, Led::tr("Wave"), true),
-    RazerCapability(::razer_test::RazerEffect::Reactive, Led::tr("Reactive"), 1),
+    RazerCapability(::openrazer::RazerEffect::Off, Led::tr("Off"), 0),
+    RazerCapability(::openrazer::RazerEffect::On, Led::tr("On"), 0),
+    RazerCapability(::openrazer::RazerEffect::Static, Led::tr("Static"), 1),
+    RazerCapability(::openrazer::RazerEffect::Breathing, Led::tr("Breathing"), 1),
+    RazerCapability(::openrazer::RazerEffect::BreathingDual, Led::tr("Breathing Dual"), 2),
+    RazerCapability(::openrazer::RazerEffect::BreathingRandom, Led::tr("Breathing Random"), 0),
+    RazerCapability(::openrazer::RazerEffect::Blinking, Led::tr("Blinking"), 1),
+    RazerCapability(::openrazer::RazerEffect::Spectrum, Led::tr("Spectrum"), 0),
+    RazerCapability(::openrazer::RazerEffect::Wave, Led::tr("Wave"), true),
+    RazerCapability(::openrazer::RazerEffect::Reactive, Led::tr("Reactive"), 1),
 };
 
 /*!
- * Mapping from razer_test::RazerLedId to a human readable string
+ * Mapping from openrazer::RazerLedId to a human readable string
  */
-const QHash<::razer_test::RazerLedId, QString> ledIdToStringTable {
-    { ::razer_test::RazerLedId::Unspecified, Led::tr("Unspecified") },
-    { ::razer_test::RazerLedId::ScrollWheelLED, Led::tr("Scroll Wheel") },
-    { ::razer_test::RazerLedId::BatteryLED, Led::tr("Battery") },
-    { ::razer_test::RazerLedId::LogoLED, Led::tr("Logo") },
-    { ::razer_test::RazerLedId::BacklightLED, Led::tr("Backlight") },
-    { ::razer_test::RazerLedId::MacroRecordingLED, Led::tr("Macro Recording") },
-    { ::razer_test::RazerLedId::GameModeLED, Led::tr("Game Mode") },
-    { ::razer_test::RazerLedId::KeymapRedLED, Led::tr("Keymap Red") },
-    { ::razer_test::RazerLedId::KeymapGreenLED, Led::tr("Keymap Green") },
-    { ::razer_test::RazerLedId::KeymapBlueLED, Led::tr("Keymap Blue") },
-    { ::razer_test::RazerLedId::RightSideLED, Led::tr("Right Side") },
-    { ::razer_test::RazerLedId::LeftSideLED, Led::tr("Left Side") }
+const QHash<::openrazer::RazerLedId, QString> ledIdToStringTable {
+    { ::openrazer::RazerLedId::Unspecified, Led::tr("Unspecified") },
+    { ::openrazer::RazerLedId::ScrollWheelLED, Led::tr("Scroll Wheel") },
+    { ::openrazer::RazerLedId::BatteryLED, Led::tr("Battery") },
+    { ::openrazer::RazerLedId::LogoLED, Led::tr("Logo") },
+    { ::openrazer::RazerLedId::BacklightLED, Led::tr("Backlight") },
+    { ::openrazer::RazerLedId::MacroRecordingLED, Led::tr("Macro Recording") },
+    { ::openrazer::RazerLedId::GameModeLED, Led::tr("Game Mode") },
+    { ::openrazer::RazerLedId::KeymapRedLED, Led::tr("Keymap Red") },
+    { ::openrazer::RazerLedId::KeymapGreenLED, Led::tr("Keymap Green") },
+    { ::openrazer::RazerLedId::KeymapBlueLED, Led::tr("Keymap Blue") },
+    { ::openrazer::RazerLedId::RightSideLED, Led::tr("Right Side") },
+    { ::openrazer::RazerLedId::LeftSideLED, Led::tr("Left Side") }
 };
 
 }

@@ -30,8 +30,8 @@ class RazerCapability
 public:
     /// @cond
     RazerCapability();
-    RazerCapability(::razer_test::RazerEffect identifier, QString displayString, int numColors);
-    RazerCapability(::razer_test::RazerEffect, QString displayString, bool wave);
+    RazerCapability(::openrazer::RazerEffect identifier, QString displayString, int numColors);
+    RazerCapability(::openrazer::RazerEffect, QString displayString, bool wave);
     RazerCapability(const RazerCapability &other);
     ~RazerCapability();
     /// @endcond
@@ -46,7 +46,7 @@ public:
      *
      * e.g. \c "lighting_logo_spectrum"
      */
-    ::razer_test::RazerEffect getIdentifier() const;
+    ::openrazer::RazerEffect getIdentifier() const;
 
     /*!
      * Returns a human-readable string describing the capability
@@ -62,7 +62,7 @@ public:
 
 private:
     int numColors;
-    ::razer_test::RazerEffect identifier;
+    ::openrazer::RazerEffect identifier;
     QString displayString;
     bool wave;
 };

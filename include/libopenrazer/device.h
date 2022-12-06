@@ -20,7 +20,8 @@
 
 #include <QDBusInterface>
 #include <QObject>
-#include <razer_test.h>
+
+#include "libopenrazer/openrazer.h"
 
 namespace libopenrazer {
 
@@ -120,14 +121,14 @@ public:
      *
      * \sa getDPI(), maxDPI()
      */
-    virtual bool setDPI(::razer_test::RazerDPI dpi) = 0;
+    virtual bool setDPI(::openrazer::RazerDPI dpi) = 0;
 
     /*!
      * Returns the DPI of the mouse (e.g. `[800, 800]`).
      *
      * \sa setDPI()
      */
-    virtual ::razer_test::RazerDPI getDPI() = 0;
+    virtual ::openrazer::RazerDPI getDPI() = 0;
 
     /*!
      * Returns the maximum DPI possible for the device.
@@ -162,7 +163,7 @@ public:
      *
      * \sa defineCustomFrame()
      */
-    virtual ::razer_test::MatrixDimensions getMatrixDimensions() = 0;
+    virtual ::openrazer::MatrixDimensions getMatrixDimensions() = 0;
 };
 
 namespace openrazer {
@@ -190,12 +191,12 @@ public:
     QString getKeyboardLayout() override;
     ushort getPollRate() override;
     bool setPollRate(ushort pollrate) override;
-    bool setDPI(::razer_test::RazerDPI dpi) override;
-    ::razer_test::RazerDPI getDPI() override;
+    bool setDPI(::openrazer::RazerDPI dpi) override;
+    ::openrazer::RazerDPI getDPI() override;
     ushort maxDPI() override;
     bool displayCustomFrame() override;
     bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) override;
-    ::razer_test::MatrixDimensions getMatrixDimensions() override;
+    ::openrazer::MatrixDimensions getMatrixDimensions() override;
 
 private:
     DevicePrivate *d;
@@ -231,12 +232,12 @@ public:
     QString getKeyboardLayout() override;
     ushort getPollRate() override;
     bool setPollRate(ushort pollrate) override;
-    bool setDPI(::razer_test::RazerDPI dpi) override;
-    ::razer_test::RazerDPI getDPI() override;
+    bool setDPI(::openrazer::RazerDPI dpi) override;
+    ::openrazer::RazerDPI getDPI() override;
     ushort maxDPI() override;
     bool displayCustomFrame() override;
     bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) override;
-    ::razer_test::MatrixDimensions getMatrixDimensions() override;
+    ::openrazer::MatrixDimensions getMatrixDimensions() override;
 
 private:
     DevicePrivate *d;

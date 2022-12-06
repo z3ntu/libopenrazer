@@ -34,7 +34,7 @@ Manager::Manager()
     d->mParent = this;
 
     // Register the enums with the Qt system
-    ::razer_test::registerMetaTypes();
+    ::openrazer::registerMetaTypes();
 }
 
 bool Manager::isDaemonRunning()

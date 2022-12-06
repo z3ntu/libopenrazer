@@ -19,7 +19,8 @@
 #define LED_H
 
 #include <QDBusInterface>
-#include <razer_test.h>
+
+#include "libopenrazer/openrazer.h"
 
 namespace libopenrazer {
 
@@ -43,22 +44,22 @@ public:
     /*!
      * Returns if the device has the specified \a fx
      */
-    virtual bool hasFx(::razer_test::RazerEffect fx) = 0;
+    virtual bool hasFx(::openrazer::RazerEffect fx) = 0;
 
     /*!
      * Returns the currently active effect
      */
-    virtual ::razer_test::RazerEffect getCurrentEffect() = 0;
+    virtual ::openrazer::RazerEffect getCurrentEffect() = 0;
 
     /*!
      * Returns the currently active colors (the list will have at least 3 elements)
      */
-    virtual QVector<::razer_test::RGB> getCurrentColors() = 0;
+    virtual QVector<::openrazer::RGB> getCurrentColors() = 0;
 
     /*!
      * Returns the Led ID of this Led
      */
-    virtual ::razer_test::RazerLedId getLedId() = 0;
+    virtual ::openrazer::RazerLedId getLedId() = 0;
 
     /*!
      * Sets the LED to none / off.
@@ -121,14 +122,14 @@ public:
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setWave(::razer_test::WaveDirection direction) = 0;
+    virtual bool setWave(::openrazer::WaveDirection direction) = 0;
 
     /*!
      * Sets the lighting to reactive mode with the specified \a color and \a speed.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setReactive(QColor color, ::razer_test::ReactiveSpeed speed) = 0;
+    virtual bool setReactive(QColor color, ::openrazer::ReactiveSpeed speed) = 0;
 
     /*!
      * Sets the \a brightness (`0` - `255`).
@@ -150,15 +151,15 @@ class LedPrivate;
 class Led : public ::libopenrazer::Led
 {
 public:
-    Led(Device *device, QDBusObjectPath objectPath, ::razer_test::RazerLedId ledId, QString lightingLocation);
+    Led(Device *device, QDBusObjectPath objectPath, ::openrazer::RazerLedId ledId, QString lightingLocation);
     ~Led() override;
 
     QDBusObjectPath getObjectPath() override;
     bool hasFx(const QString &fxStr) override;
-    bool hasFx(::razer_test::RazerEffect fx) override;
-    ::razer_test::RazerEffect getCurrentEffect() override;
-    QVector<::razer_test::RGB> getCurrentColors() override;
-    ::razer_test::RazerLedId getLedId() override;
+    bool hasFx(::openrazer::RazerEffect fx) override;
+    ::openrazer::RazerEffect getCurrentEffect() override;
+    QVector<::openrazer::RGB> getCurrentColors() override;
+    ::openrazer::RazerLedId getLedId() override;
     bool setOff() override;
     bool setOn() override;
     bool setStatic(QColor color) override;
@@ -167,8 +168,8 @@ public:
     bool setBreathingRandom() override;
     bool setBlinking(QColor color) override;
     bool setSpectrum() override;
-    bool setWave(::razer_test::WaveDirection direction) override;
-    bool setReactive(QColor color, ::razer_test::ReactiveSpeed speed) override;
+    bool setWave(::openrazer::WaveDirection direction) override;
+    bool setReactive(QColor color, ::openrazer::ReactiveSpeed speed) override;
     bool setBrightness(uchar brightness) override;
     uchar getBrightness() override;
 
@@ -190,10 +191,10 @@ public:
 
     QDBusObjectPath getObjectPath() override;
     bool hasFx(const QString &fxStr) override;
-    bool hasFx(::razer_test::RazerEffect fx) override;
-    ::razer_test::RazerEffect getCurrentEffect() override;
-    QVector<::razer_test::RGB> getCurrentColors() override;
-    ::razer_test::RazerLedId getLedId() override;
+    bool hasFx(::openrazer::RazerEffect fx) override;
+    ::openrazer::RazerEffect getCurrentEffect() override;
+    QVector<::openrazer::RGB> getCurrentColors() override;
+    ::openrazer::RazerLedId getLedId() override;
     bool setOff() override;
     bool setOn() override;
     bool setStatic(QColor color) override;
@@ -202,8 +203,8 @@ public:
     bool setBreathingRandom() override;
     bool setBlinking(QColor color) override;
     bool setSpectrum() override;
-    bool setWave(::razer_test::WaveDirection direction) override;
-    bool setReactive(QColor color, ::razer_test::ReactiveSpeed speed) override;
+    bool setWave(::openrazer::WaveDirection direction) override;
+    bool setReactive(QColor color, ::openrazer::ReactiveSpeed speed) override;
     bool setBrightness(uchar brightness) override;
     uchar getBrightness() override;
 
