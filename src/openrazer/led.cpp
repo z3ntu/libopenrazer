@@ -149,8 +149,42 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
 
 ::openrazer::RazerEffect Led::getCurrentEffect()
 {
-    // TODO Needs OpenRazer implementation
-    return ::openrazer::RazerEffect::Spectrum;
+    QDBusReply<QString> reply = d->ledIface()->call("get" + d->lightingLocationMethod + "Effect");
+    if (!reply.isValid()) {
+        printDBusError(reply.error(), Q_FUNC_INFO);
+        throw DBusException(reply.error());
+    }
+
+    QString effect = reply.value();
+    // TODO:
+    // * breathTriple
+    // * ripple
+    // * rippleRandomColour
+    // * starlightSingle
+    // * starlightDual
+    // * starlightRandom
+    if (effect == "none") {
+        return ::openrazer::RazerEffect::Off;
+    } else if (effect == "static") {
+        return ::openrazer::RazerEffect::Static;
+    } else if (effect == "breathSingle" || effect == "pulsate") {
+        return ::openrazer::RazerEffect::Breathing;
+    } else if (effect == "breathDual") {
+        return ::openrazer::RazerEffect::BreathingDual;
+    } else if (effect == "breathingRandom") {
+        return ::openrazer::RazerEffect::BreathingRandom;
+    } else if (effect == "blinking") {
+        return ::openrazer::RazerEffect::Blinking;
+    } else if (effect == "spectrum") {
+        return ::openrazer::RazerEffect::Spectrum;
+    } else if (effect == "wave") {
+        return ::openrazer::RazerEffect::Wave;
+    } else if (effect == "reactive") {
+        return ::openrazer::RazerEffect::Reactive;
+    } else {
+        qWarning("libopenrazer: Unhandled effect in getCurrentEffect: %s, defaulting to Spectrum", qUtf8Printable(effect));
+        return ::openrazer::RazerEffect::Spectrum;
+    }
 }
 
 QVector<::openrazer::RGB> Led::getCurrentColors()
