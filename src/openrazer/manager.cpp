@@ -23,6 +23,8 @@
 #include <QDBusMetaType>
 #include <QDBusReply>
 #include <QFileInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QProcess>
 
 namespace libopenrazer {
@@ -46,7 +48,9 @@ bool Manager::isDaemonRunning()
 
 QVariantHash Manager::getSupportedDevices()
 {
-    return QVariantHash(); // FIXME
+    QDBusReply<QString> reply = d->managerDevicesIface()->call("supportedDevices");
+    QString content = handleDBusReply(reply, Q_FUNC_INFO);
+    return QJsonDocument::fromJson(content.toUtf8()).object().toVariantHash();
 }
 
 QList<QDBusObjectPath> Manager::getDevices()
