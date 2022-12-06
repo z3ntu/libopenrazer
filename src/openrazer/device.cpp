@@ -59,7 +59,7 @@ void DevicePrivate::introspect()
 {
     QStringList intr;
 
-    QDBusMessage m = QDBusMessage::createMethodCall("org.razer", mObjectPath.path(), "org.freedesktop.DBus.Introspectable", "Introspect");
+    QDBusMessage m = QDBusMessage::createMethodCall(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "org.freedesktop.DBus.Introspectable", "Introspect");
     QDBusReply<QString> reply = OPENRAZER_DBUS_BUS.call(m);
     if (!reply.isValid()) {
         throw DBusException(reply.error());
