@@ -24,6 +24,7 @@
 #include <QDebug>
 
 namespace openrazer {
+Q_NAMESPACE
 
 enum class RazerLedId : uchar {
     Unspecified = 0x00,
@@ -39,6 +40,7 @@ enum class RazerLedId : uchar {
     RightSideLED = 0x10,
     LeftSideLED = 0x11
 };
+Q_ENUM_NS(RazerLedId)
 
 // Marshall the RazerLedId data into a D-Bus argument
 inline QDBusArgument &operator<<(QDBusArgument &argument, const RazerLedId &value)
@@ -68,6 +70,7 @@ enum class WaveDirection : uchar {
     LEFT_TO_RIGHT = 0x01,
     RIGHT_TO_LEFT = 0x02
 };
+Q_ENUM_NS(WaveDirection)
 
 // Marshall the WaveDirection data into a D-Bus argument
 inline QDBusArgument &operator<<(QDBusArgument &argument, const WaveDirection &value)
@@ -95,6 +98,7 @@ enum class ReactiveSpeed : uchar {
     _1500MS = 0x03,
     _2000MS = 0x04
 };
+Q_ENUM_NS(ReactiveSpeed)
 
 // Marshall the ReactiveSpeed data into a D-Bus argument
 inline QDBusArgument &operator<<(QDBusArgument &argument, const ReactiveSpeed &value)
@@ -128,6 +132,7 @@ enum class RazerEffect {
     Wave,
     Reactive,
 };
+Q_ENUM_NS(RazerEffect)
 
 // Marshall the RazerEffect data into a D-Bus argument
 inline QDBusArgument &operator<<(QDBusArgument &argument, const RazerEffect &value)

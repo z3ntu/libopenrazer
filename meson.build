@@ -26,6 +26,7 @@ sources += qt5.preprocess(
         'include/libopenrazer/device.h',
         'include/libopenrazer/led.h',
         'include/libopenrazer/manager.h',
+        'include/libopenrazer/openrazer.h',
     ]
 )
 
