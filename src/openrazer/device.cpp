@@ -100,7 +100,8 @@ void DevicePrivate::setupCapabilities()
     // razer.device.lighting.chroma more than only the normal fx, so check for methods directly
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setNone")
         || hasCapabilityInternal("razer.device.lighting.chroma", "setStatic")
-        || hasCapabilityInternal("razer.device.lighting.bw2013"))
+        || hasCapabilityInternal("razer.device.lighting.bw2013")
+        || hasCapabilityInternal("razer.device.lighting.brightness"))
         supportedLeds.insert(::openrazer::RazerLedId::Unspecified, "Chroma");
     if (hasCapabilityInternal("razer.device.lighting.logo"))
         supportedLeds.insert(::openrazer::RazerLedId::LogoLED, "Logo");
