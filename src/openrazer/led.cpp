@@ -171,7 +171,7 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
         return ::openrazer::RazerEffect::Breathing;
     } else if (effect == "breathDual") {
         return ::openrazer::RazerEffect::BreathingDual;
-    } else if (effect == "breathingRandom") {
+    } else if (effect == "breathRandom") {
         return ::openrazer::RazerEffect::BreathingRandom;
     } else if (effect == "blinking") {
         return ::openrazer::RazerEffect::Blinking;
