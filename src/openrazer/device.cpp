@@ -50,7 +50,7 @@ Device::Device(QDBusObjectPath objectPath)
 
 Device::~Device()
 {
-    foreach (libopenrazer::Led *led, d->leds) {
+    for (libopenrazer::Led *led : d->leds) {
         delete led;
     }
 }
@@ -285,7 +285,7 @@ bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QV
     data.append(row);
     data.append(startColumn);
     data.append(endColumn);
-    foreach (const QColor &color, colorData) {
+    for (const QColor &color : colorData) {
         data.append(color.red());
         data.append(color.green());
         data.append(color.blue());

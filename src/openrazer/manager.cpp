@@ -58,7 +58,7 @@ QList<QDBusObjectPath> Manager::getDevices()
     QDBusReply<QStringList> reply = d->managerDevicesIface()->call("getDevices");
     QStringList serialList = handleDBusReply(reply, Q_FUNC_INFO);
     QList<QDBusObjectPath> ret;
-    foreach (const QString &serial, serialList) {
+    for (const QString &serial : serialList) {
         ret.append(QDBusObjectPath("/org/razer/device/" + serial));
     }
     return ret;

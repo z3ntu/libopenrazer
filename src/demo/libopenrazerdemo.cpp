@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     // qDebug() << "Supported devices:" << manager->getSupportedDevices();
     manager->syncEffects(false);
 
-    foreach (const QDBusObjectPath &devicePath, manager->getDevices()) {
+    for (const QDBusObjectPath &devicePath : manager->getDevices()) {
         qDebug() << "-----------------";
         libopenrazer::Device *device = manager->getDevice(devicePath);
         qDebug() << "Device name:" << device->getDeviceName();
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
             device->setPollRate(poll_rate);
         }
 
-        foreach (libopenrazer::Led *led, device->getLeds()) {
+        for (libopenrazer::Led *led : device->getLeds()) {
             qDebug() << "LED:" << led->getLedId();
             if (led->hasBrightness()) {
                 qDebug() << "  Brightness:" << led->getBrightness();

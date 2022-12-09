@@ -35,7 +35,7 @@ Device::Device(QDBusObjectPath objectPath)
     d->supportedFx = d->getSupportedFx();
     d->supportedFeatures = d->getSupportedFeatures();
 
-    foreach (const QDBusObjectPath &ledPath, d->getLedObjectPaths()) {
+    for (const QDBusObjectPath &ledPath : d->getLedObjectPaths()) {
         Led *led = new Led(this, ledPath);
         d->leds.append(led);
     }
@@ -43,7 +43,7 @@ Device::Device(QDBusObjectPath objectPath)
 
 Device::~Device()
 {
-    foreach (libopenrazer::Led *led, d->leds) {
+    for (libopenrazer::Led *led : d->leds) {
         delete led;
     }
 }
@@ -165,7 +165,7 @@ bool Device::displayCustomFrame()
 bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData)
 {
     QVector<::openrazer::RGB> rgbData;
-    foreach (const QColor &color, colorData) {
+    for (const QColor &color : colorData) {
         rgbData.append({ static_cast<uchar>(color.red()), static_cast<uchar>(color.green()), static_cast<uchar>(color.blue()) });
     }
     QDBusReply<bool> reply = d->deviceIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), QVariant::fromValue(rgbData));
