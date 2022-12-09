@@ -46,7 +46,13 @@ int main(int argc, char *argv[])
         if (device->hasFeature("dpi")) {
             openrazer::RazerDPI dpi = device->getDPI();
             qDebug() << "DPI:" << dpi;
-            device->setDPI({ 500, 500 });
+            // FIXME Devices use 'available_dpi'
+            if (device->getDeviceName() == "Razer DeathAdder 3.5G Black" ||
+                device->getDeviceName() == "Razer DeathAdder 3.5G") {
+                device->setDPI({ 900, 0 });
+            } else {
+                device->setDPI({ 500, 500 });
+            }
             qDebug() << "DPI:" << device->getDPI();
             qDebug() << "Maximum DPI:" << device->maxDPI();
             // restore DPI
