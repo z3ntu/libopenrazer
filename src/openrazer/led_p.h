@@ -50,6 +50,7 @@ public:
     QString interface;
 
     bool hasFx();
+    bool isProfileLed();
     void setupCapabilities();
 };
 

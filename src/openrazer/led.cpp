@@ -45,6 +45,9 @@ Led::Led(Device *device, QDBusObjectPath objectPath, ::openrazer::RazerLedId led
     // Leave lightingLocationMethod empty in case it's Chroma
     if (lightingLocation == "Chroma") {
         d->interface = "razer.device.lighting.chroma";
+    } else if (d->isProfileLed()) {
+        d->lightingLocationMethod = lightingLocation;
+        d->interface = "razer.device.lighting.profile_led";
     } else {
         d->lightingLocationMethod = lightingLocation;
         d->interface = "razer.device.lighting." + lightingLocation.toLower();
@@ -84,6 +87,11 @@ void LedPrivate::setupCapabilities()
         supportedFx.append(::openrazer::RazerEffect::On);
     }
 
+    if (device->d->hasCapabilityInternal("razer.device.lighting.profile_led", "set" + lightingLocationMethod)) {
+        supportedFx.append(::openrazer::RazerEffect::Off);
+        supportedFx.append(::openrazer::RazerEffect::On);
+    }
+
     // No-color static/breathing variants
     if (device->d->hasCapabilityInternal("razer.device.lighting.bw2013", "setStatic"))
         supportedFx.append(::openrazer::RazerEffect::Static);
@@ -119,6 +127,16 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
     // OpenRazer doesn't expose get*Effect when there's no effect supported.
     if (!d->hasFx()) {
         return ::openrazer::RazerEffect::Off;
+    }
+
+    // Profile LEDs are a bit special
+    if (d->isProfileLed()) {
+        QDBusReply<bool> reply = d->ledIface()->call("get" + d->lightingLocationMethod);
+        if (!reply.isValid()) {
+            printDBusError(reply.error(), Q_FUNC_INFO);
+            throw DBusException(reply.error());
+        }
+        return reply.value() ? ::openrazer::RazerEffect::On : ::openrazer::RazerEffect::Off;
     }
 
     QDBusReply<QString> reply = d->ledIface()->call("get" + d->lightingLocationMethod + "Effect");
@@ -162,7 +180,8 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
 QVector<::openrazer::RGB> Led::getCurrentColors()
 {
     // OpenRazer doesn't expose get*EffectColors when there's no effect supported.
-    if (!d->hasFx()) {
+    // Also profile LEDs don't support any color
+    if (!d->hasFx() || d->isProfileLed()) {
         return {};
     }
 
@@ -193,7 +212,9 @@ QVector<::openrazer::RGB> Led::getCurrentColors()
 bool Led::setOff()
 {
     QDBusReply<void> reply;
-    if (d->device->d->hasCapabilityInternal(d->interface, "set" + d->lightingLocationMethod + "Active"))
+    if (d->isProfileLed())
+        reply = d->ledIface()->call("set" + d->lightingLocationMethod, false);
+    else if (d->device->d->hasCapabilityInternal(d->interface, "set" + d->lightingLocationMethod + "Active"))
         reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Active", false);
     else
         reply = d->ledIface()->call("set" + d->lightingLocationMethod + "None");
@@ -202,7 +223,11 @@ bool Led::setOff()
 
 bool Led::setOn()
 {
-    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Active", true);
+    QDBusReply<void> reply;
+    if (d->isProfileLed())
+        reply = d->ledIface()->call("set" + d->lightingLocationMethod, true);
+    else
+        reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Active", true);
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -291,6 +316,13 @@ uchar Led::getBrightness()
 bool LedPrivate::hasFx()
 {
     return !supportedFx.isEmpty();
+}
+
+bool LedPrivate::isProfileLed()
+{
+    return ledId == ::openrazer::RazerLedId::KeymapRedLED
+            || ledId == ::openrazer::RazerLedId::KeymapGreenLED
+            || ledId == ::openrazer::RazerLedId::KeymapBlueLED;
 }
 
 QDBusInterface *LedPrivate::ledIface()

@@ -113,6 +113,12 @@ void DevicePrivate::setupCapabilities()
         supportedLeds.insert(::openrazer::RazerLedId::LeftSideLED, "Left");
     if (hasCapabilityInternal("razer.device.lighting.right"))
         supportedLeds.insert(::openrazer::RazerLedId::RightSideLED, "Right");
+    if (hasCapabilityInternal("razer.device.lighting.profile_led", "setRedLED"))
+        supportedLeds.insert(::openrazer::RazerLedId::KeymapRedLED, "RedLED");
+    if (hasCapabilityInternal("razer.device.lighting.profile_led", "setGreenLED"))
+        supportedLeds.insert(::openrazer::RazerLedId::KeymapGreenLED, "GreenLED");
+    if (hasCapabilityInternal("razer.device.lighting.profile_led", "setBlueLED"))
+        supportedLeds.insert(::openrazer::RazerLedId::KeymapBlueLED, "BlueLED");
 }
 
 /**
