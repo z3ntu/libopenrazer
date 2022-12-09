@@ -49,9 +49,9 @@ QDBusObjectPath Led::getObjectPath()
     return d->mObjectPath;
 }
 
-bool Led::hasFx(const QString &fxStr)
+bool Led::hasBrightness()
 {
-    return d->device->d->supportedFx.contains(fxStr);
+    return d->hasFx("brightness");
 }
 
 bool Led::hasFx(::openrazer::RazerEffect fx)
@@ -89,7 +89,7 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
         fxStr = "reactive";
         break;
     }
-    return hasFx(fxStr);
+    return d->hasFx(fxStr);
 }
 
 ::openrazer::RazerEffect Led::getCurrentEffect()
@@ -180,6 +180,11 @@ uchar Led::getBrightness()
 {
     QDBusReply<uchar> reply = d->ledIface()->call("getBrightness");
     return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+bool LedPrivate::hasFx(const QString &fxStr)
+{
+    return device->d->supportedFx.contains(fxStr);
 }
 
 QDBusInterface *LedPrivate::ledIface()

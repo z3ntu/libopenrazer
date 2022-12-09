@@ -37,9 +37,9 @@ public:
     virtual QDBusObjectPath getObjectPath() = 0;
 
     /*!
-     * Returns if the led has the specified \a fxStr
+     * Returns if the device has brightness functionality
      */
-    virtual bool hasFx(const QString &fxStr) = 0;
+    virtual bool hasBrightness() = 0;
 
     /*!
      * Returns if the device has the specified \a fx
@@ -155,7 +155,7 @@ public:
     ~Led() override;
 
     QDBusObjectPath getObjectPath() override;
-    bool hasFx(const QString &fxStr) override;
+    bool hasBrightness() override;
     bool hasFx(::openrazer::RazerEffect fx) override;
     ::openrazer::RazerEffect getCurrentEffect() override;
     QVector<::openrazer::RGB> getCurrentColors() override;
@@ -190,7 +190,7 @@ public:
     ~Led() override;
 
     QDBusObjectPath getObjectPath() override;
-    bool hasFx(const QString &fxStr) override;
+    bool hasBrightness() override;
     bool hasFx(::openrazer::RazerEffect fx) override;
     ::openrazer::RazerEffect getCurrentEffect() override;
     QVector<::openrazer::RGB> getCurrentColors() override;

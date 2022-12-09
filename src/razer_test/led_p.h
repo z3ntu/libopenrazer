@@ -31,6 +31,8 @@ class LedPrivate
 public:
     Led *mParent = nullptr;
 
+    bool hasFx(const QString &fxStr);
+
     QDBusInterface *iface = nullptr;
     QDBusInterface *ledIface();
 

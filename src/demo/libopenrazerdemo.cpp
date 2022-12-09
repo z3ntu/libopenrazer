@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
         foreach (libopenrazer::Led *led, device->getLeds()) {
             qDebug() << "LED:" << led->getLedId();
-            if (led->hasFx("brightness")) {
+            if (led->hasBrightness()) {
                 qDebug() << "  Brightness:" << led->getBrightness();
             }
             qDebug() << "  Effect:" << led->getCurrentEffect();

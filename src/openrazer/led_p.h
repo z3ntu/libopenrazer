@@ -41,13 +41,15 @@ public:
     Device *device;
     QDBusObjectPath mObjectPath;
 
-    QStringList supportedFx;
+    QVector<::openrazer::RazerEffect> supportedFx;
+    bool supportsBrightness;
 
     ::openrazer::RazerLedId ledId;
     QString lightingLocation;
     QString lightingLocationMethod;
     QString interface;
 
+    bool hasFx();
     void setupCapabilities();
 };
 
