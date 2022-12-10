@@ -210,6 +210,12 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, MatrixDime
     return argument;
 }
 
+inline QDebug operator<<(QDebug dbg, const MatrixDimensions &value)
+{
+    dbg.nospace() << "MatrixDimensions(" << value.x << ", " << value.y << ")";
+    return dbg.maybeSpace();
+}
+
 struct RGB {
     uchar r;
     uchar g;
