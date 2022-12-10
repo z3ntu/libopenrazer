@@ -80,21 +80,27 @@ int main(int argc, char *argv[])
 
     qDebug() << "Daemon running:" << manager->isDaemonRunning();
     qDebug() << "Daemon version:" << manager->getDaemonVersion();
-    // qDebug() << "Supported devices:" << manager->getSupportedDevices();
+    qDebug() << "Supported devices:" << manager->getSupportedDevices().size();
+    bool syncEffects = manager->getSyncEffects();
+    qDebug() << "Sync effects:" << syncEffects;
     manager->syncEffects(false);
+    bool screensaver = manager->getTurnOffOnScreensaver();
+    qDebug() << "Turn off on screensaver:" << screensaver;
+    manager->setTurnOffOnScreensaver(false);
 
     for (const QDBusObjectPath &devicePath : manager->getDevices()) {
         qDebug() << "-----------------";
         libopenrazer::Device *device = manager->getDevice(devicePath);
         qDebug() << "Device name:" << device->getDeviceName();
-        qDebug() << "Firmware version:" << device->getFirmwareVersion();
-        try { // fake driver doesn't have device_mode
-            qDebug() << "Device mode:" << device->getDeviceMode();
-        } catch (const QException &e) {
-        }
-        // device->setDeviceMode(0x03, 0x00);
-        // qDebug() << "Devicemode:" << device->getDeviceMode();
         qDebug() << "Serial:" << device->getSerial();
+        qDebug() << "Firmware version:" << device->getFirmwareVersion();
+        qDebug() << "Device mode:" << device->getDeviceMode();
+        qDebug() << "Device type:" << device->getDeviceType();
+        qDebug() << "Device image:" << device->getDeviceImageUrl();
+
+        if (device->hasFeature("keyboard_layout")) {
+            qDebug() << "Keyboard layout:" << device->getKeyboardLayout();
+        }
 
         if (device->hasFeature("dpi")) {
             openrazer::RazerDPI dpi = device->getDPI();
@@ -106,7 +112,6 @@ int main(int argc, char *argv[])
             } else {
                 device->setDPI({ 500, 500 });
             }
-            qDebug() << "DPI:" << device->getDPI();
             qDebug() << "Maximum DPI:" << device->maxDPI();
             // restore DPI
             device->setDPI(dpi);
@@ -116,9 +121,12 @@ int main(int argc, char *argv[])
             ushort poll_rate = device->getPollRate();
             qDebug() << "Poll rate:" << poll_rate;
             device->setPollRate(125);
-            qDebug() << "Poll rate:" << device->getPollRate();
             // restore poll rate
             device->setPollRate(poll_rate);
+        }
+
+        if (device->hasFeature("custom_frame")) {
+            qDebug() << "Matrix dimensions:" << device->getMatrixDimensions();
         }
 
         for (libopenrazer::Led *led : device->getLeds()) {
@@ -142,35 +150,14 @@ int main(int argc, char *argv[])
                 qDebug() << "  WARN: Cannot set effect from getCurrentEffect" << effect;
                 continue;
             }
-            // TODO: Use 'colors' variable
+            // TODO: Use 'colors' variable to restore colors
             setEffect(led, effect, QVector<QColor>());
         }
 
-        if (device->hasFeature("keyboard_layout")) {
-            qDebug() << "Keyboard layout:" << device->getKeyboardLayout();
-        }
-
-        // if(device->hasMatrix()) {
-        //     QList<int> dimen = device->getMatrixDimensions();
-        //     qDebug() << dimen;
-        //     qDebug() << dimen[0] << "-" << dimen[1];
-        //     QList<QColor> colors = QList<QColor>();
-        //     for(int i=0; i<dimen[1]; i++)
-        //         colors << QColor("yellow");
-        //     qDebug() << "size:" << colors.size();
-        //     for(int i=0; i<dimen[0]; i++) {
-        //         qDebug() << i;
-        //         device->setKeyRow(i, 0, dimen[1]-1, colors);
-        //         device->setCustom();
-        //         qDebug() << "Press Enter to continue.";
-        //         std::cin.ignore();
-        //     }
-        // }
-
-        // QHash<QString, bool> hash = device->getAllCapabilities();
-        // for (QHash<QString, bool>::iterator i = hash.begin(); i != hash.end(); ++i)
-        //     qDebug() << i.key() << ": " << i.value();
-
         delete device;
     }
+
+    // restore settings
+    manager->setTurnOffOnScreensaver(screensaver);
+    manager->syncEffects(syncEffects);
 }
