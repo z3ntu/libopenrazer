@@ -156,6 +156,12 @@ ushort Device::maxDPI()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
+QVector<ushort> Device::getAllowedDPI()
+{
+    // TODO Needs implementation
+    return {};
+}
+
 bool Device::displayCustomFrame()
 {
     QDBusReply<bool> reply = d->deviceIface()->call("displayCustomFrame");

@@ -92,6 +92,8 @@ void DevicePrivate::setupCapabilities()
         supportedFeatures.append("keyboard_layout");
     if (hasCapabilityInternal("razer.device.dpi", "setDPI"))
         supportedFeatures.append("dpi");
+    if (hasCapabilityInternal("razer.device.dpi", "availableDPI"))
+        supportedFeatures.append("restricted_dpi");
     if (hasCapabilityInternal("razer.device.misc", "setPollRate"))
         supportedFeatures.append("poll_rate");
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setCustom"))
@@ -256,6 +258,20 @@ ushort Device::maxDPI()
 {
     QDBusReply<int> reply = d->deviceDpiIface()->call("maxDPI");
     return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+QVector<ushort> Device::getAllowedDPI()
+{
+    QDBusReply<QVector<int>> reply = d->deviceDpiIface()->call("availableDPI");
+    QVector<int> values = handleDBusReply(reply, Q_FUNC_INFO);
+    if (values.isEmpty())
+        throw DBusException("Invalid return array from availableDPI", "The availableDPI return array is empty.");
+    // Convert QVector<int> to QVector<ushort>
+    QVector<ushort> out;
+    out.reserve(values.size());
+    std::transform(values.cbegin(), values.cend(), std::back_inserter(out),
+                   [](int c) { return static_cast<ushort>(c); });
+    return out;
 }
 
 bool Device::displayCustomFrame()

@@ -119,7 +119,7 @@ public:
      *
      * Returns if the D-Bus call was successful.
      *
-     * \sa getDPI(), maxDPI()
+     * \sa getDPI(), maxDPI(), getAllowedDPIValues()
      */
     virtual bool setDPI(::openrazer::RazerDPI dpi) = 0;
 
@@ -136,6 +136,13 @@ public:
      * \sa getDPI(), setDPI()
      */
     virtual ushort maxDPI() = 0;
+
+    /*!
+     * Some devices only support a small number of DPI values instead of arbitrary values.
+     *
+     * Returns the allowed values you can pass to setDPI
+     */
+    virtual QVector<ushort> getAllowedDPI() = 0;
 
     /*!
      * Sets the lighting to custom mode (applies effects set from defineCustomFrame()).
@@ -194,6 +201,7 @@ public:
     bool setDPI(::openrazer::RazerDPI dpi) override;
     ::openrazer::RazerDPI getDPI() override;
     ushort maxDPI() override;
+    QVector<ushort> getAllowedDPI() override;
     bool displayCustomFrame() override;
     bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
@@ -235,6 +243,7 @@ public:
     bool setDPI(::openrazer::RazerDPI dpi) override;
     ::openrazer::RazerDPI getDPI() override;
     ushort maxDPI() override;
+    QVector<ushort> getAllowedDPI() override;
     bool displayCustomFrame() override;
     bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
