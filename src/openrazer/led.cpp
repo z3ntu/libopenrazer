@@ -137,20 +137,12 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
     // Profile LEDs are a bit special
     if (d->isProfileLed()) {
         QDBusReply<bool> reply = d->ledIface()->call("get" + d->lightingLocationMethod);
-        if (!reply.isValid()) {
-            printDBusError(reply.error(), Q_FUNC_INFO);
-            throw DBusException(reply.error());
-        }
-        return reply.value() ? ::openrazer::RazerEffect::On : ::openrazer::RazerEffect::Off;
+        bool on = handleDBusReply(reply, Q_FUNC_INFO);
+        return on ? ::openrazer::RazerEffect::On : ::openrazer::RazerEffect::Off;
     }
 
     QDBusReply<QString> reply = d->ledIface()->call("get" + d->lightingLocationMethod + "Effect");
-    if (!reply.isValid()) {
-        printDBusError(reply.error(), Q_FUNC_INFO);
-        throw DBusException(reply.error());
-    }
-
-    QString effect = reply.value();
+    QString effect = handleDBusReply(reply, Q_FUNC_INFO);
     // TODO:
     // * breathTriple
     // * starlightSingle
@@ -193,12 +185,7 @@ QVector<::openrazer::RGB> Led::getCurrentColors()
     }
 
     QDBusReply<QByteArray> reply = d->ledIface()->call("get" + d->lightingLocationMethod + "EffectColors");
-    if (!reply.isValid()) {
-        printDBusError(reply.error(), Q_FUNC_INFO);
-        throw DBusException(reply.error());
-    }
-
-    QByteArray values = reply.value();
+    QByteArray values = handleDBusReply(reply, Q_FUNC_INFO);
     if (values.size() % 3 != 0) {
         throw DBusException("Invalid return array from EffectColors", "The EffectColors return array has an invalid size.");
     }
@@ -324,12 +311,9 @@ uchar Led::getBrightness()
         reply = d->ledBrightnessIface()->call("getBrightness");
     else
         reply = d->ledIface()->call("get" + d->lightingLocationMethod + "Brightness");
-    if (reply.isValid()) {
-        return reply.value() / 100 * 255;
-    } else {
-        printDBusError(reply.error(), Q_FUNC_INFO);
-        throw DBusException(reply.error());
-    }
+
+    double value = handleDBusReply(reply, Q_FUNC_INFO);
+    return value / 100 * 255;
 }
 
 bool LedPrivate::hasFx()

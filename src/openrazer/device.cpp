@@ -224,12 +224,7 @@ QString Device::getKeyboardLayout()
 ushort Device::getPollRate()
 {
     QDBusReply<int> reply = d->deviceMiscIface()->call("getPollRate");
-    if (reply.isValid()) {
-        return reply.value();
-    } else {
-        printDBusError(reply.error(), Q_FUNC_INFO);
-        throw DBusException(reply.error());
-    }
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Device::setPollRate(ushort pollrate)
@@ -247,30 +242,20 @@ bool Device::setDPI(::openrazer::RazerDPI dpi)
 ::openrazer::RazerDPI Device::getDPI()
 {
     QDBusReply<QList<int>> reply = d->deviceDpiIface()->call("getDPI");
-    if (reply.isValid()) {
-        QList<int> dpi = reply.value();
-        if (dpi.size() == 1) {
-            return { static_cast<ushort>(dpi[0]), 0 };
-        } else if (dpi.size() == 2) {
-            return { static_cast<ushort>(dpi[0]), static_cast<ushort>(dpi[1]) };
-        } else {
-            throw DBusException("Invalid return array from DPI", "The DPI return array has an invalid size.");
-        }
+    QList<int> dpi = handleDBusReply(reply, Q_FUNC_INFO);
+    if (dpi.size() == 1) {
+        return { static_cast<ushort>(dpi[0]), 0 };
+    } else if (dpi.size() == 2) {
+        return { static_cast<ushort>(dpi[0]), static_cast<ushort>(dpi[1]) };
     } else {
-        printDBusError(reply.error(), Q_FUNC_INFO);
-        throw DBusException(reply.error());
+        throw DBusException("Invalid return array from DPI", "The DPI return array has an invalid size.");
     }
 }
 
 ushort Device::maxDPI()
 {
     QDBusReply<int> reply = d->deviceDpiIface()->call("maxDPI");
-    if (reply.isValid()) {
-        return reply.value();
-    } else {
-        printDBusError(reply.error(), Q_FUNC_INFO);
-        throw DBusException(reply.error());
-    }
+    return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Device::displayCustomFrame()
