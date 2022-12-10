@@ -50,6 +50,8 @@ const QList<RazerCapability> ledFxList {
     RazerCapability(::openrazer::RazerEffect::Spectrum, Led::tr("Spectrum"), 0),
     RazerCapability(::openrazer::RazerEffect::Wave, Led::tr("Wave"), true),
     RazerCapability(::openrazer::RazerEffect::Reactive, Led::tr("Reactive"), 1),
+    RazerCapability(::openrazer::RazerEffect::Ripple, Led::tr("Ripple"), 1),
+    RazerCapability(::openrazer::RazerEffect::RippleRandom, Led::tr("Ripple Random"), 0),
 };
 
 /*!

@@ -88,6 +88,10 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
     case ::openrazer::RazerEffect::Reactive:
         fxStr = "reactive";
         break;
+    case ::openrazer::RazerEffect::Ripple:
+    case ::openrazer::RazerEffect::RippleRandom:
+        // TODO Needs implementation
+        return false;
     }
     return d->hasFx(fxStr);
 }
@@ -168,6 +172,18 @@ bool Led::setReactive(QColor color, ::openrazer::ReactiveSpeed speed)
 {
     QDBusReply<bool> reply = d->ledIface()->call("setReactive", QVariant::fromValue(speed), QCOLOR_TO_QVARIANT(color));
     return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+bool Led::setRipple(QColor color)
+{
+    // TODO Needs implementation
+    return false;
+}
+
+bool Led::setRippleRandom()
+{
+    // TODO Needs implementation
+    return false;
 }
 
 bool Led::setBrightness(uchar brightness)

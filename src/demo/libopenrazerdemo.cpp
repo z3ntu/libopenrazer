@@ -53,6 +53,14 @@ void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<QC
         led->setReactive(colors[0], openrazer::ReactiveSpeed::_500MS);
         break;
     }
+    case openrazer::RazerEffect::Ripple: {
+        led->setRipple(colors[0]);
+        break;
+    }
+    case openrazer::RazerEffect::RippleRandom: {
+        led->setRippleRandom();
+        break;
+    }
     default:
         throw new std::invalid_argument("Effect not handled: " + QVariant::fromValue(effect).toString().toStdString());
     }

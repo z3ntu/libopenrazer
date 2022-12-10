@@ -98,6 +98,11 @@ void LedPrivate::setupCapabilities()
     if (device->d->hasCapabilityInternal("razer.device.lighting.bw2013", "setPulsate"))
         supportedFx.append(::openrazer::RazerEffect::Breathing);
 
+    if (device->d->hasCapabilityInternal("razer.device.lighting.custom", "setRipple"))
+        supportedFx.append(::openrazer::RazerEffect::Ripple);
+    if (device->d->hasCapabilityInternal("razer.device.lighting.custom", "setRippleRandomColour"))
+        supportedFx.append(::openrazer::RazerEffect::RippleRandom);
+
     if (lightingLocation == "Chroma") {
         if (device->d->hasCapabilityInternal("razer.device.lighting.brightness", "setBrightness"))
             supportsBrightness = true;
@@ -148,8 +153,6 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
     QString effect = reply.value();
     // TODO:
     // * breathTriple
-    // * ripple
-    // * rippleRandomColour
     // * starlightSingle
     // * starlightDual
     // * starlightRandom
@@ -171,6 +174,10 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
         return ::openrazer::RazerEffect::Wave;
     } else if (effect == "reactive") {
         return ::openrazer::RazerEffect::Reactive;
+    } else if (effect == "ripple") {
+        return ::openrazer::RazerEffect::Ripple;
+    } else if (effect == "rippleRandomColour") {
+        return ::openrazer::RazerEffect::RippleRandom;
     } else {
         qWarning("libopenrazer: Unhandled effect in getCurrentEffect: %s, defaulting to Spectrum", qUtf8Printable(effect));
         return ::openrazer::RazerEffect::Spectrum;
@@ -287,6 +294,18 @@ bool Led::setReactive(QColor color, ::openrazer::ReactiveSpeed speed)
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
+bool Led::setRipple(QColor color)
+{
+    QDBusReply<void> reply = d->ledCustomIface()->call("setRipple", QCOLOR_TO_QVARIANT(color), 0.05);
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+}
+
+bool Led::setRippleRandom()
+{
+    QDBusReply<void> reply = d->ledCustomIface()->call("setRippleRandomColour", 0.05);
+    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+}
+
 bool Led::setBrightness(uchar brightness)
 {
     double dbusBrightness = (double)brightness / 255 * 100;
@@ -362,6 +381,19 @@ QDBusInterface *LedPrivate::ledBw2013Iface()
                 qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceBw2013;
+}
+
+QDBusInterface *LedPrivate::ledCustomIface()
+{
+    if (ifaceCustom == nullptr) {
+        ifaceCustom = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.lighting.custom",
+                                         OPENRAZER_DBUS_BUS, mParent);
+    }
+    if (!ifaceCustom->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
+    }
+    return ifaceCustom;
 }
 
 }

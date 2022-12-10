@@ -131,6 +131,8 @@ enum class RazerEffect {
     Spectrum,
     Wave,
     Reactive,
+    Ripple,
+    RippleRandom,
 };
 Q_ENUM_NS(RazerEffect)
 

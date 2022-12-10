@@ -34,9 +34,11 @@ public:
     QDBusInterface *iface = nullptr;
     QDBusInterface *ifaceBrightness = nullptr;
     QDBusInterface *ifaceBw2013 = nullptr;
+    QDBusInterface *ifaceCustom = nullptr;
     QDBusInterface *ledIface();
     QDBusInterface *ledBrightnessIface();
     QDBusInterface *ledBw2013Iface();
+    QDBusInterface *ledCustomIface();
 
     Device *device;
     QDBusObjectPath mObjectPath;

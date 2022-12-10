@@ -132,6 +132,20 @@ public:
     virtual bool setReactive(QColor color, ::openrazer::ReactiveSpeed speed) = 0;
 
     /*!
+     * Sets the lighting effect to ripple with the specified \a color.
+     *
+     * Returns if the D-Bus call was successful.
+     */
+    virtual bool setRipple(QColor color) = 0;
+
+    /*!
+     * Sets the lighting effect to ripple with random colors.
+     *
+     * Returns if the D-Bus call was successful.
+     */
+    virtual bool setRippleRandom() = 0;
+
+    /*!
      * Sets the \a brightness (`0` - `255`).
      *
      * Returns if the D-Bus call was successful.
@@ -170,6 +184,8 @@ public:
     bool setSpectrum() override;
     bool setWave(::openrazer::WaveDirection direction) override;
     bool setReactive(QColor color, ::openrazer::ReactiveSpeed speed) override;
+    bool setRipple(QColor color) override;
+    bool setRippleRandom() override;
     bool setBrightness(uchar brightness) override;
     uchar getBrightness() override;
 
@@ -205,6 +221,8 @@ public:
     bool setSpectrum() override;
     bool setWave(::openrazer::WaveDirection direction) override;
     bool setReactive(QColor color, ::openrazer::ReactiveSpeed speed) override;
+    bool setRipple(QColor color) override;
+    bool setRippleRandom() override;
     bool setBrightness(uchar brightness) override;
     uchar getBrightness() override;
 
