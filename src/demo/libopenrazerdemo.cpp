@@ -1,10 +1,63 @@
 #include "libopenrazer.h"
 
+#include <QColor>
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QDebug>
 
-// Main method for testing / playing.
+void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<QColor> colors)
+{
+    if (colors.size() < 2)
+        colors += QColor(Qt::lightGray);
+    if (colors.size() < 2)
+        colors += QColor(Qt::magenta);
+
+    switch (effect) {
+    case openrazer::RazerEffect::Off: {
+        led->setOff();
+        break;
+    }
+    case openrazer::RazerEffect::On: {
+        led->setOn();
+        break;
+    }
+    case openrazer::RazerEffect::Static: {
+        led->setStatic(colors[0]);
+        break;
+    }
+    case openrazer::RazerEffect::Breathing: {
+        led->setBreathing(colors[0]);
+        break;
+    }
+    case openrazer::RazerEffect::BreathingDual: {
+        led->setBreathingDual(colors[0], colors[1]);
+        break;
+    }
+    case openrazer::RazerEffect::BreathingRandom: {
+        led->setBreathingRandom();
+        break;
+    }
+    case openrazer::RazerEffect::Blinking: {
+        led->setBlinking(colors[0]);
+        break;
+    }
+    case openrazer::RazerEffect::Spectrum: {
+        led->setSpectrum();
+        break;
+    }
+    case openrazer::RazerEffect::Wave: {
+        led->setWave(openrazer::WaveDirection::LEFT_TO_RIGHT);
+        break;
+    }
+    case openrazer::RazerEffect::Reactive: {
+        led->setReactive(colors[0], openrazer::ReactiveSpeed::_500MS);
+        break;
+    }
+    default:
+        throw new std::invalid_argument("Effect not handled: " + QVariant::fromValue(effect).toString().toStdString());
+    }
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -47,8 +100,8 @@ int main(int argc, char *argv[])
             openrazer::RazerDPI dpi = device->getDPI();
             qDebug() << "DPI:" << dpi;
             // FIXME Devices use 'available_dpi'
-            if (device->getDeviceName() == "Razer DeathAdder 3.5G Black" ||
-                device->getDeviceName() == "Razer DeathAdder 3.5G") {
+            if (device->getDeviceName() == "Razer DeathAdder 3.5G Black"
+                || device->getDeviceName() == "Razer DeathAdder 3.5G") {
                 device->setDPI({ 900, 0 });
             } else {
                 device->setDPI({ 500, 500 });
@@ -73,9 +126,24 @@ int main(int argc, char *argv[])
             if (led->hasBrightness()) {
                 qDebug() << "  Brightness:" << led->getBrightness();
             }
-            qDebug() << "  Effect:" << led->getCurrentEffect();
-            auto colors = led->getCurrentColors();
+            openrazer::RazerEffect effect = led->getCurrentEffect();
+            qDebug() << "  Effect:" << effect;
+            QVector<openrazer::RGB> colors = led->getCurrentColors();
             qDebug() << "  Colors:" << colors;
+
+            for (const libopenrazer::RazerCapability &cap : libopenrazer::ledFxList) {
+                if (led->hasFx(cap.getIdentifier())) {
+                    setEffect(led, cap.getIdentifier(), QVector<QColor>());
+                }
+            }
+
+            // restore effect
+            if (!led->hasFx(effect)) {
+                qDebug() << "  WARN: Cannot set effect from getCurrentEffect" << effect;
+                continue;
+            }
+            // TODO: Use 'colors' variable
+            setEffect(led, effect, QVector<QColor>());
         }
 
         if (device->hasFeature("keyboard_layout")) {
