@@ -101,7 +101,7 @@ public:
     /*!
      * Returns the current poll rate, e.g. `125`, `500` or `1000`.
      *
-     * \sa setPollRate()
+     * \sa setPollRate(), getSupportedPollRates()
      */
     virtual ushort getPollRate() = 0;
 
@@ -113,6 +113,13 @@ public:
      * \sa getPollRate()
      */
     virtual bool setPollRate(ushort pollrate) = 0;
+
+    /*!
+     * Returns the poll rates that are supported by the device.
+     *
+     * \sa setPollRate()
+     */
+    virtual QVector<ushort> getSupportedPollRates() = 0;
 
     /*!
      * Sets the DPI of the mouse to the specified \a dpi_x for the x-Axis and \a dpi_y for the y-Axis. Maximum value is what is returned by maxDPI().
@@ -198,6 +205,7 @@ public:
     QString getKeyboardLayout() override;
     ushort getPollRate() override;
     bool setPollRate(ushort pollrate) override;
+    QVector<ushort> getSupportedPollRates() override;
     bool setDPI(::openrazer::RazerDPI dpi) override;
     ::openrazer::RazerDPI getDPI() override;
     ushort maxDPI() override;
@@ -240,6 +248,7 @@ public:
     QString getKeyboardLayout() override;
     ushort getPollRate() override;
     bool setPollRate(ushort pollrate) override;
+    QVector<ushort> getSupportedPollRates() override;
     bool setDPI(::openrazer::RazerDPI dpi) override;
     ::openrazer::RazerDPI getDPI() override;
     ushort maxDPI() override;

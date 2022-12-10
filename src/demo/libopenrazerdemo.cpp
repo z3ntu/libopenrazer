@@ -129,7 +129,10 @@ int main(int argc, char *argv[])
         if (device->hasFeature("poll_rate")) {
             ushort poll_rate = device->getPollRate();
             qDebug() << "Poll rate:" << poll_rate;
-            device->setPollRate(125);
+            QVector<ushort> supportedPollRates = device->getSupportedPollRates();
+            qDebug() << "Supported poll rates:" << supportedPollRates;
+            device->setPollRate(supportedPollRates.first());
+            device->setPollRate(supportedPollRates.last());
             // restore poll rate
             device->setPollRate(poll_rate);
         }

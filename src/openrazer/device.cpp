@@ -235,6 +235,16 @@ bool Device::setPollRate(ushort pollrate)
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
+QVector<ushort> Device::getSupportedPollRates()
+{
+    // Not every device has getSupportedPollRates yet, return defaults in that case.
+    if (!d->hasCapabilityInternal("razer.device.misc", "getSupportedPollRates")) {
+        return { 125, 500, 1000 };
+    }
+    QDBusReply<QVector<ushort>> reply = d->deviceMiscIface()->call("getSupportedPollRates");
+    return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
 bool Device::setDPI(::openrazer::RazerDPI dpi)
 {
     QDBusReply<void> reply = d->deviceDpiIface()->call("setDPI", QVariant::fromValue(dpi.dpi_x), QVariant::fromValue(dpi.dpi_y));

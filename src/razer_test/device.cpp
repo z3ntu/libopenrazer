@@ -138,6 +138,12 @@ bool Device::setPollRate(ushort pollrate)
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
+QVector<ushort> Device::getSupportedPollRates()
+{
+    // TODO Needs implementation
+    return { 125, 500, 1000 };
+}
+
 bool Device::setDPI(::openrazer::RazerDPI dpi)
 {
     QDBusReply<bool> reply = d->deviceIface()->call("setDPI", QVariant::fromValue(dpi));
