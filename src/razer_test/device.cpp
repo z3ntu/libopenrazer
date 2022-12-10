@@ -20,7 +20,6 @@
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
 
-#include <QColor>
 #include <QVector>
 
 namespace libopenrazer {
@@ -174,13 +173,9 @@ bool Device::displayCustomFrame()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData)
+bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData)
 {
-    QVector<::openrazer::RGB> rgbData;
-    for (const QColor &color : colorData) {
-        rgbData.append({ static_cast<uchar>(color.red()), static_cast<uchar>(color.green()), static_cast<uchar>(color.blue()) });
-    }
-    QDBusReply<bool> reply = d->deviceIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), QVariant::fromValue(rgbData));
+    QDBusReply<bool> reply = d->deviceIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), QVariant::fromValue(colorData));
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 

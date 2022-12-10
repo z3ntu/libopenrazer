@@ -170,7 +170,7 @@ public:
      *
      * \sa displayCustomFrame()
      */
-    virtual bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) = 0;
+    virtual bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) = 0;
 
     /*!
      * Returns the dimension of the matrix supported on the device.
@@ -211,7 +211,7 @@ public:
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
     bool displayCustomFrame() override;
-    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) override;
+    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
 
 private:
@@ -254,7 +254,7 @@ public:
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
     bool displayCustomFrame() override;
-    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData) override;
+    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
 
 private:

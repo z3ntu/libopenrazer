@@ -21,13 +21,12 @@
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
 
-#include <QColor>
 #include <QDBusReply>
 
-#define QCOLOR_TO_QVARIANT(c)               \
-    QVariant::fromValue(c.red()),           \
-            QVariant::fromValue(c.green()), \
-            QVariant::fromValue(c.blue())
+#define RGB_TO_QVARIANT(c)            \
+    QVariant::fromValue(c.r),         \
+            QVariant::fromValue(c.g), \
+            QVariant::fromValue(c.b)
 
 namespace libopenrazer {
 
@@ -225,29 +224,29 @@ bool Led::setOn()
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setStatic(QColor color)
+bool Led::setStatic(::openrazer::RGB color)
 {
     QDBusReply<void> reply;
     if (d->device->d->hasCapabilityInternal("razer.device.lighting.bw2013", "setStatic"))
         reply = d->ledBw2013Iface()->call("setStatic");
     else
-        reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Static", QCOLOR_TO_QVARIANT(color));
+        reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Static", RGB_TO_QVARIANT(color));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setBreathing(QColor color)
+bool Led::setBreathing(::openrazer::RGB color)
 {
     QDBusReply<void> reply;
     if (d->device->d->hasCapabilityInternal("razer.device.lighting.bw2013", "setPulsate"))
         reply = d->ledBw2013Iface()->call("setPulsate");
     else
-        reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathSingle", QCOLOR_TO_QVARIANT(color));
+        reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathSingle", RGB_TO_QVARIANT(color));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setBreathingDual(QColor color, QColor color2)
+bool Led::setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2)
 {
-    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathDual", QCOLOR_TO_QVARIANT(color), QCOLOR_TO_QVARIANT(color2));
+    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathDual", RGB_TO_QVARIANT(color), RGB_TO_QVARIANT(color2));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -257,9 +256,9 @@ bool Led::setBreathingRandom()
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setBlinking(QColor color)
+bool Led::setBlinking(::openrazer::RGB color)
 {
-    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Blinking", QCOLOR_TO_QVARIANT(color));
+    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Blinking", RGB_TO_QVARIANT(color));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
@@ -275,15 +274,15 @@ bool Led::setWave(::openrazer::WaveDirection direction)
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setReactive(QColor color, ::openrazer::ReactiveSpeed speed)
+bool Led::setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed)
 {
-    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Reactive", QCOLOR_TO_QVARIANT(color), static_cast<uchar>(speed));
+    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Reactive", RGB_TO_QVARIANT(color), static_cast<uchar>(speed));
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Led::setRipple(QColor color)
+bool Led::setRipple(::openrazer::RGB color)
 {
-    QDBusReply<void> reply = d->ledCustomIface()->call("setRipple", QCOLOR_TO_QVARIANT(color), 0.05);
+    QDBusReply<void> reply = d->ledCustomIface()->call("setRipple", RGB_TO_QVARIANT(color), 0.05);
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 

@@ -1,16 +1,15 @@
 #include "libopenrazer.h"
 
-#include <QColor>
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QDebug>
 
-void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<QColor> colors)
+void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<::openrazer::RGB> colors)
 {
     if (colors.size() < 2)
-        colors += QColor(Qt::lightGray);
+        colors += ::openrazer::RGB { 50, 254, 100 };
     if (colors.size() < 2)
-        colors += QColor(Qt::magenta);
+        colors += ::openrazer::RGB { 173, 16, 160 };
 
     switch (effect) {
     case openrazer::RazerEffect::Off: {
@@ -153,7 +152,7 @@ int main(int argc, char *argv[])
 
             for (const libopenrazer::RazerCapability &cap : libopenrazer::ledFxList) {
                 if (led->hasFx(cap.getIdentifier())) {
-                    setEffect(led, cap.getIdentifier(), QVector<QColor>());
+                    setEffect(led, cap.getIdentifier(), QVector<::openrazer::RGB>());
                 }
             }
 
@@ -162,8 +161,7 @@ int main(int argc, char *argv[])
                 qDebug() << "  WARN: Cannot set effect from getCurrentEffect" << effect;
                 continue;
             }
-            // TODO: Use 'colors' variable to restore colors
-            setEffect(led, effect, QVector<QColor>());
+            setEffect(led, effect, colors);
         }
 
         delete device;

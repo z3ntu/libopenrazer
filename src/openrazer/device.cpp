@@ -20,7 +20,6 @@
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
 
-#include <QColor>
 #include <QDBusReply>
 #include <QDomDocument>
 #include <QJsonDocument>
@@ -290,16 +289,16 @@ bool Device::displayCustomFrame()
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<QColor> colorData)
+bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData)
 {
     QByteArray data;
     data.append(row);
     data.append(startColumn);
     data.append(endColumn);
-    for (const QColor &color : colorData) {
-        data.append(color.red());
-        data.append(color.green());
-        data.append(color.blue());
+    for (const ::openrazer::RGB &color : colorData) {
+        data.append(color.r);
+        data.append(color.g);
+        data.append(color.b);
     }
     QDBusReply<void> reply = d->deviceLightingChromaIface()->call("setKeyRow", data);
     return handleVoidDBusReply(reply, Q_FUNC_INFO);
