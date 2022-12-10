@@ -59,9 +59,9 @@ Device *Manager::getDevice(QDBusObjectPath objectPath)
     return new Device(objectPath);
 }
 
-bool Manager::syncEffects(bool yes)
+void Manager::syncEffects(bool yes)
 {
-    return false; // TODO Needs implementation
+    // TODO Needs implementation
 }
 
 bool Manager::getSyncEffects()
@@ -75,9 +75,9 @@ QString Manager::getDaemonVersion()
     return handleDBusVariant<QString>(reply, d->managerIface()->lastError(), Q_FUNC_INFO);
 }
 
-bool Manager::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
+void Manager::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
 {
-    return false; // TODO Needs implementation
+    // TODO Needs implementation
 }
 
 bool Manager::getTurnOffOnScreensaver()

@@ -69,10 +69,10 @@ Device *Manager::getDevice(QDBusObjectPath objectPath)
     return new Device(objectPath);
 }
 
-bool Manager::syncEffects(bool yes)
+void Manager::syncEffects(bool yes)
 {
     QDBusReply<void> reply = d->managerDevicesIface()->call("syncEffects", QVariant::fromValue(yes));
-    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+    handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Manager::getSyncEffects()
@@ -87,10 +87,10 @@ QString Manager::getDaemonVersion()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Manager::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
+void Manager::setTurnOffOnScreensaver(bool turnOffOnScreensaver)
 {
     QDBusReply<void> reply = d->managerDevicesIface()->call("enableTurnOffOnScreensaver", QVariant::fromValue(turnOffOnScreensaver));
-    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+    handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 bool Manager::getTurnOffOnScreensaver()

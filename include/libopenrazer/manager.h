@@ -72,7 +72,7 @@ public:
      *
      * \sa getSyncEffects()
      */
-    virtual bool syncEffects(bool yes) = 0;
+    virtual void syncEffects(bool yes) = 0;
 
     /*!
      * Returns if devices should sync effect.
@@ -88,7 +88,7 @@ public:
      *
      * \sa getTurnOffOnScreensaver()
      */
-    virtual bool setTurnOffOnScreensaver(bool turnOffOnScreensaver) = 0;
+    virtual void setTurnOffOnScreensaver(bool turnOffOnScreensaver) = 0;
 
     /*!
      * Returns if the LEDs should turn off if the screensaver is turned on.
@@ -149,9 +149,9 @@ public:
     QString getDaemonVersion() override;
     bool isDaemonRunning() override;
     QVariantHash getSupportedDevices() override;
-    bool syncEffects(bool yes) override;
+    void syncEffects(bool yes) override;
     bool getSyncEffects() override;
-    bool setTurnOffOnScreensaver(bool turnOffOnScreensaver) override;
+    void setTurnOffOnScreensaver(bool turnOffOnScreensaver) override;
     bool getTurnOffOnScreensaver() override;
     DaemonStatus getDaemonStatus() override;
     QString getDaemonStatusOutput() override;
@@ -177,9 +177,9 @@ public:
     QString getDaemonVersion() override;
     bool isDaemonRunning() override;
     QVariantHash getSupportedDevices() override;
-    bool syncEffects(bool yes) override;
+    void syncEffects(bool yes) override;
     bool getSyncEffects() override;
-    bool setTurnOffOnScreensaver(bool turnOffOnScreensaver) override;
+    void setTurnOffOnScreensaver(bool turnOffOnScreensaver) override;
     bool getTurnOffOnScreensaver() override;
     DaemonStatus getDaemonStatus() override;
     QString getDaemonStatusOutput() override;

@@ -24,7 +24,7 @@
 namespace libopenrazer {
 
 void printDBusError(QDBusError error, const char *functionname);
-bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname);
+void handleVoidDBusReply(QDBusReply<bool> reply, const char *functionname);
 
 template<typename T>
 T handleDBusReply(QDBusReply<T> reply, const char *functionname)
@@ -35,6 +35,10 @@ T handleDBusReply(QDBusReply<T> reply, const char *functionname)
     printDBusError(reply.error(), functionname);
     throw DBusException(reply.error());
 }
+
+// Specialization for QDBusReply<void>
+template<>
+void handleDBusReply(QDBusReply<void> reply, const char *functionname);
 
 template<typename T>
 T handleDBusVariant(QVariant variant, QDBusError error, const char *functionname)

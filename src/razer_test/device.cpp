@@ -90,9 +90,9 @@ QString Device::getDeviceMode()
     return "error"; // TODO Needs implementation
 }
 
-bool Device::setDeviceMode(uchar mode_id, uchar param)
+void Device::setDeviceMode(uchar mode_id, uchar param)
 {
-    return false; // TODO Needs implementation
+    // TODO Needs implementation
 }
 
 QString Device::getSerial()
@@ -131,10 +131,10 @@ ushort Device::getPollRate()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::setPollRate(ushort pollrate)
+void Device::setPollRate(ushort pollrate)
 {
     QDBusReply<bool> reply = d->deviceIface()->call("setPollRate", QVariant::fromValue(pollrate));
-    return handleDBusReply(reply, Q_FUNC_INFO);
+    handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 QVector<ushort> Device::getSupportedPollRates()
@@ -143,10 +143,10 @@ QVector<ushort> Device::getSupportedPollRates()
     return { 125, 500, 1000 };
 }
 
-bool Device::setDPI(::openrazer::RazerDPI dpi)
+void Device::setDPI(::openrazer::RazerDPI dpi)
 {
     QDBusReply<bool> reply = d->deviceIface()->call("setDPI", QVariant::fromValue(dpi));
-    return handleDBusReply(reply, Q_FUNC_INFO);
+    handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 ::openrazer::RazerDPI Device::getDPI()
@@ -167,16 +167,16 @@ QVector<ushort> Device::getAllowedDPI()
     return {};
 }
 
-bool Device::displayCustomFrame()
+void Device::displayCustomFrame()
 {
     QDBusReply<bool> reply = d->deviceIface()->call("displayCustomFrame");
-    return handleDBusReply(reply, Q_FUNC_INFO);
+    handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData)
+void Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData)
 {
     QDBusReply<bool> reply = d->deviceIface()->call("defineCustomFrame", QVariant::fromValue(row), QVariant::fromValue(startColumn), QVariant::fromValue(endColumn), QVariant::fromValue(colorData));
-    return handleDBusReply(reply, Q_FUNC_INFO);
+    handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
 ::openrazer::MatrixDimensions Device::getMatrixDimensions()

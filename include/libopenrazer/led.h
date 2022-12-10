@@ -66,91 +66,91 @@ public:
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setOff() = 0;
+    virtual void setOff() = 0;
 
     /*!
      * Sets the LED to on.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setOn() = 0;
+    virtual void setOn() = 0;
 
     /*!
      * Sets the lighting to static lighting in the specified \a color.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setStatic(::openrazer::RGB color) = 0;
+    virtual void setStatic(::openrazer::RGB color) = 0;
 
     /*!
      * Sets the lighting to the single breath effect with the specified \a color.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setBreathing(::openrazer::RGB color) = 0;
+    virtual void setBreathing(::openrazer::RGB color) = 0;
 
     /*!
      * Sets the lighting to the dual breath effect with the specified \a color and \a color2.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) = 0;
+    virtual void setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) = 0;
 
     /*!
      * Sets the lighting wheel to the random breath effect.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setBreathingRandom() = 0;
+    virtual void setBreathingRandom() = 0;
 
     /*!
      * Sets the lighting wheel to the random breath effect.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setBlinking(::openrazer::RGB color) = 0;
+    virtual void setBlinking(::openrazer::RGB color) = 0;
 
     /*!
      * Sets the lighting to spectrum mode.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setSpectrum() = 0;
+    virtual void setSpectrum() = 0;
 
     /*!
      * Sets the lighting effect to wave, in the direction \a direction.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setWave(::openrazer::WaveDirection direction) = 0;
+    virtual void setWave(::openrazer::WaveDirection direction) = 0;
 
     /*!
      * Sets the lighting to reactive mode with the specified \a color and \a speed.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) = 0;
+    virtual void setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) = 0;
 
     /*!
      * Sets the lighting effect to ripple with the specified \a color.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setRipple(::openrazer::RGB color) = 0;
+    virtual void setRipple(::openrazer::RGB color) = 0;
 
     /*!
      * Sets the lighting effect to ripple with random colors.
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setRippleRandom() = 0;
+    virtual void setRippleRandom() = 0;
 
     /*!
      * Sets the \a brightness (`0` - `255`).
      *
      * Returns if the D-Bus call was successful.
      */
-    virtual bool setBrightness(uchar brightness) = 0;
+    virtual void setBrightness(uchar brightness) = 0;
 
     /*!
      * Returns the current brightness (`0` - `255`).
@@ -174,19 +174,19 @@ public:
     ::openrazer::RazerEffect getCurrentEffect() override;
     QVector<::openrazer::RGB> getCurrentColors() override;
     ::openrazer::RazerLedId getLedId() override;
-    bool setOff() override;
-    bool setOn() override;
-    bool setStatic(::openrazer::RGB color) override;
-    bool setBreathing(::openrazer::RGB color) override;
-    bool setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) override;
-    bool setBreathingRandom() override;
-    bool setBlinking(::openrazer::RGB color) override;
-    bool setSpectrum() override;
-    bool setWave(::openrazer::WaveDirection direction) override;
-    bool setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) override;
-    bool setRipple(::openrazer::RGB color) override;
-    bool setRippleRandom() override;
-    bool setBrightness(uchar brightness) override;
+    void setOff() override;
+    void setOn() override;
+    void setStatic(::openrazer::RGB color) override;
+    void setBreathing(::openrazer::RGB color) override;
+    void setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) override;
+    void setBreathingRandom() override;
+    void setBlinking(::openrazer::RGB color) override;
+    void setSpectrum() override;
+    void setWave(::openrazer::WaveDirection direction) override;
+    void setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) override;
+    void setRipple(::openrazer::RGB color) override;
+    void setRippleRandom() override;
+    void setBrightness(uchar brightness) override;
     uchar getBrightness() override;
 
 private:
@@ -211,19 +211,19 @@ public:
     ::openrazer::RazerEffect getCurrentEffect() override;
     QVector<::openrazer::RGB> getCurrentColors() override;
     ::openrazer::RazerLedId getLedId() override;
-    bool setOff() override;
-    bool setOn() override;
-    bool setStatic(::openrazer::RGB color) override;
-    bool setBreathing(::openrazer::RGB color) override;
-    bool setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) override;
-    bool setBreathingRandom() override;
-    bool setBlinking(::openrazer::RGB color) override;
-    bool setSpectrum() override;
-    bool setWave(::openrazer::WaveDirection direction) override;
-    bool setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) override;
-    bool setRipple(::openrazer::RGB color) override;
-    bool setRippleRandom() override;
-    bool setBrightness(uchar brightness) override;
+    void setOff() override;
+    void setOn() override;
+    void setStatic(::openrazer::RGB color) override;
+    void setBreathing(::openrazer::RGB color) override;
+    void setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) override;
+    void setBreathingRandom() override;
+    void setBlinking(::openrazer::RGB color) override;
+    void setSpectrum() override;
+    void setWave(::openrazer::WaveDirection direction) override;
+    void setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) override;
+    void setRipple(::openrazer::RGB color) override;
+    void setRippleRandom() override;
+    void setBrightness(uchar brightness) override;
     uchar getBrightness() override;
 
 private:

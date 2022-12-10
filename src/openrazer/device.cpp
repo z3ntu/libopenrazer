@@ -163,10 +163,10 @@ QString Device::getDeviceMode()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::setDeviceMode(uchar mode_id, uchar param)
+void Device::setDeviceMode(uchar mode_id, uchar param)
 {
     QDBusReply<void> reply = d->deviceMiscIface()->call("setDeviceMode");
-    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+    handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 QString Device::getSerial()
@@ -228,10 +228,10 @@ ushort Device::getPollRate()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::setPollRate(ushort pollrate)
+void Device::setPollRate(ushort pollrate)
 {
     QDBusReply<void> reply = d->deviceMiscIface()->call("setPollRate", QVariant::fromValue(pollrate));
-    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+    handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 QVector<ushort> Device::getSupportedPollRates()
@@ -244,10 +244,10 @@ QVector<ushort> Device::getSupportedPollRates()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::setDPI(::openrazer::RazerDPI dpi)
+void Device::setDPI(::openrazer::RazerDPI dpi)
 {
     QDBusReply<void> reply = d->deviceDpiIface()->call("setDPI", QVariant::fromValue(dpi.dpi_x), QVariant::fromValue(dpi.dpi_y));
-    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+    handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 ::openrazer::RazerDPI Device::getDPI()
@@ -283,13 +283,13 @@ QVector<ushort> Device::getAllowedDPI()
     return out;
 }
 
-bool Device::displayCustomFrame()
+void Device::displayCustomFrame()
 {
     QDBusReply<void> reply = d->deviceLightingChromaIface()->call("setCustom");
-    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+    handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData)
+void Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData)
 {
     QByteArray data;
     data.append(row);
@@ -301,7 +301,7 @@ bool Device::defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QV
         data.append(color.b);
     }
     QDBusReply<void> reply = d->deviceLightingChromaIface()->call("setKeyRow", data);
-    return handleVoidDBusReply(reply, Q_FUNC_INFO);
+    handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 ::openrazer::MatrixDimensions Device::getMatrixDimensions()

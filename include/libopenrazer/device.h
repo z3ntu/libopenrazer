@@ -71,7 +71,7 @@ public:
      *
      * \sa getDeviceMode()
      */
-    virtual bool setDeviceMode(uchar mode_id, uchar param) = 0;
+    virtual void setDeviceMode(uchar mode_id, uchar param) = 0;
 
     /*!
      * Returns the serial number of the device which can be used to identify the device.
@@ -112,7 +112,7 @@ public:
      *
      * \sa getPollRate()
      */
-    virtual bool setPollRate(ushort pollrate) = 0;
+    virtual void setPollRate(ushort pollrate) = 0;
 
     /*!
      * Returns the poll rates that are supported by the device.
@@ -128,7 +128,7 @@ public:
      *
      * \sa getDPI(), maxDPI(), getAllowedDPIValues()
      */
-    virtual bool setDPI(::openrazer::RazerDPI dpi) = 0;
+    virtual void setDPI(::openrazer::RazerDPI dpi) = 0;
 
     /*!
      * Returns the DPI of the mouse (e.g. `[800, 800]`).
@@ -158,7 +158,7 @@ public:
      *
      * \sa defineCustomFrame()
      */
-    virtual bool displayCustomFrame() = 0;
+    virtual void displayCustomFrame() = 0;
 
     /*!
      * Sets the lighting of a key row to the specified \a colorData.
@@ -170,7 +170,7 @@ public:
      *
      * \sa displayCustomFrame()
      */
-    virtual bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) = 0;
+    virtual void defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) = 0;
 
     /*!
      * Returns the dimension of the matrix supported on the device.
@@ -197,21 +197,21 @@ public:
     QString getDeviceImageUrl() override;
     QList<::libopenrazer::Led *> getLeds() override;
     QString getDeviceMode() override;
-    bool setDeviceMode(uchar mode_id, uchar param) override;
+    void setDeviceMode(uchar mode_id, uchar param) override;
     QString getSerial() override;
     QString getDeviceName() override;
     QString getDeviceType() override;
     QString getFirmwareVersion() override;
     QString getKeyboardLayout() override;
     ushort getPollRate() override;
-    bool setPollRate(ushort pollrate) override;
+    void setPollRate(ushort pollrate) override;
     QVector<ushort> getSupportedPollRates() override;
-    bool setDPI(::openrazer::RazerDPI dpi) override;
+    void setDPI(::openrazer::RazerDPI dpi) override;
     ::openrazer::RazerDPI getDPI() override;
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
-    bool displayCustomFrame() override;
-    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
+    void displayCustomFrame() override;
+    void defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
 
 private:
@@ -240,21 +240,21 @@ public:
     QString getDeviceImageUrl() override;
     QList<::libopenrazer::Led *> getLeds() override;
     QString getDeviceMode() override;
-    bool setDeviceMode(uchar mode_id, uchar param) override;
+    void setDeviceMode(uchar mode_id, uchar param) override;
     QString getSerial() override;
     QString getDeviceName() override;
     QString getDeviceType() override;
     QString getFirmwareVersion() override;
     QString getKeyboardLayout() override;
     ushort getPollRate() override;
-    bool setPollRate(ushort pollrate) override;
+    void setPollRate(ushort pollrate) override;
     QVector<ushort> getSupportedPollRates() override;
-    bool setDPI(::openrazer::RazerDPI dpi) override;
+    void setDPI(::openrazer::RazerDPI dpi) override;
     ::openrazer::RazerDPI getDPI() override;
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
-    bool displayCustomFrame() override;
-    bool defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
+    void displayCustomFrame() override;
+    void defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
 
 private:

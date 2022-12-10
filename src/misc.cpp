@@ -30,13 +30,27 @@ void printDBusError(QDBusError error, const char *functionname)
     qWarning("libopenrazer: %s", qUtf8Printable(error.message()));
 }
 
-bool handleVoidDBusReply(QDBusReply<void> reply, const char *functionname)
+// Specialization for QDBusReply<void>
+template<>
+void handleDBusReply(QDBusReply<void> reply, const char *functionname)
 {
     if (reply.isValid()) {
-        return true;
+        return;
     }
     printDBusError(reply.error(), functionname);
     throw DBusException(reply.error());
+}
+
+void handleVoidDBusReply(QDBusReply<bool> reply, const char *functionname)
+{
+    if (!reply.isValid()) {
+        printDBusError(reply.error(), functionname);
+        throw DBusException(reply.error());
+    }
+    if (!reply.value()) {
+        qWarning("libopenrazer: %s: The function has returned false", functionname);
+        throw DBusException("Call failed", QString(functionname) + " has returned false");
+    }
 }
 
 }
