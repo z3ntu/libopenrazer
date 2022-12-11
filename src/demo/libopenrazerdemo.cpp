@@ -1,3 +1,7 @@
+// Copyright (C) 2018  Luca Weiss <luca (at) z3ntu (dot) xyz>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "libopenrazer.h"
 
 #include <QCommandLineParser>
