@@ -90,11 +90,6 @@ QString Device::getDeviceMode()
     return "error"; // TODO Needs implementation
 }
 
-void Device::setDeviceMode(uchar mode_id, uchar param)
-{
-    // TODO Needs implementation
-}
-
 QString Device::getSerial()
 {
     QDBusReply<QString> reply = d->deviceIface()->call("getSerial");

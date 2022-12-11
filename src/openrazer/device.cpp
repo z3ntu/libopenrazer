@@ -169,12 +169,6 @@ QString Device::getDeviceMode()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-void Device::setDeviceMode(uchar mode_id, uchar param)
-{
-    QDBusReply<void> reply = d->deviceMiscIface()->call("setDeviceMode");
-    handleDBusReply(reply, Q_FUNC_INFO);
-}
-
 QString Device::getSerial()
 {
     QDBusReply<QString> reply = d->deviceMiscIface()->call("getSerial");

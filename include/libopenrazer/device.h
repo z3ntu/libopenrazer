@@ -56,22 +56,8 @@ public:
 
     /*!
      * Returns the device mode of the device, like `0:0` or `3:0` for normal mode and driver mode respetively.
-     *
-     * \sa setDeviceMode()
      */
     virtual QString getDeviceMode() = 0;
-
-    /*!
-     * Sets the device mode to the specified \a mode_id and \a param.
-     * Allowed values are `0x00` (normal mode) and `0x03` (driver mode) for \a mode_id and `0x00` for param.
-     *
-     * When the device is set to Driver Mode, tilting the mouse wheel stops working, and the 'Up DPI' and 'Down DPI' buttons don't actually do anything. Razer Synapse on Windows is supposed to change the DPI instead of the mouse.
-     *
-     * Returns if the D-Bus call was successful.
-     *
-     * \sa getDeviceMode()
-     */
-    virtual void setDeviceMode(uchar mode_id, uchar param) = 0;
 
     /*!
      * Returns the serial number of the device which can be used to identify the device.
@@ -197,7 +183,6 @@ public:
     QString getDeviceImageUrl() override;
     QList<::libopenrazer::Led *> getLeds() override;
     QString getDeviceMode() override;
-    void setDeviceMode(uchar mode_id, uchar param) override;
     QString getSerial() override;
     QString getDeviceName() override;
     QString getDeviceType() override;
@@ -240,7 +225,6 @@ public:
     QString getDeviceImageUrl() override;
     QList<::libopenrazer::Led *> getLeds() override;
     QString getDeviceMode() override;
-    void setDeviceMode(uchar mode_id, uchar param) override;
     QString getSerial() override;
     QString getDeviceName() override;
     QString getDeviceType() override;
