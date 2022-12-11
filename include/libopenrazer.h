@@ -39,7 +39,7 @@ namespace libopenrazer {
 /*!
  * List of effects provided by OpenRazer.
  */
-const QList<RazerCapability> ledFxList {
+const QVector<RazerCapability> ledFxList {
     RazerCapability(::openrazer::RazerEffect::Off, Led::tr("Off"), 0),
     RazerCapability(::openrazer::RazerEffect::On, Led::tr("On"), 0),
     RazerCapability(::openrazer::RazerEffect::Static, Led::tr("Static"), 1),
