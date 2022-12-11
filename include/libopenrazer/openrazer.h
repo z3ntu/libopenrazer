@@ -38,7 +38,10 @@ enum class RazerLedId : uchar {
     KeymapGreenLED = 0x0D,
     KeymapBlueLED = 0x0E,
     RightSideLED = 0x10,
-    LeftSideLED = 0x11
+    LeftSideLED = 0x11,
+    ChargingLED = 0x20,
+    FastChargingLED = 0x21,
+    FullyChargedLED = 0x22,
 };
 Q_ENUM_NS(RazerLedId)
 

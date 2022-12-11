@@ -69,7 +69,10 @@ const QHash<::openrazer::RazerLedId, QString> ledIdToStringTable {
     { ::openrazer::RazerLedId::KeymapGreenLED, Led::tr("Keymap Green") },
     { ::openrazer::RazerLedId::KeymapBlueLED, Led::tr("Keymap Blue") },
     { ::openrazer::RazerLedId::RightSideLED, Led::tr("Right Side") },
-    { ::openrazer::RazerLedId::LeftSideLED, Led::tr("Left Side") }
+    { ::openrazer::RazerLedId::LeftSideLED, Led::tr("Left Side") },
+    { ::openrazer::RazerLedId::ChargingLED, Led::tr("Charging") },
+    { ::openrazer::RazerLedId::FastChargingLED, Led::tr("Fast Charging") },
+    { ::openrazer::RazerLedId::FullyChargedLED, Led::tr("Fully Charged") },
 };
 
 }

@@ -20,6 +20,7 @@
 #include "libopenrazer_private.h"
 
 #include <QDBusReply>
+#include <QRegularExpression>
 
 namespace libopenrazer {
 
@@ -51,6 +52,17 @@ void handleVoidDBusReply(QDBusReply<bool> reply, const char *functionname)
         qWarning("libopenrazer: %s: The function has returned false", functionname);
         throw DBusException("Call failed", QString(functionname) + " has returned false");
     }
+}
+
+// Convert CamelCase string to snake_case
+QString fromCamelCase(const QString &s)
+{
+    static QRegularExpression regExp1 { "(.)([A-Z][a-z]+)" };
+    static QRegularExpression regExp2 { "([a-z0-9])([A-Z])" };
+    QString result = s;
+    result.replace(regExp1, "\\1_\\2");
+    result.replace(regExp2, "\\1_\\2");
+    return result.toLower();
 }
 
 }

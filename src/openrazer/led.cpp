@@ -49,7 +49,7 @@ Led::Led(Device *device, QDBusObjectPath objectPath, ::openrazer::RazerLedId led
         d->interface = "razer.device.lighting.profile_led";
     } else {
         d->lightingLocationMethod = lightingLocation;
-        d->interface = "razer.device.lighting." + lightingLocation.toLower();
+        d->interface = "razer.device.lighting." + fromCamelCase(lightingLocation);
     }
 
     d->setupCapabilities();

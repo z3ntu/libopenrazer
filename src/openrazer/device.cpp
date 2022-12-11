@@ -120,6 +120,12 @@ void DevicePrivate::setupCapabilities()
         supportedLeds.insert(::openrazer::RazerLedId::KeymapGreenLED, "GreenLED");
     if (hasCapabilityInternal("razer.device.lighting.profile_led", "setBlueLED"))
         supportedLeds.insert(::openrazer::RazerLedId::KeymapBlueLED, "BlueLED");
+    if (hasCapabilityInternal("razer.device.lighting.charging"))
+        supportedLeds.insert(::openrazer::RazerLedId::ChargingLED, "Charging");
+    if (hasCapabilityInternal("razer.device.lighting.fast_charging"))
+        supportedLeds.insert(::openrazer::RazerLedId::FastChargingLED, "FastCharging");
+    if (hasCapabilityInternal("razer.device.lighting.fully_charged"))
+        supportedLeds.insert(::openrazer::RazerLedId::FullyChargedLED, "FullyCharged");
 }
 
 /**

@@ -25,6 +25,7 @@ namespace libopenrazer {
 
 void printDBusError(QDBusError error, const char *functionname);
 void handleVoidDBusReply(QDBusReply<bool> reply, const char *functionname);
+QString fromCamelCase(const QString &s);
 
 template<typename T>
 T handleDBusReply(QDBusReply<T> reply, const char *functionname)
