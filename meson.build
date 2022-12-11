@@ -3,9 +3,8 @@ project('libopenrazer',
         version : '0.0.1',
         default_options : ['cpp_std=c++11'])
 
-qt5 = import('qt5')
-
-qt5_dep = dependency('qt5', modules : ['Core', 'DBus', 'Gui', 'Xml'])
+qt = import('qt5')
+qt_dep = dependency('qt5', modules : ['Core', 'DBus', 'Gui', 'Xml'])
 
 sources = [
     'src/dbusexception.cpp',
@@ -21,7 +20,7 @@ sources = [
     'src/razer_test/manager.cpp',
 ]
 
-sources += qt5.preprocess(
+sources += qt.preprocess(
     moc_headers : [
         'include/libopenrazer/device.h',
         'include/libopenrazer/led.h',
@@ -36,12 +35,12 @@ srcinc = include_directories('src')
 openrazerlib = library('openrazer',
                        sources,
                        version : meson.project_version(),
-                       dependencies : [qt5_dep],
+                       dependencies : [qt_dep],
                        include_directories : [inc, srcinc],
                        install : not meson.is_subproject())
 
 libopenrazer_dep = declare_dependency(
-    dependencies : [qt5_dep],
+    dependencies : [qt_dep],
     include_directories : inc,
     link_with : openrazerlib
 )
@@ -72,5 +71,5 @@ if get_option('demo') == true
   message('Building libopenrazerdemo...')
   executable('libopenrazerdemo',
              'src/demo/libopenrazerdemo.cpp',
-             dependencies : [qt5_dep, libopenrazer_dep])
+             dependencies : [qt_dep, libopenrazer_dep])
 endif
