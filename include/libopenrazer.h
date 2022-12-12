@@ -44,7 +44,7 @@ const QVector<RazerCapability> ledFxList {
  * Mapping from openrazer::RazerLedId to a human readable string
  */
 const QHash<::openrazer::RazerLedId, QString> ledIdToStringTable {
-    { ::openrazer::RazerLedId::Unspecified, Led::tr("Unspecified") },
+    { ::openrazer::RazerLedId::Unspecified, "" },
     { ::openrazer::RazerLedId::ScrollWheelLED, Led::tr("Scroll Wheel") },
     { ::openrazer::RazerLedId::BatteryLED, Led::tr("Battery") },
     { ::openrazer::RazerLedId::LogoLED, Led::tr("Logo") },
