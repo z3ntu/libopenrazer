@@ -56,6 +56,7 @@ install_headers('include/libopenrazer/dbusexception.h',
                 'include/libopenrazer/led.h',
                 'include/libopenrazer/manager.h',
                 'include/libopenrazer/misc.h',
+                'include/libopenrazer/openrazer.h',
                 'include/libopenrazer/razercapability.h',
                 subdir : 'libopenrazer')
 
