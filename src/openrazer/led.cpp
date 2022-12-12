@@ -119,9 +119,13 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
         return ::openrazer::RazerEffect::Off;
     }
 
-    // Profile LEDs are a bit special
-    if (d->isProfileLed()) {
-        QDBusReply<bool> reply = d->ledIface()->call("get" + d->lightingLocationMethod);
+    // Devices with On/Off effects need special handling
+    if (hasFx(::openrazer::RazerEffect::On)) {
+        QDBusReply<bool> reply;
+        if (d->isProfileLed())
+            reply = d->ledIface()->call("get" + d->lightingLocationMethod);
+        else
+            reply = d->ledIface()->call("get" + d->lightingLocationMethod + "Active");
         bool on = handleDBusReply(reply, Q_FUNC_INFO);
         return on ? ::openrazer::RazerEffect::On : ::openrazer::RazerEffect::Off;
     }
