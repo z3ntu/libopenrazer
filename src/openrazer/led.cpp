@@ -50,6 +50,8 @@ void LedPrivate::setupCapabilities()
 {
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "None"))
         supportedFx.append(::openrazer::RazerEffect::Off);
+    if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "On"))
+        supportedFx.append(::openrazer::RazerEffect::On);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Static"))
         supportedFx.append(::openrazer::RazerEffect::Static);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Blinking"))
@@ -119,8 +121,11 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
         return ::openrazer::RazerEffect::Off;
     }
 
-    // Devices with On/Off effects need special handling
-    if (hasFx(::openrazer::RazerEffect::On)) {
+    // Devices with On/Off effects need special handling, except for when
+    // openrazer already supports the "On" effect. Then we can treat it
+    // standard.
+    if (hasFx(::openrazer::RazerEffect::On) &&
+            !d->device->d->hasCapabilityInternal(d->interface, "set" + d->lightingLocationMethod + "On")) {
         QDBusReply<bool> reply;
         if (d->isProfileLed())
             reply = d->ledIface()->call("get" + d->lightingLocationMethod);
@@ -139,6 +144,8 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
     // * starlightRandom
     if (effect == "none") {
         return ::openrazer::RazerEffect::Off;
+    } else if (effect == "on") {
+        return ::openrazer::RazerEffect::On;
     } else if (effect == "static") {
         return ::openrazer::RazerEffect::Static;
     } else if (effect == "breathSingle" || effect == "pulsate") {
@@ -209,8 +216,10 @@ void Led::setOn()
     QDBusReply<void> reply;
     if (d->isProfileLed())
         reply = d->ledIface()->call("set" + d->lightingLocationMethod, true);
-    else
+    else if (d->device->d->hasCapabilityInternal(d->interface, "set" + d->lightingLocationMethod + "Active"))
         reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Active", true);
+    else
+        reply = d->ledIface()->call("set" + d->lightingLocationMethod + "On");
     handleDBusReply(reply, Q_FUNC_INFO);
 }
 
