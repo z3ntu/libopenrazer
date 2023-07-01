@@ -40,6 +40,10 @@ void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<::
         led->setBreathingRandom();
         break;
     }
+    case openrazer::RazerEffect::BreathingMono: {
+        led->setBreathingMono();
+        break;
+    }
     case openrazer::RazerEffect::Blinking: {
         led->setBlinking(colors[0]);
         break;

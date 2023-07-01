@@ -65,6 +65,7 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
     case ::openrazer::RazerEffect::Reactive:
         fxStr = "reactive";
         break;
+    case ::openrazer::RazerEffect::BreathingMono:
     case ::openrazer::RazerEffect::Ripple:
     case ::openrazer::RazerEffect::RippleRandom:
         // TODO Needs implementation
@@ -125,6 +126,11 @@ void Led::setBreathingRandom()
 {
     QDBusReply<bool> reply = d->ledIface()->call("setBreathingRandom");
     handleVoidDBusReply(reply, Q_FUNC_INFO);
+}
+
+void Led::setBreathingMono()
+{
+    // TODO Needs implementation
 }
 
 void Led::setBlinking(::openrazer::RGB color)

@@ -32,6 +32,7 @@ const QVector<RazerCapability> ledFxList {
     RazerCapability(::openrazer::RazerEffect::Breathing, Led::tr("Breathing"), 1),
     RazerCapability(::openrazer::RazerEffect::BreathingDual, Led::tr("Breathing Dual"), 2),
     RazerCapability(::openrazer::RazerEffect::BreathingRandom, Led::tr("Breathing Random"), 0),
+    RazerCapability(::openrazer::RazerEffect::BreathingMono, Led::tr("Breathing"), 0),
     RazerCapability(::openrazer::RazerEffect::Blinking, Led::tr("Blinking"), 1),
     RazerCapability(::openrazer::RazerEffect::Spectrum, Led::tr("Spectrum"), 0),
     RazerCapability(::openrazer::RazerEffect::Wave, Led::tr("Wave"), true),

@@ -84,11 +84,18 @@ public:
     virtual void setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) = 0;
 
     /*!
-     * Sets the lighting wheel to the random breath effect.
+     * Sets the lighting to the random breath effect.
      *
      * Returns if the D-Bus call was successful.
      */
     virtual void setBreathingRandom() = 0;
+
+    /*!
+     * Sets the lighting to the mono-color breath effect.
+     *
+     * Returns if the D-Bus call was successful.
+     */
+    virtual void setBreathingMono() = 0;
 
     /*!
      * Sets the lighting wheel to the random breath effect.
@@ -167,6 +174,7 @@ public:
     void setBreathing(::openrazer::RGB color) override;
     void setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) override;
     void setBreathingRandom() override;
+    void setBreathingMono() override;
     void setBlinking(::openrazer::RGB color) override;
     void setSpectrum() override;
     void setWave(::openrazer::WaveDirection direction) override;
@@ -204,6 +212,7 @@ public:
     void setBreathing(::openrazer::RGB color) override;
     void setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) override;
     void setBreathingRandom() override;
+    void setBreathingMono() override;
     void setBlinking(::openrazer::RGB color) override;
     void setSpectrum() override;
     void setWave(::openrazer::WaveDirection direction) override;

@@ -116,6 +116,7 @@ enum class RazerEffect {
     Breathing,
     BreathingDual,
     BreathingRandom,
+    BreathingMono,
     Blinking,
     Spectrum,
     Wave,

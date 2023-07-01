@@ -62,6 +62,8 @@ void LedPrivate::setupCapabilities()
         supportedFx.append(::openrazer::RazerEffect::BreathingDual);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathRandom"))
         supportedFx.append(::openrazer::RazerEffect::BreathingRandom);
+    if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathMono"))
+        supportedFx.append(::openrazer::RazerEffect::BreathingMono);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Spectrum"))
         supportedFx.append(::openrazer::RazerEffect::Spectrum);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Wave"))
@@ -154,6 +156,8 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
         return ::openrazer::RazerEffect::BreathingDual;
     } else if (effect == "breathRandom") {
         return ::openrazer::RazerEffect::BreathingRandom;
+    } else if (effect == "breathMono") {
+        return ::openrazer::RazerEffect::BreathingMono;
     } else if (effect == "blinking") {
         return ::openrazer::RazerEffect::Blinking;
     } else if (effect == "spectrum") {
@@ -252,6 +256,12 @@ void Led::setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2)
 void Led::setBreathingRandom()
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathRandom");
+    handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+void Led::setBreathingMono()
+{
+    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "BreathMono");
     handleDBusReply(reply, Q_FUNC_INFO);
 }
 
