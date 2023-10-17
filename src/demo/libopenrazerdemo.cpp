@@ -56,6 +56,10 @@ void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<::
         led->setWave(openrazer::WaveDirection::LEFT_TO_RIGHT);
         break;
     }
+    case openrazer::RazerEffect::Wheel: {
+        led->setWheel(openrazer::WheelDirection::CLOCKWISE);
+        break;
+    }
     case openrazer::RazerEffect::Reactive: {
         led->setReactive(colors[0], openrazer::ReactiveSpeed::_500MS);
         break;

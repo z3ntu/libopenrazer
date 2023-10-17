@@ -65,6 +65,7 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
     case ::openrazer::RazerEffect::Reactive:
         fxStr = "reactive";
         break;
+    case ::openrazer::RazerEffect::Wheel:
     case ::openrazer::RazerEffect::BreathingMono:
     case ::openrazer::RazerEffect::Ripple:
     case ::openrazer::RazerEffect::RippleRandom:
@@ -149,6 +150,11 @@ void Led::setWave(::openrazer::WaveDirection direction)
 {
     QDBusReply<bool> reply = d->ledIface()->call("setWave", QVariant::fromValue(direction));
     handleVoidDBusReply(reply, Q_FUNC_INFO);
+}
+
+void Led::setWheel(::openrazer::WheelDirection direction)
+{
+    // TODO Needs implementation
 }
 
 void Led::setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed)

@@ -81,6 +81,32 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, WaveDirect
     return argument;
 }
 
+enum class WheelDirection : uchar {
+    CLOCKWISE = 0x01,
+    COUNTER_CLOCKWISE = 0x02
+};
+Q_ENUM_NS(WheelDirection)
+
+// Marshall the WheelDirection data into a D-Bus argument
+inline QDBusArgument &operator<<(QDBusArgument &argument, const WheelDirection &value)
+{
+    argument.beginStructure();
+    argument << static_cast<int>(value);
+    argument.endStructure();
+    return argument;
+}
+
+// Retrieve the WheelDirection data from the D-Bus argument
+inline const QDBusArgument &operator>>(const QDBusArgument &argument, WheelDirection &value)
+{
+    int a;
+    argument.beginStructure();
+    argument >> a;
+    argument.endStructure();
+    value = static_cast<WheelDirection>(a);
+    return argument;
+}
+
 enum class ReactiveSpeed : uchar {
     _500MS = 0x01,
     _1000MS = 0x02,
@@ -120,6 +146,7 @@ enum class RazerEffect {
     Blinking,
     Spectrum,
     Wave,
+    Wheel,
     Reactive,
     Ripple,
     RippleRandom,
@@ -242,6 +269,7 @@ inline QDebug operator<<(QDebug dbg, const RGB &value)
 
 Q_DECLARE_METATYPE(openrazer::RazerLedId)
 Q_DECLARE_METATYPE(openrazer::WaveDirection)
+Q_DECLARE_METATYPE(openrazer::WheelDirection)
 Q_DECLARE_METATYPE(openrazer::ReactiveSpeed)
 Q_DECLARE_METATYPE(openrazer::RazerEffect)
 Q_DECLARE_METATYPE(openrazer::RazerDPI)
@@ -257,6 +285,9 @@ inline void registerMetaTypes()
 
     qRegisterMetaType<WaveDirection>("WaveDirection");
     qDBusRegisterMetaType<WaveDirection>();
+
+    qRegisterMetaType<WheelDirection>("WheelDirection");
+    qDBusRegisterMetaType<WheelDirection>();
 
     qRegisterMetaType<RazerDPI>("RazerDPI");
     qDBusRegisterMetaType<RazerDPI>();

@@ -68,6 +68,8 @@ void LedPrivate::setupCapabilities()
         supportedFx.append(::openrazer::RazerEffect::Spectrum);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Wave"))
         supportedFx.append(::openrazer::RazerEffect::Wave);
+    if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Wheel"))
+        supportedFx.append(::openrazer::RazerEffect::Wheel);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Reactive"))
         supportedFx.append(::openrazer::RazerEffect::Reactive);
 
@@ -164,6 +166,8 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
         return ::openrazer::RazerEffect::Spectrum;
     } else if (effect == "wave") {
         return ::openrazer::RazerEffect::Wave;
+    } else if (effect == "wheel") {
+        return ::openrazer::RazerEffect::Wheel;
     } else if (effect == "reactive") {
         return ::openrazer::RazerEffect::Reactive;
     } else if (effect == "ripple") {
@@ -280,6 +284,12 @@ void Led::setSpectrum()
 void Led::setWave(::openrazer::WaveDirection direction)
 {
     QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Wave", static_cast<int>(direction));
+    handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+void Led::setWheel(::openrazer::WheelDirection direction)
+{
+    QDBusReply<void> reply = d->ledIface()->call("set" + d->lightingLocationMethod + "Wheel", static_cast<int>(direction));
     handleDBusReply(reply, Q_FUNC_INFO);
 }
 

@@ -119,6 +119,13 @@ public:
     virtual void setWave(::openrazer::WaveDirection direction) = 0;
 
     /*!
+     * Sets the lighting effect to wheel, in the direction \a direction.
+     *
+     * Returns if the D-Bus call was successful.
+     */
+    virtual void setWheel(::openrazer::WheelDirection direction) = 0;
+
+    /*!
      * Sets the lighting to reactive mode with the specified \a color and \a speed.
      *
      * Returns if the D-Bus call was successful.
@@ -178,6 +185,7 @@ public:
     void setBlinking(::openrazer::RGB color) override;
     void setSpectrum() override;
     void setWave(::openrazer::WaveDirection direction) override;
+    void setWheel(::openrazer::WheelDirection direction) override;
     void setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) override;
     void setRipple(::openrazer::RGB color) override;
     void setRippleRandom() override;
@@ -216,6 +224,7 @@ public:
     void setBlinking(::openrazer::RGB color) override;
     void setSpectrum() override;
     void setWave(::openrazer::WaveDirection direction) override;
+    void setWheel(::openrazer::WheelDirection direction) override;
     void setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) override;
     void setRipple(::openrazer::RGB color) override;
     void setRippleRandom() override;
