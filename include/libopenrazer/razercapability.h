@@ -18,7 +18,7 @@ public:
     /// @cond
     RazerCapability();
     RazerCapability(::openrazer::RazerEffect identifier, QString displayString, int numColors);
-    RazerCapability(::openrazer::RazerEffect, QString displayString, bool wave);
+    RazerCapability(::openrazer::RazerEffect, QString displayString);
     RazerCapability(const RazerCapability &other);
     ~RazerCapability();
     /// @endcond
@@ -42,16 +42,10 @@ public:
      */
     QString getDisplayString() const;
 
-    /*!
-     * Returns if the capability is the wave effect.
-     */
-    bool isWave() const;
-
 private:
     int numColors;
     ::openrazer::RazerEffect identifier;
     QString displayString;
-    bool wave;
 };
 
 }
