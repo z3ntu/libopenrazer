@@ -8,6 +8,8 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+#include <stdexcept>
+
 void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<::openrazer::RGB> colors)
 {
     if (colors.size() < 2)
