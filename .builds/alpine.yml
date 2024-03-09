@@ -8,7 +8,7 @@ sources:
 tasks:
   - setup: |
       cd libopenrazer
-      meson -Ddemo=true builddir
+      meson setup -Ddemo=true builddir
   - build: |
       cd libopenrazer
-      ninja -C builddir
+      meson compile -C builddir
