@@ -85,6 +85,8 @@ void DevicePrivate::setupCapabilities()
         supportedFeatures.append("poll_rate");
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setCustom"))
         supportedFeatures.append("custom_frame");
+    if (hasCapabilityInternal("razer.device.power", "getBattery"))
+        supportedFeatures.append("battery");
 
     // razer.device.lighting.chroma more than only the normal fx, so check for methods directly
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setNone")
@@ -269,6 +271,18 @@ ushort Device::maxDPI()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
+double Device::getBatteryPercent()
+{
+    QDBusReply<double> reply = d->devicePowerIface()->call("getBattery");
+    return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+bool Device::isCharging()
+{
+    QDBusReply<bool> reply = d->devicePowerIface()->call("isCharging");
+    return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
 QVector<ushort> Device::getAllowedDPI()
 {
     QDBusReply<QVector<int>> reply = d->deviceDpiIface()->call("availableDPI");
@@ -337,6 +351,19 @@ QDBusInterface *DevicePrivate::deviceDpiIface()
                 qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
     }
     return ifaceDpi;
+}
+
+QDBusInterface *DevicePrivate::devicePowerIface()
+{
+    if (ifacePower == nullptr) {
+        ifacePower = new QDBusInterface(OPENRAZER_SERVICE_NAME, mObjectPath.path(), "razer.device.power",
+                                        OPENRAZER_DBUS_BUS, mParent);
+    }
+    if (!ifacePower->isValid()) {
+        fprintf(stderr, "%s\n",
+                qPrintable(OPENRAZER_DBUS_BUS.lastError().message()));
+    }
+    return ifacePower;
 }
 
 QDBusInterface *DevicePrivate::deviceLightingChromaIface()

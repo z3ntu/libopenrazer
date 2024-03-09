@@ -159,6 +159,18 @@ QVector<ushort> Device::getAllowedDPI()
     return {};
 }
 
+double Device::getBatteryPercent()
+{
+    // TODO Needs implementation
+    return 100;
+}
+
+bool Device::isCharging()
+{
+    // TODO Needs implementation
+    return true;
+}
+
 void Device::displayCustomFrame()
 {
     QDBusReply<bool> reply = d->deviceIface()->call("displayCustomFrame");

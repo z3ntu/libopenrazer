@@ -21,9 +21,11 @@ public:
 
     QDBusInterface *ifaceMisc = nullptr;
     QDBusInterface *ifaceDpi = nullptr;
+    QDBusInterface *ifacePower = nullptr;
     QDBusInterface *ifaceLightingChroma = nullptr;
     QDBusInterface *deviceMiscIface();
     QDBusInterface *deviceDpiIface();
+    QDBusInterface *devicePowerIface();
     QDBusInterface *deviceLightingChromaIface();
 
     QDBusObjectPath mObjectPath;

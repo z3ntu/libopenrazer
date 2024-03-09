@@ -161,6 +161,11 @@ int main(int argc, char *argv[])
             qDebug() << "Matrix dimensions:" << device->getMatrixDimensions();
         }
 
+        if (device->hasFeature("battery")) {
+            qDebug() << "Battery:" << device->getBatteryPercent() << "%";
+            qDebug() << "Charging:" << device->isCharging();
+        }
+
         for (libopenrazer::Led *led : device->getLeds()) {
             qDebug() << "LED:" << led->getLedId();
             if (led->hasBrightness()) {

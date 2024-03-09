@@ -145,6 +145,16 @@ public:
     virtual QVector<ushort> getAllowedDPI() = 0;
 
     /*!
+     * Returns the percentage the battery of the device is charged.
+     */
+    virtual double getBatteryPercent() = 0;
+
+    /*!
+     * Returns whether the device is currently charging.
+     */
+    virtual bool isCharging() = 0;
+
+    /*!
      * Sets the lighting to custom mode (applies effects set from defineCustomFrame()).
      *
      * Returns if the D-Bus call was successful.
@@ -204,6 +214,8 @@ public:
     QPair<uchar, QVector<::openrazer::RazerDPI>> getDPIStages() override;
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
+    double getBatteryPercent() override;
+    bool isCharging() override;
     void displayCustomFrame() override;
     void defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
@@ -248,6 +260,8 @@ public:
     QPair<uchar, QVector<::openrazer::RazerDPI>> getDPIStages() override;
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
+    double getBatteryPercent() override;
+    bool isCharging() override;
     void displayCustomFrame() override;
     void defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
