@@ -92,7 +92,8 @@ DaemonStatus Manager::getDaemonStatus()
     // - Unit wasn't found (i.e. daemon is not installed - or only an old version) - exit code 1
     // Daemon can be not installed but enabled -.-
     QProcess process;
-    process.start("systemctl", QStringList() << "is-enabled"
+    process.start("systemctl", QStringList() << "--user"
+                                             << "is-enabled"
                                              << "openrazer-daemon.service");
     process.waitForFinished();
     QString output(process.readAllStandardOutput());
@@ -119,7 +120,8 @@ DaemonStatus Manager::getDaemonStatus()
 QString Manager::getDaemonStatusOutput()
 {
     QProcess process;
-    process.start("systemctl", QStringList() << "status"
+    process.start("systemctl", QStringList() << "--user"
+                                             << "status"
                                              << "openrazer-daemon.service");
     process.waitForFinished();
     QString output(process.readAllStandardOutput());
@@ -132,7 +134,8 @@ QString Manager::getDaemonStatusOutput()
 bool Manager::enableDaemon()
 {
     QProcess process;
-    process.start("systemctl", QStringList() << "enable"
+    process.start("systemctl", QStringList() << "--user"
+                                             << "enable"
                                              << "openrazer-daemon.service");
     process.waitForFinished();
     return process.exitCode() == 0;
