@@ -81,8 +81,6 @@ public:
     /*!
      * Sets the poll rate of the mouse to the specified \a pollrate, e.g. `125`, `500` or `1000`.
      *
-     * Returns if the D-Bus call was successful.
-     *
      * \sa getPollRate()
      */
     virtual void setPollRate(ushort pollrate) = 0;
@@ -96,8 +94,6 @@ public:
 
     /*!
      * Sets the DPI of the mouse to the specified \a dpi_x for the x-Axis and \a dpi_y for the y-Axis. Maximum value is what is returned by maxDPI().
-     *
-     * Returns if the D-Bus call was successful.
      *
      * \sa getDPI(), maxDPI(), getAllowedDPIValues()
      */
@@ -157,7 +153,6 @@ public:
     /*!
      * Sets the lighting to custom mode (applies effects set from defineCustomFrame()).
      *
-     * Returns if the D-Bus call was successful.
      *
      * \sa defineCustomFrame()
      */
@@ -168,8 +163,6 @@ public:
      * \a row is the row in the matrix, \a startColumn the column the \a colorData list starts and \a endColumn where the list ends.
      * Note, that you have to call displayCustomFrame() after setting otherwise the effect won't be displayed (even if you have already called displayCustomFrame() before).
      * Currently the driver only accepts whole rows that are sent.
-     *
-     * Returns if the D-Bus call was successful.
      *
      * \sa displayCustomFrame()
      */

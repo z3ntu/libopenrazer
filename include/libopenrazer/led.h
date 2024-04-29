@@ -55,106 +55,76 @@ public:
 
     /*!
      * Sets the LED to none / off.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setOff() = 0;
 
     /*!
      * Sets the LED to on.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setOn() = 0;
 
     /*!
      * Sets the lighting to static lighting in the specified \a color.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setStatic(::openrazer::RGB color) = 0;
 
     /*!
      * Sets the lighting to the single breath effect with the specified \a color.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setBreathing(::openrazer::RGB color) = 0;
 
     /*!
      * Sets the lighting to the dual breath effect with the specified \a color and \a color2.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setBreathingDual(::openrazer::RGB color, ::openrazer::RGB color2) = 0;
 
     /*!
      * Sets the lighting to the random breath effect.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setBreathingRandom() = 0;
 
     /*!
      * Sets the lighting to the mono-color breath effect.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setBreathingMono() = 0;
 
     /*!
      * Sets the lighting wheel to the random breath effect.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setBlinking(::openrazer::RGB color) = 0;
 
     /*!
      * Sets the lighting to spectrum mode.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setSpectrum() = 0;
 
     /*!
      * Sets the lighting effect to wave, in the direction \a direction.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setWave(::openrazer::WaveDirection direction) = 0;
 
     /*!
      * Sets the lighting effect to wheel, in the direction \a direction.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setWheel(::openrazer::WheelDirection direction) = 0;
 
     /*!
      * Sets the lighting to reactive mode with the specified \a color and \a speed.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setReactive(::openrazer::RGB color, ::openrazer::ReactiveSpeed speed) = 0;
 
     /*!
      * Sets the lighting effect to ripple with the specified \a color.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setRipple(::openrazer::RGB color) = 0;
 
     /*!
      * Sets the lighting effect to ripple with random colors.
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setRippleRandom() = 0;
 
     /*!
      * Sets the \a brightness (`0` - `255`).
-     *
-     * Returns if the D-Bus call was successful.
      */
     virtual void setBrightness(uchar brightness) = 0;
 

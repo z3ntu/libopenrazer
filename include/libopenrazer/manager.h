@@ -55,8 +55,6 @@ public:
      *
      * Example: Set it to \c 'on', set the lighting on one device to something, other devices connected will automatically get set to the same effect.
      *
-     * Returns if the D-Bus call was successful.
-     *
      * \sa getSyncEffects()
      */
     virtual void syncEffects(bool yes) = 0;
@@ -70,8 +68,6 @@ public:
 
     /*!
      * Sets if the LEDs should turn off if the screensaver is turned on, as specified by \a turnOffOnScreensaver.
-     *
-     * Returns if the D-Bus call was successful.
      *
      * \sa getTurnOffOnScreensaver()
      */
