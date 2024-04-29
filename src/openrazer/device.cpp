@@ -87,6 +87,10 @@ void DevicePrivate::setupCapabilities()
         supportedFeatures.append("custom_frame");
     if (hasCapabilityInternal("razer.device.power", "getBattery"))
         supportedFeatures.append("battery");
+    if (hasCapabilityInternal("razer.device.power", "getLowBatteryThreshold"))
+        supportedFeatures.append("low_battery_threshold");
+    if (hasCapabilityInternal("razer.device.power", "getIdleTime"))
+        supportedFeatures.append("idle_time");
 
     // razer.device.lighting.chroma more than only the normal fx, so check for methods directly
     if (hasCapabilityInternal("razer.device.lighting.chroma", "setNone")
@@ -295,6 +299,30 @@ QVector<ushort> Device::getAllowedDPI()
     std::transform(values.cbegin(), values.cend(), std::back_inserter(out),
                    [](int c) { return static_cast<ushort>(c); });
     return out;
+}
+
+ushort Device::getIdleTime()
+{
+    QDBusReply<ushort> reply = d->devicePowerIface()->call("getIdleTime");
+    return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+void Device::setIdleTime(ushort idleTime)
+{
+    QDBusReply<void> reply = d->devicePowerIface()->call("setIdleTime", QVariant::fromValue(idleTime));
+    handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+double Device::getLowBatteryThreshold()
+{
+    QDBusReply<uchar> reply = d->devicePowerIface()->call("getLowBatteryThreshold");
+    return handleDBusReply(reply, Q_FUNC_INFO);
+}
+
+void Device::setLowBatteryThreshold(double threshold)
+{
+    QDBusReply<void> reply = d->devicePowerIface()->call("setLowBatteryThreshold", QVariant::fromValue(threshold));
+    handleDBusReply(reply, Q_FUNC_INFO);
 }
 
 void Device::displayCustomFrame()

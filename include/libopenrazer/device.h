@@ -151,8 +151,39 @@ public:
     virtual bool isCharging() = 0;
 
     /*!
-     * Sets the lighting to custom mode (applies effects set from defineCustomFrame()).
+     * Returns the time (in seconds) after which the device will enter sleep mode.
      *
+     * Maximum value: 900 seconds (15 minutes)
+     *
+     * \sa setIdleTime()
+     */
+    virtual ushort getIdleTime() = 0;
+
+    /*!
+     * Sets the time (in seconds) after which the device will enter sleep mode.
+     *
+     * Maximum value: 900 seconds (15 minutes)
+     *
+     * \sa getIdleTime()
+     */
+    virtual void setIdleTime(ushort idleTime) = 0;
+
+    /*!
+     * Returns the battery percentage before the device will enter low power mode.
+     *
+     * \sa setLowBatteryThreshold()
+     */
+    virtual double getLowBatteryThreshold() = 0;
+
+    /*!
+     * Sets the battery percentage before the device will enter low power mode.
+     *
+     * \sa getLowBatteryThreshold()
+     */
+    virtual void setLowBatteryThreshold(double threshold) = 0;
+
+    /*!
+     * Sets the lighting to custom mode (applies effects set from defineCustomFrame()).
      *
      * \sa defineCustomFrame()
      */
@@ -209,6 +240,10 @@ public:
     QVector<ushort> getAllowedDPI() override;
     double getBatteryPercent() override;
     bool isCharging() override;
+    ushort getIdleTime() override;
+    void setIdleTime(ushort idleTime) override;
+    double getLowBatteryThreshold() override;
+    void setLowBatteryThreshold(double threshold) override;
     void displayCustomFrame() override;
     void defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;
@@ -255,6 +290,10 @@ public:
     QVector<ushort> getAllowedDPI() override;
     double getBatteryPercent() override;
     bool isCharging() override;
+    ushort getIdleTime() override;
+    void setIdleTime(ushort idleTime) override;
+    double getLowBatteryThreshold() override;
+    void setLowBatteryThreshold(double threshold) override;
     void displayCustomFrame() override;
     void defineCustomFrame(uchar row, uchar startColumn, uchar endColumn, QVector<::openrazer::RGB> colorData) override;
     ::openrazer::MatrixDimensions getMatrixDimensions() override;

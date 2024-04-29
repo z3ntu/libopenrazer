@@ -166,6 +166,22 @@ int main(int argc, char *argv[])
             qDebug() << "Charging:" << device->isCharging();
         }
 
+        if (device->hasFeature("low_battery_threshold")) {
+            double threshold = device->getLowBatteryThreshold();
+            qDebug() << "Low battery threshold:" << threshold << "%";
+            device->setLowBatteryThreshold(50);
+            // restore low battery threshold
+            device->setLowBatteryThreshold(threshold);
+        }
+
+        if (device->hasFeature("idle_time")) {
+            ushort idleTime = device->getIdleTime();
+            qDebug() << "Idle time:" << idleTime << "seconds";
+            device->setIdleTime(900);
+            // restore idle time
+            device->setIdleTime(idleTime);
+        }
+
         for (libopenrazer::Led *led : device->getLeds()) {
             qDebug() << "LED:" << led->getLedId();
             if (led->hasBrightness()) {

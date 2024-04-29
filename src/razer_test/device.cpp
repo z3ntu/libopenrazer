@@ -171,6 +171,28 @@ bool Device::isCharging()
     return true;
 }
 
+ushort Device::getIdleTime()
+{
+    // TODO Needs implementation
+    return 900;
+}
+
+void Device::setIdleTime(ushort idleTime)
+{
+    // TODO Needs implementation
+}
+
+double Device::getLowBatteryThreshold()
+{
+    // TODO Needs implementation
+    return 15;
+}
+
+void Device::setLowBatteryThreshold(double threshold)
+{
+    // TODO Needs implementation
+}
+
 void Device::displayCustomFrame()
 {
     QDBusReply<bool> reply = d->deviceIface()->call("displayCustomFrame");
