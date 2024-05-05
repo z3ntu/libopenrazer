@@ -39,8 +39,8 @@ public:
     bool hasCapabilityInternal(const QString &interface, const QString &method = QString());
     QStringList introspection;
 
-    // Maps RazerLedId to "Chroma" or "Scroll" (the string put e.g. into setScrollSpectrum)
-    QMap<::openrazer::RazerLedId, QString> supportedLeds;
+    // Maps LedId to "Chroma" or "Scroll" (the string put e.g. into setScrollSpectrum)
+    QMap<::openrazer::LedId, QString> supportedLeds;
 };
 
 }

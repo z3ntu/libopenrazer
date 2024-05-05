@@ -12,7 +12,7 @@
 namespace openrazer {
 Q_NAMESPACE
 
-enum class RazerLedId : uchar {
+enum class LedId : uchar {
     Unspecified = 0x00,
     ScrollWheelLED = 0x01,
     BatteryLED = 0x03,
@@ -29,10 +29,10 @@ enum class RazerLedId : uchar {
     FastChargingLED = 0x21,
     FullyChargedLED = 0x22,
 };
-Q_ENUM_NS(RazerLedId)
+Q_ENUM_NS(LedId)
 
-// Marshall the RazerLedId data into a D-Bus argument
-inline QDBusArgument &operator<<(QDBusArgument &argument, const RazerLedId &value)
+// Marshall the LedId data into a D-Bus argument
+inline QDBusArgument &operator<<(QDBusArgument &argument, const LedId &value)
 {
     argument.beginStructure();
     argument << static_cast<int>(value);
@@ -40,17 +40,17 @@ inline QDBusArgument &operator<<(QDBusArgument &argument, const RazerLedId &valu
     return argument;
 }
 
-// Retrieve the RazerLedId data from the D-Bus argument
-inline const QDBusArgument &operator>>(const QDBusArgument &argument, RazerLedId &value)
+// Retrieve the LedId data from the D-Bus argument
+inline const QDBusArgument &operator>>(const QDBusArgument &argument, LedId &value)
 {
     int a;
     argument.beginStructure();
     argument >> a;
     argument.endStructure();
-    value = static_cast<RazerLedId>(a);
+    value = static_cast<LedId>(a);
     return argument;
 }
-inline uint qHash(RazerLedId key, uint seed)
+inline uint qHash(LedId key, uint seed)
 {
     return ::qHash(static_cast<uchar>(key), seed);
 }
@@ -135,7 +135,7 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, ReactiveSp
     return argument;
 }
 
-enum class RazerEffect {
+enum class Effect {
     Off,
     On,
     Static,
@@ -151,10 +151,10 @@ enum class RazerEffect {
     Ripple,
     RippleRandom,
 };
-Q_ENUM_NS(RazerEffect)
+Q_ENUM_NS(Effect)
 
-// Marshall the RazerEffect data into a D-Bus argument
-inline QDBusArgument &operator<<(QDBusArgument &argument, const RazerEffect &value)
+// Marshall the Effect data into a D-Bus argument
+inline QDBusArgument &operator<<(QDBusArgument &argument, const Effect &value)
 {
     argument.beginStructure();
     argument << static_cast<int>(value);
@@ -162,28 +162,28 @@ inline QDBusArgument &operator<<(QDBusArgument &argument, const RazerEffect &val
     return argument;
 }
 
-// Retrieve the RazerEffect data from the D-Bus argument
-inline const QDBusArgument &operator>>(const QDBusArgument &argument, RazerEffect &value)
+// Retrieve the Effect data from the D-Bus argument
+inline const QDBusArgument &operator>>(const QDBusArgument &argument, Effect &value)
 {
     int a;
     argument.beginStructure();
     argument >> a;
     argument.endStructure();
-    value = static_cast<RazerEffect>(a);
+    value = static_cast<Effect>(a);
     return argument;
 }
-inline uint qHash(RazerEffect key, uint seed)
+inline uint qHash(Effect key, uint seed)
 {
     return ::qHash(static_cast<uint>(key), seed);
 }
 
-struct RazerDPI {
+struct DPI {
     ushort dpi_x;
     ushort dpi_y;
 };
 
-// Marshall the RazerDPI data into a D-Bus argument
-inline QDBusArgument &operator<<(QDBusArgument &argument, const RazerDPI &value)
+// Marshall the DPI data into a D-Bus argument
+inline QDBusArgument &operator<<(QDBusArgument &argument, const DPI &value)
 {
     argument.beginStructure();
     argument << value.dpi_x << value.dpi_y;
@@ -191,8 +191,8 @@ inline QDBusArgument &operator<<(QDBusArgument &argument, const RazerDPI &value)
     return argument;
 }
 
-// Retrieve the RazerDPI data from the D-Bus argument
-inline const QDBusArgument &operator>>(const QDBusArgument &argument, RazerDPI &value)
+// Retrieve the DPI data from the D-Bus argument
+inline const QDBusArgument &operator>>(const QDBusArgument &argument, DPI &value)
 {
     argument.beginStructure();
     argument >> value.dpi_x >> value.dpi_y;
@@ -200,9 +200,9 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, RazerDPI &
     return argument;
 }
 
-inline QDebug operator<<(QDebug dbg, const RazerDPI &value)
+inline QDebug operator<<(QDebug dbg, const DPI &value)
 {
-    dbg.nospace() << "RazerDPI(" << value.dpi_x << ", " << value.dpi_y << ")";
+    dbg.nospace() << "DPI(" << value.dpi_x << ", " << value.dpi_y << ")";
     return dbg.maybeSpace();
 }
 
@@ -267,12 +267,12 @@ inline QDebug operator<<(QDebug dbg, const RGB &value)
 
 }
 
-Q_DECLARE_METATYPE(openrazer::RazerLedId)
+Q_DECLARE_METATYPE(openrazer::LedId)
 Q_DECLARE_METATYPE(openrazer::WaveDirection)
 Q_DECLARE_METATYPE(openrazer::WheelDirection)
 Q_DECLARE_METATYPE(openrazer::ReactiveSpeed)
-Q_DECLARE_METATYPE(openrazer::RazerEffect)
-Q_DECLARE_METATYPE(openrazer::RazerDPI)
+Q_DECLARE_METATYPE(openrazer::Effect)
+Q_DECLARE_METATYPE(openrazer::DPI)
 Q_DECLARE_METATYPE(openrazer::MatrixDimensions)
 Q_DECLARE_METATYPE(openrazer::RGB)
 
@@ -280,8 +280,8 @@ namespace openrazer {
 
 inline void registerMetaTypes()
 {
-    qRegisterMetaType<RazerLedId>("RazerLedId");
-    qDBusRegisterMetaType<RazerLedId>();
+    qRegisterMetaType<LedId>("LedId");
+    qDBusRegisterMetaType<LedId>();
 
     qRegisterMetaType<WaveDirection>("WaveDirection");
     qDBusRegisterMetaType<WaveDirection>();
@@ -289,12 +289,12 @@ inline void registerMetaTypes()
     qRegisterMetaType<WheelDirection>("WheelDirection");
     qDBusRegisterMetaType<WheelDirection>();
 
-    qRegisterMetaType<RazerDPI>("RazerDPI");
-    qDBusRegisterMetaType<RazerDPI>();
-    qRegisterMetaType<QVector<RazerDPI>>("QVector<RazerDPI>");
-    qDBusRegisterMetaType<QVector<RazerDPI>>();
-    qRegisterMetaType<QPair<uchar, QVector<::openrazer::RazerDPI>>>("QPair<uchar, QVector<RazerDPI>>");
-    qDBusRegisterMetaType<QPair<uchar, QVector<::openrazer::RazerDPI>>>();
+    qRegisterMetaType<DPI>("DPI");
+    qDBusRegisterMetaType<DPI>();
+    qRegisterMetaType<QVector<DPI>>("QVector<DPI>");
+    qDBusRegisterMetaType<QVector<DPI>>();
+    qRegisterMetaType<QPair<uchar, QVector<::openrazer::DPI>>>("QPair<uchar, QVector<DPI>>");
+    qDBusRegisterMetaType<QPair<uchar, QVector<::openrazer::DPI>>>();
 
     qRegisterMetaType<ReactiveSpeed>("ReactiveSpeed");
     qDBusRegisterMetaType<ReactiveSpeed>();
@@ -307,8 +307,8 @@ inline void registerMetaTypes()
     qRegisterMetaType<QVector<RGB>>("QVector<RGB>");
     qDBusRegisterMetaType<QVector<RGB>>();
 
-    qRegisterMetaType<RazerEffect>("RazerEffect");
-    qDBusRegisterMetaType<RazerEffect>();
+    qRegisterMetaType<Effect>("Effect");
+    qDBusRegisterMetaType<Effect>();
 
     qDBusRegisterMetaType<QList<QDBusObjectPath>>();
 }

@@ -11,7 +11,7 @@
 #include "libopenrazer/manager.h"
 #include "libopenrazer/misc.h"
 #include "libopenrazer/openrazer.h"
-#include "libopenrazer/razercapability.h"
+#include "libopenrazer/capability.h"
 
 // NOTE: DBus types -> Qt/C++ types: http://doc.qt.io/qt-5/qdbustypesystem.html#primitive-types
 
@@ -25,42 +25,42 @@ namespace libopenrazer {
 /*!
  * List of effects provided by OpenRazer.
  */
-const QVector<RazerCapability> ledFxList {
-    RazerCapability(::openrazer::RazerEffect::Off, Led::tr("Off"), 0),
-    RazerCapability(::openrazer::RazerEffect::On, Led::tr("On"), 0),
-    RazerCapability(::openrazer::RazerEffect::Static, Led::tr("Static"), 1),
-    RazerCapability(::openrazer::RazerEffect::Breathing, Led::tr("Breathing"), 1),
-    RazerCapability(::openrazer::RazerEffect::BreathingDual, Led::tr("Breathing Dual"), 2),
-    RazerCapability(::openrazer::RazerEffect::BreathingRandom, Led::tr("Breathing Random"), 0),
-    RazerCapability(::openrazer::RazerEffect::BreathingMono, Led::tr("Breathing"), 0),
-    RazerCapability(::openrazer::RazerEffect::Blinking, Led::tr("Blinking"), 1),
-    RazerCapability(::openrazer::RazerEffect::Spectrum, Led::tr("Spectrum"), 0),
-    RazerCapability(::openrazer::RazerEffect::Wave, Led::tr("Wave"), 0),
-    RazerCapability(::openrazer::RazerEffect::Wheel, Led::tr("Wheel"), 0),
-    RazerCapability(::openrazer::RazerEffect::Reactive, Led::tr("Reactive"), 1),
-    RazerCapability(::openrazer::RazerEffect::Ripple, Led::tr("Ripple"), 1),
-    RazerCapability(::openrazer::RazerEffect::RippleRandom, Led::tr("Ripple Random"), 0),
+const QVector<Capability> ledFxList {
+    Capability(::openrazer::Effect::Off, Led::tr("Off"), 0),
+    Capability(::openrazer::Effect::On, Led::tr("On"), 0),
+    Capability(::openrazer::Effect::Static, Led::tr("Static"), 1),
+    Capability(::openrazer::Effect::Breathing, Led::tr("Breathing"), 1),
+    Capability(::openrazer::Effect::BreathingDual, Led::tr("Breathing Dual"), 2),
+    Capability(::openrazer::Effect::BreathingRandom, Led::tr("Breathing Random"), 0),
+    Capability(::openrazer::Effect::BreathingMono, Led::tr("Breathing"), 0),
+    Capability(::openrazer::Effect::Blinking, Led::tr("Blinking"), 1),
+    Capability(::openrazer::Effect::Spectrum, Led::tr("Spectrum"), 0),
+    Capability(::openrazer::Effect::Wave, Led::tr("Wave"), 0),
+    Capability(::openrazer::Effect::Wheel, Led::tr("Wheel"), 0),
+    Capability(::openrazer::Effect::Reactive, Led::tr("Reactive"), 1),
+    Capability(::openrazer::Effect::Ripple, Led::tr("Ripple"), 1),
+    Capability(::openrazer::Effect::RippleRandom, Led::tr("Ripple Random"), 0),
 };
 
 /*!
- * Mapping from openrazer::RazerLedId to a human readable string
+ * Mapping from openrazer::LedId to a human readable string
  */
-const QHash<::openrazer::RazerLedId, QString> ledIdToStringTable {
-    { ::openrazer::RazerLedId::Unspecified, "" },
-    { ::openrazer::RazerLedId::ScrollWheelLED, Led::tr("Scroll Wheel") },
-    { ::openrazer::RazerLedId::BatteryLED, Led::tr("Battery") },
-    { ::openrazer::RazerLedId::LogoLED, Led::tr("Logo") },
-    { ::openrazer::RazerLedId::BacklightLED, Led::tr("Backlight") },
-    { ::openrazer::RazerLedId::MacroRecordingLED, Led::tr("Macro Recording") },
-    { ::openrazer::RazerLedId::GameModeLED, Led::tr("Game Mode") },
-    { ::openrazer::RazerLedId::KeymapRedLED, Led::tr("Keymap Red") },
-    { ::openrazer::RazerLedId::KeymapGreenLED, Led::tr("Keymap Green") },
-    { ::openrazer::RazerLedId::KeymapBlueLED, Led::tr("Keymap Blue") },
-    { ::openrazer::RazerLedId::RightSideLED, Led::tr("Right Side") },
-    { ::openrazer::RazerLedId::LeftSideLED, Led::tr("Left Side") },
-    { ::openrazer::RazerLedId::ChargingLED, Led::tr("Charging") },
-    { ::openrazer::RazerLedId::FastChargingLED, Led::tr("Fast Charging") },
-    { ::openrazer::RazerLedId::FullyChargedLED, Led::tr("Fully Charged") },
+const QHash<::openrazer::LedId, QString> ledIdToStringTable {
+    { ::openrazer::LedId::Unspecified, "" },
+    { ::openrazer::LedId::ScrollWheelLED, Led::tr("Scroll Wheel") },
+    { ::openrazer::LedId::BatteryLED, Led::tr("Battery") },
+    { ::openrazer::LedId::LogoLED, Led::tr("Logo") },
+    { ::openrazer::LedId::BacklightLED, Led::tr("Backlight") },
+    { ::openrazer::LedId::MacroRecordingLED, Led::tr("Macro Recording") },
+    { ::openrazer::LedId::GameModeLED, Led::tr("Game Mode") },
+    { ::openrazer::LedId::KeymapRedLED, Led::tr("Keymap Red") },
+    { ::openrazer::LedId::KeymapGreenLED, Led::tr("Keymap Green") },
+    { ::openrazer::LedId::KeymapBlueLED, Led::tr("Keymap Blue") },
+    { ::openrazer::LedId::RightSideLED, Led::tr("Right Side") },
+    { ::openrazer::LedId::LeftSideLED, Led::tr("Left Side") },
+    { ::openrazer::LedId::ChargingLED, Led::tr("Charging") },
+    { ::openrazer::LedId::FastChargingLED, Led::tr("Fast Charging") },
+    { ::openrazer::LedId::FullyChargedLED, Led::tr("Fully Charged") },
 };
 
 }

@@ -10,7 +10,7 @@
 
 #include <stdexcept>
 
-void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<::openrazer::RGB> colors)
+void setEffect(libopenrazer::Led *led, openrazer::Effect effect, QVector<::openrazer::RGB> colors)
 {
     if (colors.size() < 2)
         colors += ::openrazer::RGB { 50, 254, 100 };
@@ -18,59 +18,59 @@ void setEffect(libopenrazer::Led *led, openrazer::RazerEffect effect, QVector<::
         colors += ::openrazer::RGB { 173, 16, 160 };
 
     switch (effect) {
-    case openrazer::RazerEffect::Off: {
+    case openrazer::Effect::Off: {
         led->setOff();
         break;
     }
-    case openrazer::RazerEffect::On: {
+    case openrazer::Effect::On: {
         led->setOn();
         break;
     }
-    case openrazer::RazerEffect::Static: {
+    case openrazer::Effect::Static: {
         led->setStatic(colors[0]);
         break;
     }
-    case openrazer::RazerEffect::Breathing: {
+    case openrazer::Effect::Breathing: {
         led->setBreathing(colors[0]);
         break;
     }
-    case openrazer::RazerEffect::BreathingDual: {
+    case openrazer::Effect::BreathingDual: {
         led->setBreathingDual(colors[0], colors[1]);
         break;
     }
-    case openrazer::RazerEffect::BreathingRandom: {
+    case openrazer::Effect::BreathingRandom: {
         led->setBreathingRandom();
         break;
     }
-    case openrazer::RazerEffect::BreathingMono: {
+    case openrazer::Effect::BreathingMono: {
         led->setBreathingMono();
         break;
     }
-    case openrazer::RazerEffect::Blinking: {
+    case openrazer::Effect::Blinking: {
         led->setBlinking(colors[0]);
         break;
     }
-    case openrazer::RazerEffect::Spectrum: {
+    case openrazer::Effect::Spectrum: {
         led->setSpectrum();
         break;
     }
-    case openrazer::RazerEffect::Wave: {
+    case openrazer::Effect::Wave: {
         led->setWave(openrazer::WaveDirection::LEFT_TO_RIGHT);
         break;
     }
-    case openrazer::RazerEffect::Wheel: {
+    case openrazer::Effect::Wheel: {
         led->setWheel(openrazer::WheelDirection::CLOCKWISE);
         break;
     }
-    case openrazer::RazerEffect::Reactive: {
+    case openrazer::Effect::Reactive: {
         led->setReactive(colors[0], openrazer::ReactiveSpeed::_500MS);
         break;
     }
-    case openrazer::RazerEffect::Ripple: {
+    case openrazer::Effect::Ripple: {
         led->setRipple(colors[0]);
         break;
     }
-    case openrazer::RazerEffect::RippleRandom: {
+    case openrazer::Effect::RippleRandom: {
         led->setRippleRandom();
         break;
     }
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
         }
 
         if (device->hasFeature("dpi")) {
-            openrazer::RazerDPI dpi = device->getDPI();
+            openrazer::DPI dpi = device->getDPI();
             qDebug() << "DPI:" << dpi;
             if (device->hasFeature("restricted_dpi")) {
                 QVector<ushort> allowedDPI = device->getAllowedDPI();
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
                 device->setDPI({ 500, 500 });
             }
             if (device->hasFeature("dpi_stages")) {
-                QPair<uchar, QVector<openrazer::RazerDPI>> dpiStages = device->getDPIStages();
+                QPair<uchar, QVector<openrazer::DPI>> dpiStages = device->getDPIStages();
                 qDebug() << "DPI stages:" << dpiStages;
                 device->setDPIStages(2, { { 400, 500 }, { 600, 700 }, { 800, 900 } });
                 // restore DPI stages
@@ -187,14 +187,14 @@ int main(int argc, char *argv[])
             if (led->hasBrightness()) {
                 qDebug() << "  Brightness:" << led->getBrightness();
             }
-            openrazer::RazerEffect effect = led->getCurrentEffect();
+            openrazer::Effect effect = led->getCurrentEffect();
             qDebug() << "  Effect:" << effect;
             QVector<openrazer::RGB> colors = led->getCurrentColors();
             qDebug() << "  Colors:" << colors;
             openrazer::WaveDirection waveDirection = led->getWaveDirection();
             qDebug() << "  Wave direction:" << waveDirection;
 
-            for (const libopenrazer::RazerCapability &cap : libopenrazer::ledFxList) {
+            for (const libopenrazer::Capability &cap : libopenrazer::ledFxList) {
                 if (led->hasFx(cap.getIdentifier())) {
                     setEffect(led, cap.getIdentifier(), QVector<::openrazer::RGB>());
                 }

@@ -18,7 +18,7 @@ namespace libopenrazer {
 
 namespace openrazer {
 
-Led::Led(Device *device, QDBusObjectPath objectPath, ::openrazer::RazerLedId ledId, QString lightingLocation)
+Led::Led(Device *device, QDBusObjectPath objectPath, ::openrazer::LedId ledId, QString lightingLocation)
 {
     d = new LedPrivate();
     d->mParent = this;
@@ -49,50 +49,50 @@ Led::~Led() = default;
 void LedPrivate::setupCapabilities()
 {
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "None"))
-        supportedFx.append(::openrazer::RazerEffect::Off);
+        supportedFx.append(::openrazer::Effect::Off);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "On"))
-        supportedFx.append(::openrazer::RazerEffect::On);
+        supportedFx.append(::openrazer::Effect::On);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Static"))
-        supportedFx.append(::openrazer::RazerEffect::Static);
+        supportedFx.append(::openrazer::Effect::Static);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Blinking"))
-        supportedFx.append(::openrazer::RazerEffect::Blinking);
+        supportedFx.append(::openrazer::Effect::Blinking);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathSingle"))
-        supportedFx.append(::openrazer::RazerEffect::Breathing);
+        supportedFx.append(::openrazer::Effect::Breathing);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathDual"))
-        supportedFx.append(::openrazer::RazerEffect::BreathingDual);
+        supportedFx.append(::openrazer::Effect::BreathingDual);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathRandom"))
-        supportedFx.append(::openrazer::RazerEffect::BreathingRandom);
+        supportedFx.append(::openrazer::Effect::BreathingRandom);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "BreathMono"))
-        supportedFx.append(::openrazer::RazerEffect::BreathingMono);
+        supportedFx.append(::openrazer::Effect::BreathingMono);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Spectrum"))
-        supportedFx.append(::openrazer::RazerEffect::Spectrum);
+        supportedFx.append(::openrazer::Effect::Spectrum);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Wave"))
-        supportedFx.append(::openrazer::RazerEffect::Wave);
+        supportedFx.append(::openrazer::Effect::Wave);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Wheel"))
-        supportedFx.append(::openrazer::RazerEffect::Wheel);
+        supportedFx.append(::openrazer::Effect::Wheel);
     if (device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Reactive"))
-        supportedFx.append(::openrazer::RazerEffect::Reactive);
+        supportedFx.append(::openrazer::Effect::Reactive);
 
     if (supportedFx.isEmpty() && device->d->hasCapabilityInternal(interface, "set" + lightingLocationMethod + "Active")) {
-        supportedFx.append(::openrazer::RazerEffect::Off);
-        supportedFx.append(::openrazer::RazerEffect::On);
+        supportedFx.append(::openrazer::Effect::Off);
+        supportedFx.append(::openrazer::Effect::On);
     }
 
     if (device->d->hasCapabilityInternal("razer.device.lighting.profile_led", "set" + lightingLocationMethod)) {
-        supportedFx.append(::openrazer::RazerEffect::Off);
-        supportedFx.append(::openrazer::RazerEffect::On);
+        supportedFx.append(::openrazer::Effect::Off);
+        supportedFx.append(::openrazer::Effect::On);
     }
 
     // No-color static/breathing variants
     if (device->d->hasCapabilityInternal("razer.device.lighting.bw2013", "setStatic"))
-        supportedFx.append(::openrazer::RazerEffect::Static);
+        supportedFx.append(::openrazer::Effect::Static);
     if (device->d->hasCapabilityInternal("razer.device.lighting.bw2013", "setPulsate"))
-        supportedFx.append(::openrazer::RazerEffect::Breathing);
+        supportedFx.append(::openrazer::Effect::Breathing);
 
     if (device->d->hasCapabilityInternal("razer.device.lighting.custom", "setRipple"))
-        supportedFx.append(::openrazer::RazerEffect::Ripple);
+        supportedFx.append(::openrazer::Effect::Ripple);
     if (device->d->hasCapabilityInternal("razer.device.lighting.custom", "setRippleRandomColour"))
-        supportedFx.append(::openrazer::RazerEffect::RippleRandom);
+        supportedFx.append(::openrazer::Effect::RippleRandom);
 
     if (lightingLocation == "Chroma") {
         if (device->d->hasCapabilityInternal("razer.device.lighting.brightness", "setBrightness"))
@@ -113,22 +113,22 @@ bool Led::hasBrightness()
     return d->supportsBrightness;
 }
 
-bool Led::hasFx(::openrazer::RazerEffect fx)
+bool Led::hasFx(::openrazer::Effect fx)
 {
     return d->supportedFx.contains(fx);
 }
 
-::openrazer::RazerEffect Led::getCurrentEffect()
+::openrazer::Effect Led::getCurrentEffect()
 {
     // OpenRazer doesn't expose get*Effect when there's no effect supported.
     if (!d->hasFx()) {
-        return ::openrazer::RazerEffect::Off;
+        return ::openrazer::Effect::Off;
     }
 
     // Devices with On/Off effects need special handling, except for when
     // openrazer already supports the "On" effect. Then we can treat it
     // standard.
-    if (hasFx(::openrazer::RazerEffect::On) &&
+    if (hasFx(::openrazer::Effect::On) &&
             !d->device->d->hasCapabilityInternal(d->interface, "set" + d->lightingLocationMethod + "On")) {
         QDBusReply<bool> reply;
         if (d->isProfileLed())
@@ -136,7 +136,7 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
         else
             reply = d->ledIface()->call("get" + d->lightingLocationMethod + "Active");
         bool on = handleDBusReply(reply, Q_FUNC_INFO);
-        return on ? ::openrazer::RazerEffect::On : ::openrazer::RazerEffect::Off;
+        return on ? ::openrazer::Effect::On : ::openrazer::Effect::Off;
     }
 
     QDBusReply<QString> reply = d->ledIface()->call("get" + d->lightingLocationMethod + "Effect");
@@ -147,36 +147,36 @@ bool Led::hasFx(::openrazer::RazerEffect fx)
     // * starlightDual
     // * starlightRandom
     if (effect == "none") {
-        return ::openrazer::RazerEffect::Off;
+        return ::openrazer::Effect::Off;
     } else if (effect == "on") {
-        return ::openrazer::RazerEffect::On;
+        return ::openrazer::Effect::On;
     } else if (effect == "static") {
-        return ::openrazer::RazerEffect::Static;
+        return ::openrazer::Effect::Static;
     } else if (effect == "breathSingle" || effect == "pulsate") {
-        return ::openrazer::RazerEffect::Breathing;
+        return ::openrazer::Effect::Breathing;
     } else if (effect == "breathDual") {
-        return ::openrazer::RazerEffect::BreathingDual;
+        return ::openrazer::Effect::BreathingDual;
     } else if (effect == "breathRandom") {
-        return ::openrazer::RazerEffect::BreathingRandom;
+        return ::openrazer::Effect::BreathingRandom;
     } else if (effect == "breathMono") {
-        return ::openrazer::RazerEffect::BreathingMono;
+        return ::openrazer::Effect::BreathingMono;
     } else if (effect == "blinking") {
-        return ::openrazer::RazerEffect::Blinking;
+        return ::openrazer::Effect::Blinking;
     } else if (effect == "spectrum") {
-        return ::openrazer::RazerEffect::Spectrum;
+        return ::openrazer::Effect::Spectrum;
     } else if (effect == "wave") {
-        return ::openrazer::RazerEffect::Wave;
+        return ::openrazer::Effect::Wave;
     } else if (effect == "wheel") {
-        return ::openrazer::RazerEffect::Wheel;
+        return ::openrazer::Effect::Wheel;
     } else if (effect == "reactive") {
-        return ::openrazer::RazerEffect::Reactive;
+        return ::openrazer::Effect::Reactive;
     } else if (effect == "ripple") {
-        return ::openrazer::RazerEffect::Ripple;
+        return ::openrazer::Effect::Ripple;
     } else if (effect == "rippleRandomColour") {
-        return ::openrazer::RazerEffect::RippleRandom;
+        return ::openrazer::Effect::RippleRandom;
     } else {
         qWarning("libopenrazer: Unhandled effect in getCurrentEffect: %s, defaulting to Spectrum", qUtf8Printable(effect));
-        return ::openrazer::RazerEffect::Spectrum;
+        return ::openrazer::Effect::Spectrum;
     }
 }
 
@@ -215,7 +215,7 @@ QVector<::openrazer::RGB> Led::getCurrentColors()
     return static_cast<::openrazer::WaveDirection>(value);
 }
 
-::openrazer::RazerLedId Led::getLedId()
+::openrazer::LedId Led::getLedId()
 {
     return d->ledId;
 }
@@ -354,9 +354,9 @@ bool LedPrivate::hasFx()
 
 bool LedPrivate::isProfileLed()
 {
-    return ledId == ::openrazer::RazerLedId::KeymapRedLED
-            || ledId == ::openrazer::RazerLedId::KeymapGreenLED
-            || ledId == ::openrazer::RazerLedId::KeymapBlueLED;
+    return ledId == ::openrazer::LedId::KeymapRedLED
+            || ledId == ::openrazer::LedId::KeymapGreenLED
+            || ledId == ::openrazer::LedId::KeymapBlueLED;
 }
 
 QDBusInterface *LedPrivate::ledIface()

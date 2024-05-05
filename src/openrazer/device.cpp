@@ -25,7 +25,7 @@ Device::Device(QDBusObjectPath objectPath)
     d->introspect();
     d->setupCapabilities();
 
-    QMap<::openrazer::RazerLedId, QString>::const_iterator i = d->supportedLeds.constBegin();
+    QMap<::openrazer::LedId, QString>::const_iterator i = d->supportedLeds.constBegin();
     while (i != d->supportedLeds.constEnd()) {
         Led *led = new Led(this, d->mObjectPath, i.key(), i.value());
         d->leds.append(led);
@@ -97,29 +97,29 @@ void DevicePrivate::setupCapabilities()
         || hasCapabilityInternal("razer.device.lighting.chroma", "setStatic")
         || hasCapabilityInternal("razer.device.lighting.bw2013")
         || hasCapabilityInternal("razer.device.lighting.brightness"))
-        supportedLeds.insert(::openrazer::RazerLedId::Unspecified, "Chroma");
+        supportedLeds.insert(::openrazer::LedId::Unspecified, "Chroma");
     if (hasCapabilityInternal("razer.device.lighting.logo"))
-        supportedLeds.insert(::openrazer::RazerLedId::LogoLED, "Logo");
+        supportedLeds.insert(::openrazer::LedId::LogoLED, "Logo");
     if (hasCapabilityInternal("razer.device.lighting.scroll"))
-        supportedLeds.insert(::openrazer::RazerLedId::ScrollWheelLED, "Scroll");
+        supportedLeds.insert(::openrazer::LedId::ScrollWheelLED, "Scroll");
     if (hasCapabilityInternal("razer.device.lighting.backlight"))
-        supportedLeds.insert(::openrazer::RazerLedId::BacklightLED, "Backlight");
+        supportedLeds.insert(::openrazer::LedId::BacklightLED, "Backlight");
     if (hasCapabilityInternal("razer.device.lighting.left"))
-        supportedLeds.insert(::openrazer::RazerLedId::LeftSideLED, "Left");
+        supportedLeds.insert(::openrazer::LedId::LeftSideLED, "Left");
     if (hasCapabilityInternal("razer.device.lighting.right"))
-        supportedLeds.insert(::openrazer::RazerLedId::RightSideLED, "Right");
+        supportedLeds.insert(::openrazer::LedId::RightSideLED, "Right");
     if (hasCapabilityInternal("razer.device.lighting.profile_led", "setRedLED"))
-        supportedLeds.insert(::openrazer::RazerLedId::KeymapRedLED, "RedLED");
+        supportedLeds.insert(::openrazer::LedId::KeymapRedLED, "RedLED");
     if (hasCapabilityInternal("razer.device.lighting.profile_led", "setGreenLED"))
-        supportedLeds.insert(::openrazer::RazerLedId::KeymapGreenLED, "GreenLED");
+        supportedLeds.insert(::openrazer::LedId::KeymapGreenLED, "GreenLED");
     if (hasCapabilityInternal("razer.device.lighting.profile_led", "setBlueLED"))
-        supportedLeds.insert(::openrazer::RazerLedId::KeymapBlueLED, "BlueLED");
+        supportedLeds.insert(::openrazer::LedId::KeymapBlueLED, "BlueLED");
     if (hasCapabilityInternal("razer.device.lighting.charging"))
-        supportedLeds.insert(::openrazer::RazerLedId::ChargingLED, "Charging");
+        supportedLeds.insert(::openrazer::LedId::ChargingLED, "Charging");
     if (hasCapabilityInternal("razer.device.lighting.fast_charging"))
-        supportedLeds.insert(::openrazer::RazerLedId::FastChargingLED, "FastCharging");
+        supportedLeds.insert(::openrazer::LedId::FastChargingLED, "FastCharging");
     if (hasCapabilityInternal("razer.device.lighting.fully_charged"))
-        supportedLeds.insert(::openrazer::RazerLedId::FullyChargedLED, "FullyCharged");
+        supportedLeds.insert(::openrazer::LedId::FullyChargedLED, "FullyCharged");
 }
 
 /**
@@ -238,13 +238,13 @@ QVector<ushort> Device::getSupportedPollRates()
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-void Device::setDPI(::openrazer::RazerDPI dpi)
+void Device::setDPI(::openrazer::DPI dpi)
 {
     QDBusReply<void> reply = d->deviceDpiIface()->call("setDPI", QVariant::fromValue(dpi.dpi_x), QVariant::fromValue(dpi.dpi_y));
     handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-::openrazer::RazerDPI Device::getDPI()
+::openrazer::DPI Device::getDPI()
 {
     QDBusReply<QList<int>> reply = d->deviceDpiIface()->call("getDPI");
     QList<int> dpi = handleDBusReply(reply, Q_FUNC_INFO);
@@ -257,15 +257,15 @@ void Device::setDPI(::openrazer::RazerDPI dpi)
     }
 }
 
-void Device::setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages)
+void Device::setDPIStages(uchar activeStage, QVector<::openrazer::DPI> dpiStages)
 {
     QDBusReply<void> reply = d->deviceDpiIface()->call("setDPIStages", QVariant::fromValue(activeStage), QVariant::fromValue(dpiStages));
     handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-QPair<uchar, QVector<::openrazer::RazerDPI>> Device::getDPIStages()
+QPair<uchar, QVector<::openrazer::DPI>> Device::getDPIStages()
 {
-    QDBusReply<QPair<uchar, QVector<::openrazer::RazerDPI>>> reply = d->deviceDpiIface()->call("getDPIStages");
+    QDBusReply<QPair<uchar, QVector<::openrazer::DPI>>> reply = d->deviceDpiIface()->call("getDPIStages");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 

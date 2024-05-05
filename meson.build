@@ -9,7 +9,7 @@ qt_dep = dependency('qt5', modules : ['Core', 'DBus', 'Gui', 'Xml'])
 sources = [
     'src/dbusexception.cpp',
     'src/misc.cpp',
-    'src/razercapability.cpp',
+    'src/capability.cpp',
 
     'src/openrazer/device.cpp',
     'src/openrazer/led.cpp',
@@ -57,7 +57,7 @@ install_headers('include/libopenrazer/dbusexception.h',
                 'include/libopenrazer/manager.h',
                 'include/libopenrazer/misc.h',
                 'include/libopenrazer/openrazer.h',
-                'include/libopenrazer/razercapability.h',
+                'include/libopenrazer/capability.h',
                 subdir : 'libopenrazer')
 
 pkg = import('pkgconfig')

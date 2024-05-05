@@ -6,39 +6,39 @@
 
 namespace libopenrazer {
 
-RazerCapability::RazerCapability()
+Capability::Capability()
 {
-    this->identifier = ::openrazer::RazerEffect::Off;
+    this->identifier = ::openrazer::Effect::Off;
     this->displayString = "";
     this->numColors = 0;
 }
-RazerCapability::RazerCapability(::openrazer::RazerEffect identifier, QString displayString, int numColors)
+Capability::Capability(::openrazer::Effect identifier, QString displayString, int numColors)
 {
     this->identifier = identifier;
     this->displayString = displayString;
     this->numColors = numColors;
 }
 
-RazerCapability::RazerCapability(const RazerCapability &other)
+Capability::Capability(const Capability &other)
 {
     this->identifier = other.identifier;
     this->displayString = other.displayString;
     this->numColors = other.numColors;
 }
 
-RazerCapability::~RazerCapability() = default;
+Capability::~Capability() = default;
 
-int RazerCapability::getNumColors() const
+int Capability::getNumColors() const
 {
     return numColors;
 }
 
-::openrazer::RazerEffect RazerCapability::getIdentifier() const
+::openrazer::Effect Capability::getIdentifier() const
 {
     return identifier;
 }
 
-QString RazerCapability::getDisplayString() const
+QString Capability::getDisplayString() const
 {
     return displayString;
 }

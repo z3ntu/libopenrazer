@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#ifndef RAZERCAPABILITY_H
-#define RAZERCAPABILITY_H
+#ifndef CAPABILITY_H
+#define CAPABILITY_H
 
 namespace libopenrazer {
 
@@ -12,15 +12,15 @@ namespace libopenrazer {
  *
  * Helper-class used by libopenrazer for providing lists of lighting effect capabilities that can be implemented e.g. in a combobox. It can contain the number of colors an effect needs, if the effect is the 'Wave' effect and a human readable string for displaying in the UI.
  */
-class RazerCapability
+class Capability
 {
 public:
     /// @cond
-    RazerCapability();
-    RazerCapability(::openrazer::RazerEffect identifier, QString displayString, int numColors);
-    RazerCapability(::openrazer::RazerEffect, QString displayString);
-    RazerCapability(const RazerCapability &other);
-    ~RazerCapability();
+    Capability();
+    Capability(::openrazer::Effect identifier, QString displayString, int numColors);
+    Capability(::openrazer::Effect, QString displayString);
+    Capability(const Capability &other);
+    ~Capability();
     /// @endcond
 
     /*!
@@ -33,7 +33,7 @@ public:
      *
      * e.g. \c "lighting_logo_spectrum"
      */
-    ::openrazer::RazerEffect getIdentifier() const;
+    ::openrazer::Effect getIdentifier() const;
 
     /*!
      * Returns a human-readable string describing the capability
@@ -44,12 +44,12 @@ public:
 
 private:
     int numColors;
-    ::openrazer::RazerEffect identifier;
+    ::openrazer::Effect identifier;
     QString displayString;
 };
 
 }
 
-Q_DECLARE_METATYPE(libopenrazer::RazerCapability)
+Q_DECLARE_METATYPE(libopenrazer::Capability)
 
-#endif // RAZERCAPABILITY_H
+#endif // CAPABILITY_H

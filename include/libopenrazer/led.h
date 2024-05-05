@@ -31,12 +31,12 @@ public:
     /*!
      * Returns if the device has the specified \a fx
      */
-    virtual bool hasFx(::openrazer::RazerEffect fx) = 0;
+    virtual bool hasFx(::openrazer::Effect fx) = 0;
 
     /*!
      * Returns the currently active effect
      */
-    virtual ::openrazer::RazerEffect getCurrentEffect() = 0;
+    virtual ::openrazer::Effect getCurrentEffect() = 0;
 
     /*!
      * Returns the currently active colors (the list will have at least 3 elements)
@@ -51,7 +51,7 @@ public:
     /*!
      * Returns the Led ID of this Led
      */
-    virtual ::openrazer::RazerLedId getLedId() = 0;
+    virtual ::openrazer::LedId getLedId() = 0;
 
     /*!
      * Sets the LED to none / off.
@@ -141,16 +141,16 @@ class LedPrivate;
 class Led : public ::libopenrazer::Led
 {
 public:
-    Led(Device *device, QDBusObjectPath objectPath, ::openrazer::RazerLedId ledId, QString lightingLocation);
+    Led(Device *device, QDBusObjectPath objectPath, ::openrazer::LedId ledId, QString lightingLocation);
     ~Led() override;
 
     QDBusObjectPath getObjectPath() override;
     bool hasBrightness() override;
-    bool hasFx(::openrazer::RazerEffect fx) override;
-    ::openrazer::RazerEffect getCurrentEffect() override;
+    bool hasFx(::openrazer::Effect fx) override;
+    ::openrazer::Effect getCurrentEffect() override;
     QVector<::openrazer::RGB> getCurrentColors() override;
     ::openrazer::WaveDirection getWaveDirection() override;
-    ::openrazer::RazerLedId getLedId() override;
+    ::openrazer::LedId getLedId() override;
     void setOff() override;
     void setOn() override;
     void setStatic(::openrazer::RGB color) override;
@@ -186,11 +186,11 @@ public:
 
     QDBusObjectPath getObjectPath() override;
     bool hasBrightness() override;
-    bool hasFx(::openrazer::RazerEffect fx) override;
-    ::openrazer::RazerEffect getCurrentEffect() override;
+    bool hasFx(::openrazer::Effect fx) override;
+    ::openrazer::Effect getCurrentEffect() override;
     QVector<::openrazer::RGB> getCurrentColors() override;
     ::openrazer::WaveDirection getWaveDirection() override;
-    ::openrazer::RazerLedId getLedId() override;
+    ::openrazer::LedId getLedId() override;
     void setOff() override;
     void setOn() override;
     void setStatic(::openrazer::RGB color) override;

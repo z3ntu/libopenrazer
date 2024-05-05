@@ -124,24 +124,24 @@ QVector<ushort> Device::getSupportedPollRates()
     return { 125, 500, 1000 };
 }
 
-void Device::setDPI(::openrazer::RazerDPI dpi)
+void Device::setDPI(::openrazer::DPI dpi)
 {
     QDBusReply<bool> reply = d->deviceIface()->call("setDPI", QVariant::fromValue(dpi));
     handleVoidDBusReply(reply, Q_FUNC_INFO);
 }
 
-::openrazer::RazerDPI Device::getDPI()
+::openrazer::DPI Device::getDPI()
 {
-    QDBusReply<::openrazer::RazerDPI> reply = d->deviceIface()->call("getDPI");
+    QDBusReply<::openrazer::DPI> reply = d->deviceIface()->call("getDPI");
     return handleDBusReply(reply, Q_FUNC_INFO);
 }
 
-void Device::setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages)
+void Device::setDPIStages(uchar activeStage, QVector<::openrazer::DPI> dpiStages)
 {
     // TODO Needs implementation
 }
 
-QPair<uchar, QVector<::openrazer::RazerDPI>> Device::getDPIStages()
+QPair<uchar, QVector<::openrazer::DPI>> Device::getDPIStages()
 {
     // TODO Needs implementation
     return { 0, {} };

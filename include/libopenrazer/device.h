@@ -97,14 +97,14 @@ public:
      *
      * \sa getDPI(), maxDPI(), getAllowedDPIValues()
      */
-    virtual void setDPI(::openrazer::RazerDPI dpi) = 0;
+    virtual void setDPI(::openrazer::DPI dpi) = 0;
 
     /*!
      * Returns the DPI of the mouse (e.g. `[800, 800]`).
      *
      * \sa setDPI()
      */
-    virtual ::openrazer::RazerDPI getDPI() = 0;
+    virtual ::openrazer::DPI getDPI() = 0;
 
     /*!
      * Sets the DPI stages of the mouse to the specified \a dpiStages and sets stage nr. \a activeStage active.
@@ -114,7 +114,7 @@ public:
      *
      * \sa getDPIStages(), maxDPI()
      */
-    virtual void setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages) = 0;
+    virtual void setDPIStages(uchar activeStage, QVector<::openrazer::DPI> dpiStages) = 0;
 
     /*!
      * Returns a pair of the active DPI stage and the configured DPI stages of the mouse.
@@ -124,7 +124,7 @@ public:
      *
      * \sa setDPIStages(), maxDPI()
      */
-    virtual QPair<uchar, QVector<::openrazer::RazerDPI>> getDPIStages() = 0;
+    virtual QPair<uchar, QVector<::openrazer::DPI>> getDPIStages() = 0;
 
     /*!
      * Returns the maximum DPI possible for the device.
@@ -232,10 +232,10 @@ public:
     ushort getPollRate() override;
     void setPollRate(ushort pollrate) override;
     QVector<ushort> getSupportedPollRates() override;
-    void setDPI(::openrazer::RazerDPI dpi) override;
-    ::openrazer::RazerDPI getDPI() override;
-    void setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages) override;
-    QPair<uchar, QVector<::openrazer::RazerDPI>> getDPIStages() override;
+    void setDPI(::openrazer::DPI dpi) override;
+    ::openrazer::DPI getDPI() override;
+    void setDPIStages(uchar activeStage, QVector<::openrazer::DPI> dpiStages) override;
+    QPair<uchar, QVector<::openrazer::DPI>> getDPIStages() override;
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
     double getBatteryPercent() override;
@@ -282,10 +282,10 @@ public:
     ushort getPollRate() override;
     void setPollRate(ushort pollrate) override;
     QVector<ushort> getSupportedPollRates() override;
-    void setDPI(::openrazer::RazerDPI dpi) override;
-    ::openrazer::RazerDPI getDPI() override;
-    void setDPIStages(uchar activeStage, QVector<::openrazer::RazerDPI> dpiStages) override;
-    QPair<uchar, QVector<::openrazer::RazerDPI>> getDPIStages() override;
+    void setDPI(::openrazer::DPI dpi) override;
+    ::openrazer::DPI getDPI() override;
+    void setDPIStages(uchar activeStage, QVector<::openrazer::DPI> dpiStages) override;
+    QPair<uchar, QVector<::openrazer::DPI>> getDPIStages() override;
     ushort maxDPI() override;
     QVector<ushort> getAllowedDPI() override;
     double getBatteryPercent() override;
