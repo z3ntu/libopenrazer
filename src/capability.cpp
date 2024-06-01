@@ -12,7 +12,7 @@ Capability::Capability()
     this->displayString = "";
     this->numColors = 0;
 }
-Capability::Capability(::openrazer::Effect identifier, QString displayString, int numColors)
+Capability::Capability(::openrazer::Effect identifier, const char *displayString, int numColors)
 {
     this->identifier = identifier;
     this->displayString = displayString;
@@ -38,7 +38,7 @@ int Capability::getNumColors() const
     return identifier;
 }
 
-QString Capability::getDisplayString() const
+const char *Capability::getDisplayString() const
 {
     return displayString;
 }

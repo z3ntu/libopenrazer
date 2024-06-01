@@ -4,6 +4,7 @@ packages:
   - pkgconf
   - qt5-buildtools
   - qt5-dbus
+  - qt5-linguisttools
   - qt5-widgets
   - qt5-xml
 sources:

@@ -5,6 +5,8 @@
 #ifndef CAPABILITY_H
 #define CAPABILITY_H
 
+#include "libopenrazer/openrazer.h"
+
 namespace libopenrazer {
 
 /*!
@@ -17,8 +19,8 @@ class Capability
 public:
     /// @cond
     Capability();
-    Capability(::openrazer::Effect identifier, QString displayString, int numColors);
-    Capability(::openrazer::Effect, QString displayString);
+    Capability(::openrazer::Effect identifier, const char *displayString, int numColors);
+    Capability(::openrazer::Effect, const char *displayString);
     Capability(const Capability &other);
     ~Capability();
     /// @endcond
@@ -38,14 +40,17 @@ public:
     /*!
      * Returns a human-readable string describing the capability
      *
+     * This needs to be translated by the user!
+     *   qApp->translate("libopenrazer", foo.getDisplayString())
+     *
      * e.g. \c "Spectrum"
      */
-    QString getDisplayString() const;
+    const char *getDisplayString() const;
 
 private:
     int numColors;
     ::openrazer::Effect identifier;
-    QString displayString;
+    const char *displayString;
 };
 
 }

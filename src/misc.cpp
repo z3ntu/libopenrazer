@@ -2,9 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include "config.h"
 #include "libopenrazer.h"
 #include "libopenrazer_private.h"
 
+#include <QCoreApplication>
 #include <QDBusReply>
 #include <QRegularExpression>
 
@@ -49,6 +51,16 @@ QString fromCamelCase(const QString &s)
     result.replace(regExp1, "\\1_\\2");
     result.replace(regExp2, "\\1_\\2");
     return result.toLower();
+}
+
+bool loadTranslations(QTranslator *translator)
+{
+#if defined(Q_OS_MACOS)
+    QString translationsDirectory = QCoreApplication::applicationDirPath() + "/../Resources/translations/";
+#else
+    QString translationsDirectory = QString(LIBOPENRAZER_DATADIR) + "/translations/";
+#endif
+    return translator->load(QLocale::system(), "libopenrazer", "_", translationsDirectory);
 }
 
 }

@@ -6,6 +6,22 @@ project('libopenrazer',
 qt = import('qt5')
 qt_dep = dependency('qt5', modules : ['Core', 'DBus', 'Gui', 'Xml'])
 
+if build_machine.system() == 'darwin'
+  libopenrazer_data_dir = 'Contents/Resources'
+else
+  libopenrazer_data_dir = get_option('datadir') / 'libopenrazer'
+endif
+
+subdir('translations')
+
+conf_data = configuration_data({
+  'LIBOPENRAZER_VERSION' : '"' + meson.project_version() + '"',
+  'LIBOPENRAZER_DATADIR' : '"' + get_option('prefix') / get_option('datadir') / 'libopenrazer' + '"',
+})
+
+configure_file(output : 'config.h',
+               configuration : conf_data)
+
 sources = [
     'src/dbusexception.cpp',
     'src/misc.cpp',
