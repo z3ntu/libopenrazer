@@ -8,6 +8,7 @@
 
 #include <QCoreApplication>
 #include <QDBusReply>
+#include <QLocale>
 #include <QRegularExpression>
 
 namespace libopenrazer {
