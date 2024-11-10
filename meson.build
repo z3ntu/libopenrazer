@@ -1,6 +1,6 @@
 project('libopenrazer',
         'cpp',
-        version : '0.2.0',
+        version : '0.3.0',
         default_options : ['cpp_std=c++11'])
 
 qt = import('qt5')
