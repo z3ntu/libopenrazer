@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2018 Luca Weiss <luca@lucaweiss.eu>
+
 project('libopenrazer',
         'cpp',
         version : '0.4.0',

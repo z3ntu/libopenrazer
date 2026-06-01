@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2019 Luca Weiss <luca@lucaweiss.eu>
+
 option('demo',
        type : 'boolean',
        value : false,
